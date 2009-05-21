@@ -9,7 +9,20 @@ enum PEBBLE_COLOR {
 	NONE=0, BLACK=1, WHITE=2
 };
 
-struct BaseNode;
+struct BaseNode {
+	PEBBLE_COLOR mover;
+	int depth;
+	NODETYPE type;
+	/**
+	 * hboard: stores the horizontal lines
+	 * vboard: stores the vertical lines
+	 * lines are divided into two parts, the more significant
+	 * section is for white, and the less significant
+	 * section is for black
+	 */
+	int hboard[16], vboard[16];
+	int lowerbound, upperbound;
+};
 
 typedef struct BaseNode *Configuration;
 
@@ -28,6 +41,10 @@ void undoMove(Configuration v, Move m);
 Configuration allocConfiguration();
 
 PEBBLE_COLOR getColor(Configuration v, int x, int y);
+
+PEBBLE_COLOR getMover(Configuration v);
+
+void setMover(Configuration v, PEBBLE_COLOR c);
 
 /**
  * put a pebble at the specified position

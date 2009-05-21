@@ -1,20 +1,6 @@
 #include <stdlib.h>
 #include "basetypes.h"
 
-struct BaseNode {
-	int depth;
-	NODETYPE type;
-	/**
-	 * hboard: stores the horizontal lines
-	 * vboard: stores the vertical lines
-	 * lines are divided into two parts, the more significant
-	 * section is for white, and the less significant
-	 * section is for black
-	 */
-	int hboard[16], vboard[16];
-	int lowerbound, upperbound;
-};
-
 int _reverse[1 << 16]={0};
 
 void initializeBaseType(){
@@ -30,6 +16,14 @@ void initializeBaseType(){
 			_reverse[i]=j;
 			_reverse[j]=i;
 		}
+}
+
+PEBBLE_COLOR getMover(Configuration v){
+	return v->mover;
+}
+
+void setMover(Configuration v, PEBBLE_COLOR c){
+	v->mover=c;
 }
 
 PEBBLE_COLOR getColor(Configuration v, int x, int y){
