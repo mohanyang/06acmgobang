@@ -2,9 +2,8 @@
 #include "transposition.h"
 
 struct HNode{
-	int depth;
-	int value;
 	int hconf[16], vconf[16];
+	int lb, ub;
 	Move move;
 	// next in the hash list
 	int next;
@@ -12,11 +11,13 @@ struct HNode{
 
 enum {
 	MAX_TRANSPOSITION_DEPTH = 8;
+	// TODO use different table size
 	MAX_TABLE_SIZE = 1000;
 };
 
 int* pointer[MAX_TRANSPOSITION_DEPTH];
 struct HNode *container;
+int containersize=0;
 
 int getHash(Configuration v){
 	int i, key=0;
@@ -43,10 +44,46 @@ void hashInitialize(){
 }
 
 HashRetVal retrieve(Configuration v){
+	// TODO optimize v so that do not 
+	// need to calculate hash every time
 	int key=getHash(v);
 	if (v->depth>MAX_TRANSPOSITION_DEPTH)
 		return NULL;
 	else {
-		
+		if (pointer[v->depth][key % MAX_TABLE_SIZE]!=0){
+			// TODO iterate the list
+			struct HNode *ptr=&(container[pointer[v->depth][key % MAX_TABLE_SIZE]]);
+			HashRetVal ret;
+			ret.lowerbound=ptr->lb;
+			ret.upperbound=ptr->ub;
+			ret.mv=ptr->move;
+			return ret;
+		}
+		else
+			return NULL;
+	}
+}
+
+void store(Configuration v, Move m){
+	int key=getHash(v);
+	if (v->depth>MAX_TRANSPOSITION_DEPTH)
+		return NULL;
+	else {
+		if (pointer[v->depth][key % MAX_TABLE_SIZE]!=0){
+			// TODO
+			// current: ignore
+		}
+		else {
+			// allocate space for a new node
+			++containersize;
+			struct HNode *target;
+			target=&(container[containersize]);
+			target->lb=v->lowerbound;
+			target->ub=v->upperbound;
+			target->move=v->mv;
+			memcpy(target->hconf, v->hboard, 16*sizeof(int));
+			memcpy(target->vconf, v->vboard, 16*sizeof(int));
+			// TODO make linked list
+		}
 	}
 }
