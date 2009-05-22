@@ -17,6 +17,7 @@ enum {
 };
 
 // TODO finalize
+// TODO consider zohrist
 
 /**
  * an array that stores the pointer to 

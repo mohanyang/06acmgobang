@@ -1,0 +1,28 @@
+ID support
+	provide heuristics in the order of children
+history heuristic
+	p-145
+	history table (saving moves, for each node?) and rating
+	* Jonathan Schaeffer. The history heuristic and alpha-beta search enhancements in practice
+mtd(f)
+	can use binary?
+	
+hash: how to deal with collision and old data
+	avoid hashing near-leaf nodes
+	cf search aid/ICS 180, April 24, 1997
+	can use hash to improve node ordering?
+		sorting?
+
+deal with forbidden
+
+section 9.5, 9.1
+
+evaluation
+	p220
+quiesence, selective extension, the accuracy (evaluated) of the estimator
+	one move much better? 
+	cf search aid/ICS 180, February 4, 1999
+open book
+
+engine facade: should let front end inform about real moves
+
