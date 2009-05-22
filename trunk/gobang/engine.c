@@ -15,3 +15,7 @@ ReturnValue search(PEBBLE_COLOR p){
 	initializeConfiguration(glbl, p);
 	return id_mtdf(glbl);
 }
+
+void playMove(Move m){
+	applyMove(glbl, m);
+}

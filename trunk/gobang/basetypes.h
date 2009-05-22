@@ -39,7 +39,7 @@ PEBBLE_COLOR getOppositePlayer(PEBBLE_COLOR p);
 
 void initializeBaseType();
 
-void applyMove(Configuration v, PEBBLE_COLOR col, Move m);
+void applyMove(Configuration v, Move m);
 
 void undoMove(Configuration v, Move m);
 
