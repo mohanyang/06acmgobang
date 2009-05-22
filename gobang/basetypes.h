@@ -20,8 +20,11 @@ struct BaseNode {
 	 * section is for white, and the less significant
 	 * section is for black
 	 */
-	int hboard[16], vboard[16];
+	int *hboard, *vboard;
 	int lowerbound, upperbound;
+	// TODO calculate hash when possible
+	int step;
+	int hash;
 };
 
 typedef struct BaseNode *Configuration;
@@ -81,15 +84,23 @@ void setLB(Configuration v, int l);
 int getLB(Configuration v);
 
 /**
- * flip the src configuration vertically and store it into the 
- * dest configuration
+ * flip the src configuration vertically and store 
+ * it into the dest configuration
  */
 void flipVertical(Configuration src, Configuration dest);
 
+void flipVertical(Configuration v);
+
 /**
- * flip the src configuration horizontally and store it into the 
- * dest configuration
+ * flip the src configuration horizontally and 
+ * store it into the dest configuration
  */
 void flipHorizontal(Configuration src, Configuration dest);
+
+void flipHorizontal(Configuration v);
+
+void rotateBoard(Configuration src, Configuration dest);
+
+void rotateBoard(Configuration v);
 
 #endif

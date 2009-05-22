@@ -37,21 +37,13 @@ void initializeBaseType(){
 }
 
 void initializeConfiguration(Configuration v, PEBBLE_COLOR p){
+	// TODO
 	v->depth=0;
-	v->NODETYPE
-
-	int depth;
-	NODETYPE type;
-	/**
-	 * hboard: stores the horizontal lines
-	 * vboard: stores the vertical lines
-	 * lines are divided into two parts, the more significant
-	 * section is for white, and the less significant
-	 * section is for black
-	 */
-	int hboard[16], vboard[16];
-	int lowerbound, upperbound;
-
+	v->NODETYPE=MAXNODE;
+	memset(*(v->hboard), 0, sizeof(int)*16);
+	memset(*(v->vboard), 0, sizeof(int)*16);
+	v->lowerbound=-INFINITY;
+	v->upperbound=INFINITY;
 }
 
 PEBBLE_COLOR getMover(Configuration v){
@@ -116,6 +108,10 @@ NODETYPE getType(Configuration v){
 Configuration allocConfiguration(){
 	Configuration ret=malloc(sizeof(struct BaseNode));
 	memset(ret, 0, sizeof(struct BaseNode));
+	ret->hboard=malloc(sizeof(int)*16);
+	ret->vboard=malloc(sizeof(int)*16);
+	memset(ret->hboard, 0, sizeof(int)*16);
+	memset(ret->vboard, 0, sizeof(int)*16);
 	return ret;
 }
 
@@ -156,6 +152,19 @@ void flipVertical(Configuration src, Configuration dest){
 	}
 }
 
+void flipVertical(Configuration v) {
+	int i;
+	int *ptr;
+	for (i=0; i<15; ++i) {
+		v->vboard[i]=reverseLine(v->vboard[i]);
+		if (i<7){
+			ptr=v->hboard[i];
+			v->hboard[i]=v->hboard[15-1-i];
+			v->hboard[15-1-i]=ptr;
+		}
+	}
+}
+
 /**
  * flip the src configuration horizontally and store it into the 
  * dest configuration
@@ -168,12 +177,41 @@ void flipHorizontal(Configuration src, Configuration dest){
 	}
 }
 
+void flipHorizontal(Configuration v){
+	int i;
+	int *ptr;
+	for (i=0; i<15; ++i) {
+		v->hboard[i]=reverseLine(v->hboard[i]);
+		if (i<7) {
+			ptr=v->vboard[i];
+			v->vboard[i]=v->vboard[15-1-i];
+			v->vboard[15-1-i]=ptr;
+		}
+	}
+}
+
 void applyMove(Configuration v, Move m){
 	putPebble(v, m.x, m.y, getMover(v));
+	++(v->step);
 	v->type=getOppositeType(v->type);
 }
 
 void undoMove(Configuration v, Move m){
 	removePebble(v, m.x, m.y);
+	--(v->step);
 	v->type=getOppositeType(v->type);
+}
+
+void rotateBoard(Configuration src, Configuration dest){
+	int i;
+	for (i=0; i<15; ++i) {
+		memcpy(dest->hboard[i], src->vboard[i], sizeof(int)*16);
+		memcpy(dest->vboard[i], src->hboard[i], sizeof(int)*16);
+	}
+}
+
+void rotateBoard(Configuration v){
+	int *ptr=v->hboard;
+	v->hboard=v->vboard;
+	v->vboard=ptr;
 }

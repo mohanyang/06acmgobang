@@ -10,14 +10,27 @@ struct HNode{
 };
 
 enum {
-	MAX_TRANSPOSITION_DEPTH = 8;
 	// TODO use different table size
-	MAX_TABLE_SIZE = 1000;
+	MAX_TABLE_SIZE = 10000;
+	MAX_HASH_SIZE = 10000;
 };
 
-int* pointer[MAX_TRANSPOSITION_DEPTH];
+// TODO finalize
+
+/**
+ * an array that stores the pointer to 
+ * hashnodes, according to the depth,
+ * the index is the key
+ */
+int *pointer;
 struct HNode *container;
 int containersize=0;
+/**
+ * temporary configuration used to calculate
+ * flip and rotate
+ */
+Configuration tempconf;
+Move *tempmove;
 
 int getHash(Configuration v){
 	int i, key=0;
@@ -34,13 +47,12 @@ int getHash(Configuration v){
 
 void hashInitialize(){
 	int i;
-	for (i=0; i<MAX_TRANSPOSITION_DEPTH; ++i){
-		// TODO use different hash size
-		pointer[i]=malloc(1000*sizeof(int));
-		memset(pointer[i], 0, sizeof(int)*1000);
-	}
-	container=malloc(1000*sizeof(struct HNode));
-	memset(container, 0, sizeof(struct HNode)*1000);
+	pointer=malloc(MAX_HASH_SIZE*sizeof(int));
+	memset(pointer, 0, sizeof(int)*MAX_HASH_SIZE);
+	container=malloc(MAX_TABLE_SIZE*sizeof(struct HNode));
+	memset(container, 0, sizeof(struct HNode)*MAX_TABLE_SIZE);
+	tempconf=allocConfiguration();
+	tempmove=malloc(sizeof(Move));
 }
 
 HashRetVal retrieve(Configuration v){
@@ -66,24 +78,46 @@ HashRetVal retrieve(Configuration v){
 
 void store(Configuration v, Move m){
 	int key=getHash(v);
+	int i, j, k;
 	if (v->depth>MAX_TRANSPOSITION_DEPTH)
 		return NULL;
 	else {
-		if (pointer[v->depth][key % MAX_TABLE_SIZE]!=0){
-			// TODO
-			// current: ignore
+		memcpy(*tempconf, *v, sizeof(*Configuration));
+		memcpy(*tempmove, m, sizeof(Move));
+		for (i=0; i<2; ++i) {
+			flipVertical(tempconf);
+			flipMoveVertical(tempmove);
+			for (j=0; j<2; ++j) {
+				flipHorizontal(tempconf);
+				flipMoveHorizontal(tempmove);
+				for (k=0; k<4; ++k) {
+					rotateBoard(tempconf);
+					rotateMove(tempmove);
+					saveConfiguration(tempconf, tempmove);
+				}
+			}
 		}
-		else {
-			// allocate space for a new node
-			++containersize;
-			struct HNode *target;
-			target=&(container[containersize]);
-			target->lb=v->lowerbound;
-			target->ub=v->upperbound;
-			target->move=v->mv;
-			memcpy(target->hconf, v->hboard, 16*sizeof(int));
-			memcpy(target->vconf, v->vboard, 16*sizeof(int));
-			// TODO make linked list
-		}
+	}
+}
+
+void flipMoveHorizontal(Move *m){
+	m->x=(15-1-m->x);
+}
+
+void flipMoveVertical(Move *m){
+	m->y=(15-1-m->y);
+}
+
+void rotateMove(Move *m){
+	int tmp=m->y;
+	m->y=(15-1-m->x);
+	m->x=tmp;
+}
+
+void saveConfiguration(Configuration v, Move *m){
+	int key=getHash(v);
+	if (pointer[v->depth][key % MAX_TABLE_SIZE]!=0) {
+	}
+	else {
 	}
 }
