@@ -1,10 +1,17 @@
-#include "engine.c"
+#include "engine.h"
 #include "basetypes.h"
+#include "mtdfengine.h"
+#include "timer.h"
+
+Configuration glbl;
 
 void initialize(){
 	initializeBaseType();
+	initializeTimer();
+	glbl=allocConfiguration();
 }
 
-void search(Configuration v){
-	
+ReturnValue search(PEBBLE_COLOR p){
+	initializeConfiguration(glbl, p);
+	return id_mtdf(glbl);
 }

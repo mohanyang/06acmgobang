@@ -4,6 +4,7 @@
 #include "transposition.h"
 #include "evaluator.h"
 #include "expansion.h"
+#include "timer.h"
 
 int max(int a, int b){
 	return a>b?a:b;
@@ -42,7 +43,12 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			applyMove(v, itr->current);
 			ret.value=max(ret.value, alphaBeta(v, a, beta, depth-1));
 			undoMove(v, itr->current);
-			a=max(a, ret.value);
+			if (a>ret.value){
+				a=ret.value;
+				ret.move=itr->current;
+			}
+			if (!tickTimer())
+				break;
 			getNext(v, itr);
 		}
 	}
@@ -54,21 +60,29 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			applyMove(v, itr->current);
 			ret.value=min(ret.value, alphaBeta(v, alpha, b, depth-1));
 			undoMove(v, itr->current);
-			b=min(b, ret.value);
+			if (b<ret.value){
+				b=ret.value;
+				ret.move=itr->current;
+			}
+			if (!tickTimer())
+				break;
 			getNext(v, itr);
 		}
 	}
 
 	if (ret.value<=alpha) {
+		/* fail low */
+		v->upperbound=ret.value;
 		/* Fail low result implies an upper bound */
-		n.upperbound := g; store n.upperbound;
 	}
 	else if (ret.value>alpha && ret.value<beta) {
-		/* Found an accurate minimax value - will not occur if called with zero window */
-		n.lowerbound := g; n.upperbound := g; store n.lowerbound, n.upperbound;
+		/* accurate window */
+		v->upperbound=v->lowerbound=ret.value;
 	}
 	else {
-		n.lowerbound := g; store n.lowerbound;
+		/* fail high */
+		v->lowerbound=ret.value;
 	}
+	store(v, ret.move);
 	return retval;
 }
