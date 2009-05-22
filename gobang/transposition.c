@@ -5,6 +5,7 @@ struct HNode{
 	int hconf[16], vconf[16];
 	int lb, ub;
 	Move move;
+	int depth, step;
 	// next in the hash list
 	int next;
 };
@@ -42,7 +43,7 @@ int getHash(Configuration v){
 	key = key ^ (key >>> 4);
 	key = key * 2057;
 	key = key ^ (key >>> 16);
-	return key;
+	return key % MAX_HASH_SIZE;
 }
 
 void hashInitialize(){
@@ -59,21 +60,17 @@ HashRetVal retrieve(Configuration v){
 	// TODO optimize v so that do not 
 	// need to calculate hash every time
 	int key=getHash(v);
-	if (v->depth>MAX_TRANSPOSITION_DEPTH)
-		return NULL;
-	else {
-		if (pointer[v->depth][key % MAX_TABLE_SIZE]!=0){
-			// TODO iterate the list
-			struct HNode *ptr=&(container[pointer[v->depth][key % MAX_TABLE_SIZE]]);
-			HashRetVal ret;
-			ret.lowerbound=ptr->lb;
-			ret.upperbound=ptr->ub;
-			ret.mv=ptr->move;
-			return ret;
-		}
-		else
-			return NULL;
+	if (pointer[key]!=0){
+		// TODO iterate the list
+		struct HNode *ptr=&(container[pointer[key]]);
+		HashRetVal ret;
+		ret.lowerbound=ptr->lb;
+		ret.upperbound=ptr->ub;
+		ret.mv=ptr->move;
+		return ret;
 	}
+	else
+		return NULL;
 }
 
 void store(Configuration v, Move m){
@@ -116,8 +113,33 @@ void rotateMove(Move *m){
 
 void saveConfiguration(Configuration v, Move *m){
 	int key=getHash(v);
-	if (pointer[v->depth][key % MAX_TABLE_SIZE]!=0) {
+	if (pointer[key]!=0) {
+		// TODO currently, we just check
+		// if we can overwrite (i.e., the 
+		// step of the found is not as deep as the 
+		// current)
+		int p=pointer[key];
+		if (container[p]->step<v->step) {
+			struct HNode *ptr=&(container[containersize]);
+			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
+			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
+			ptr->lb=v->lowerbound;
+			ptr->ub=v->upperbound;
+			ptr->move=v->mv;
+			ptr->depth=v->depth;
+			ptr->step=v->step;
+		}
 	}
 	else {
+		++containersize;
+		struct HNode *ptr=&(container[containersize]);
+		memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
+		memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
+		ptr->lb=v->lowerbound;
+		ptr->ub=v->upperbound;
+		ptr->move=v->mv;
+		ptr->depth=v->depth;
+		ptr->step=v->step;
+		ptr->next=0;
 	}
 }
