@@ -2,6 +2,7 @@
 #define _BASETYPES_H_
 
 enum NODETYPE {
+	// black=maxnode, white=minnode
 	MAXNODE, MINNODE
 };
 
@@ -10,7 +11,6 @@ enum PEBBLE_COLOR {
 };
 
 struct BaseNode {
-	PEBBLE_COLOR mover;
 	int depth;
 	NODETYPE type;
 	/**
@@ -32,6 +32,8 @@ struct Position {
 
 typedef struct Position Move;
 
+PEBBLE_COLOR getOppositePlayer(PEBBLE_COLOR p);
+
 void initializeBaseType();
 
 void applyMove(Configuration v, PEBBLE_COLOR col, Move m);
@@ -39,6 +41,12 @@ void applyMove(Configuration v, PEBBLE_COLOR col, Move m);
 void undoMove(Configuration v, Move m);
 
 Configuration allocConfiguration();
+
+/**
+ * initialize the current configuration,
+ * and make the current player p
+ */
+void initializeConfiguration(Configuration v, PEBBLE_COLOR p);
 
 PEBBLE_COLOR getColor(Configuration v, int x, int y);
 

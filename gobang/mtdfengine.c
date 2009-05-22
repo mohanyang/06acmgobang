@@ -1,19 +1,23 @@
 #include "mtdfengine.h"
 #include "abengine.h"
+#include "timer.h"
 
 enum {
 	MAX_SEARCH_DEPTH = 8;
 };
 
+
 ReturnValue id_mtdf(Configuration v){
 	ReturnValue f;
 	f.value=0;
 	int depth=1;
+	resetTimer();
 	// TODO read from configuration and 
 	// use heuristics
 	for (depth=1; depth<MAX_SEARCH_DEPTH; ++i) {
 		f=mtdf(v, f.value, depth);
-		// TODO stop time
+		if (tickTimer())
+			break;
 	}
 	return f;
 }

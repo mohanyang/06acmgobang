@@ -2,6 +2,7 @@
 #define _ENGINE_H_
 
 #include "basetypes.h"
+#include "enginetypes.h"
 
 /**
  * initialize the whole search engine, including hashset, 
@@ -10,8 +11,10 @@
 void initialize();
 
 /**
- * search below the current configuration
+ * search below the current configuration,
+ * the root corresponds to player with
+ * specified color
  */
-void search(Configuration v);
+ReturnValue search(Configuration v, PEBBLE_COLOR player);
 
 #endif

@@ -3,6 +3,24 @@
 
 int _reverse[1 << 16]={0};
 
+PEBBLE_COLOR getOppositePlayer(PEBBLE_COLOR p){
+	switch (PEBBLE_COLOR) {
+		case WHITE:
+			return BLACK;
+		case BLACK:
+			return WHITE;
+		default:
+			return NONE;
+	}
+}
+
+NODETYPE getOppositeType(NODETYPE type){
+	if (type==MAXNODE)
+		return MINNODE;
+	else
+		return MAXNODE;
+}
+
 void initializeBaseType(){
 	int i, j, k, l;
 	for (i=1; i<(1<<16); ++i)
@@ -18,12 +36,36 @@ void initializeBaseType(){
 		}
 }
 
+void initializeConfiguration(Configuration v, PEBBLE_COLOR p){
+	v->depth=0;
+	v->NODETYPE
+
+	int depth;
+	NODETYPE type;
+	/**
+	 * hboard: stores the horizontal lines
+	 * vboard: stores the vertical lines
+	 * lines are divided into two parts, the more significant
+	 * section is for white, and the less significant
+	 * section is for black
+	 */
+	int hboard[16], vboard[16];
+	int lowerbound, upperbound;
+
+}
+
 PEBBLE_COLOR getMover(Configuration v){
-	return v->mover;
+	if (v->type==MAXNODE)
+		return BLACK;
+	else
+		return WHITE;
 }
 
 void setMover(Configuration v, PEBBLE_COLOR c){
-	v->mover=c;
+	if (c==BLACK)
+		v->type=MAXNODE;
+	else
+		v->type=MINNODE;
 }
 
 PEBBLE_COLOR getColor(Configuration v, int x, int y){
@@ -126,10 +168,12 @@ void flipHorizontal(Configuration src, Configuration dest){
 	}
 }
 
-void applyMove(Configuration v, PEBBLE_COLOR col, Move m){
-	putPebble(v, m.x, m.y, col);
+void applyMove(Configuration v, Move m){
+	putPebble(v, m.x, m.y, getMover(v));
+	v->type=getOppositeType(v->type);
 }
 
 void undoMove(Configuration v, Move m){
 	removePebble(v, m.x, m.y);
+	v->type=getOppositeType(v->type);
 }
