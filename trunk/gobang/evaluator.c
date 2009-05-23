@@ -14,13 +14,13 @@ int evaluate(Configuration v, Move *m){
 		if (k>=5)
 			return INFINITY;
 		else
-			return k;
+			return k+1;
 	}
 	else {
 		if (k>=5)
 			return -INFINITY;
 		else
-			return -k;
+			return -k-1;
 	}
 }
 

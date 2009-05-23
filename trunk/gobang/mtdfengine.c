@@ -1,9 +1,10 @@
+#include <stdio.h>
 #include "mtdfengine.h"
 #include "abengine.h"
 #include "timer.h"
 
 enum {
-	MAX_SEARCH_DEPTH = 2
+	MAX_SEARCH_DEPTH = 3
 };
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
@@ -42,6 +43,7 @@ ReturnValue mtdf(Configuration v, int firstguess, int depth){
 			ub=g.value;
 		else
 			lb=g.value;
-	} while (ub>=lb);
+		printf("ub=%d, lb=%d\n", ub, lb);
+	} while (ub>lb);
 	return g;
 }

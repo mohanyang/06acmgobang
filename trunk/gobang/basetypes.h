@@ -106,4 +106,6 @@ void rotateBoard(Configuration src, Configuration dest);
 
 void selfRotateBoard(Configuration v);
 
+void printBoard(Configuration v);
+
 #endif
