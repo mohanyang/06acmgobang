@@ -12,6 +12,7 @@ hash: how to deal with collision and old data
 	cf search aid/ICS 180, April 24, 1997
 	can use hash to improve node ordering?
 		sorting?
+		ETC, see pruning/acmfinal.pdf/section 3.2
 
 deal with forbidden
 
@@ -24,5 +25,6 @@ quiesence, selective extension, the accuracy (evaluated) of the estimator
 	cf search aid/ICS 180, February 4, 1999
 open book
 
-engine facade: should let front end inform about real moves
+IMPORTANT: check for memory leakage
 
+fail low restart

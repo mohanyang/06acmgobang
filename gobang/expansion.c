@@ -1,9 +1,12 @@
 #include "expansion.h"
 #include <stdlib.h>
 
+// TODO a repository for struct ChildPointer
+
 ChildIterator getExpansion(Configuration v) {
 	ChildIterator retval=malloc(sizeof (struct ChildPointer));
 	int i,j;
+	retval->v=v;
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==NONE) {
@@ -14,19 +17,22 @@ ChildIterator getExpansion(Configuration v) {
 	return NULL;
 }
 
-void getNext(Configuration v, ChildIterator itr) {
+void getNext(ChildIterator itr) {
+	if (itr==NULL)
+		return;
 	int i,j;
 	for (i=itr->y; i<15; ++i)
-		if (getColor(v, itr->x, i)==NONE){
+		if (getColor(itr->v, itr->x, i)==NONE){
 			itr->y=i;
 			return;
 		}
 	for (i=itr->x+1; i<15; ++i)
 		for (j=0; j<15; ++j)
-			if (getColor(v, i, j)==NONE) {
+			if (getColor(itr->v, i, j)==NONE) {
 				itr->x=i;
 				itr->y=j;
 				return;
 			}
+	free(itr);
 	itr=NULL;
 }

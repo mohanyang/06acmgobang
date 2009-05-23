@@ -4,6 +4,7 @@
 #include "basetypes.h"
 
 struct ChildPointer{
+	Configuration v;
 	Move current;
 };
 
