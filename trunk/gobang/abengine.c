@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "basetypes.h"
 #include "abengine.h"
@@ -40,6 +41,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		int a=alpha;
 		ret.value=-INFINITY;
 		while (itr!=NULL && ret.value<beta) {
+			if (tickTimer()==0)
+				break;
 			applyMove(v, itr->current);
 			ret.value=max(ret.value, alphaBeta(v, a, beta, depth-1).value);
 			undoMove(v, itr->current);
@@ -47,8 +50,6 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				a=ret.value;
 				ret.move=itr->current;
 			}
-			if (!tickTimer())
-				break;
 			getNext(itr);
 		}
 	}
@@ -57,6 +58,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		int b=beta;
 		ret.value=INFINITY;
 		while (itr!=NULL && ret.value>alpha) {
+			if (tickTimer()==0)
+				break;
 			applyMove(v, itr->current);
 			ret.value=min(ret.value, alphaBeta(v, alpha, b, depth-1).value);
 			undoMove(v, itr->current);
@@ -64,8 +67,6 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				b=ret.value;
 				ret.move=itr->current;
 			}
-			if (!tickTimer())
-				break;
 			getNext(itr);
 		}
 	}

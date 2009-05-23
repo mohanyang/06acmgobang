@@ -3,7 +3,7 @@
 #include "timer.h"
 
 enum {
-	MAX_SEARCH_DEPTH = 8
+	MAX_SEARCH_DEPTH = 2
 };
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
