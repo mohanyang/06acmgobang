@@ -49,7 +49,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			}
 			if (!tickTimer())
 				break;
-			getNext(v, itr);
+			getNext(itr);
 		}
 	}
 	else {
@@ -66,7 +66,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			}
 			if (!tickTimer())
 				break;
-			getNext(v, itr);
+			getNext(itr);
 		}
 	}
 

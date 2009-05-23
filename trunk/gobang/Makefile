@@ -2,6 +2,7 @@ CFLAGS =	-O2 -g -Wall -fmessage-length=0
 
 OBJS =		globalconst.o \
 			basetypes.o \
+			forbidden.o \
 			timer.o \
 			enginetypes.o \
 			transposition.o \
