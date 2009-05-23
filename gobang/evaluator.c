@@ -15,7 +15,7 @@ int evaluateBoard(Configuration v, PEBBLE_COLOR c){
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==c)
-				k+=_priority[i,j];
+				k+=_priority[i][j];
 	if (c==BLACK)
 		return k;
 	else
@@ -50,6 +50,8 @@ int isWin(Configuration v, Move *m){
 	tmp=getConsecutive(v, t, m, SW)+getConsecutive(v, t, m, NE);
 	if (tmp>mx)
 		mx=tmp;
+	if (mx!=0)
+		printf("iswin return %d\n", mx);
 	return mx;
 }
 
@@ -66,4 +68,11 @@ void initializeEvaluate(){
 			_priority[15-1-i][j]=k;
 			_priority[15-1-i][15-1-j]=k;
 		}
+	/*
+	for (i=0; i<15; ++i) {
+		for (j=0; j<15; ++j)
+			printf("%d ", _priority[i][j]);
+		printf("\n");
+	}
+	*/
 }
