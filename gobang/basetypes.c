@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "basetypes.h"
 #include "enginetypes.h"
@@ -214,4 +215,23 @@ void selfRotateBoard(Configuration v){
 	int *ptr=v->hboard;
 	v->hboard=v->vboard;
 	v->vboard=ptr;
+}
+
+void printBoard(Configuration v){
+	int i,j;
+	for (i=0; i<15; ++i){
+		for (j=0;j<15;++j)
+			switch (getColor(v, i, j)){
+				case BLACK:
+					printf("X ");
+					break;
+				case WHITE:
+					printf("O ");
+					break;
+				default:
+					printf("- ");
+			}
+		printf("\n");
+	}
+	getchar();
 }

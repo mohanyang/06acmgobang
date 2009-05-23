@@ -12,6 +12,6 @@ typedef struct ChildPointer *ChildIterator;
 
 ChildIterator getExpansion(Configuration v);
 
-void getNext(ChildIterator itr);
+void getNext(ChildIterator *itr);
 
 #endif
