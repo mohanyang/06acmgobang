@@ -14,6 +14,6 @@ void resetTimer();
  * the clock reaches the upperbound, return
  * false
  */
-boolean tickTimer();
+int tickTimer();
 
 #endif

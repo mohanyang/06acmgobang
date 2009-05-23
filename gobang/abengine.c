@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "basetypes.h"
-#include "abengine.c"
+#include "abengine.h"
 #include "transposition.h"
 #include "evaluator.h"
 #include "expansion.h"
@@ -30,8 +30,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			ret.move=s->mv;
 			return ret;
 		}
-		ret.alpha=max(alpha, getLB(s));
-		ret.beta=min(beta, getUB(s));
+		ret.alpha=max(alpha, s->lowerbound);
+		ret.beta=min(beta, s->upperbound);
 	}
 	if (depth==0)
 		ret.value=evaluate(v, &(ret.move));
@@ -41,7 +41,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ret.value=-INFINITY;
 		while (itr!=NULL && ret.value<beta) {
 			applyMove(v, itr->current);
-			ret.value=max(ret.value, alphaBeta(v, a, beta, depth-1));
+			ret.value=max(ret.value, alphaBeta(v, a, beta, depth-1).value);
 			undoMove(v, itr->current);
 			if (a>ret.value){
 				a=ret.value;
@@ -58,7 +58,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ret.value=INFINITY;
 		while (itr!=NULL && ret.value>alpha) {
 			applyMove(v, itr->current);
-			ret.value=min(ret.value, alphaBeta(v, alpha, b, depth-1));
+			ret.value=min(ret.value, alphaBeta(v, alpha, b, depth-1).value);
 			undoMove(v, itr->current);
 			if (b<ret.value){
 				b=ret.value;
@@ -84,5 +84,5 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		v->lowerbound=ret.value;
 	}
 	store(v, ret.move);
-	return retval;
+	return ret;
 }

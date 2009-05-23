@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include "basetypes.h"
 
-typedef struct HNode HashNode;
-
 struct HashRet {
 	int lowerbound;
 	int upperbound;

@@ -2,12 +2,14 @@
 #include "basetypes.h"
 #include "mtdfengine.h"
 #include "timer.h"
+#include "transposition.h"
 
 Configuration glbl;
 
-void initialize(){
+void initializeEngine(){
 	initializeBaseType();
 	initializeTimer();
+	hashInitialize();
 	glbl=allocConfiguration();
 }
 
