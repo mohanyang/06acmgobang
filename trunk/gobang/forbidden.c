@@ -1,8 +1,4 @@
-#include "forbidden.c"
-
-enum DIRECTION {
-	N, E, W, S, NW, NE, SW, SE
-};
+#include "forbidden.h"
 
 int doubleThree(Configuration v, Move m){
 	// count how many live three are there

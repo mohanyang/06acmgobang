@@ -2,6 +2,7 @@
 #define _FORBIDDEN_H_
 
 #include "basetypes.h"
+#include "basestat.h"
 
 /**
  * especially used to decide whether a move

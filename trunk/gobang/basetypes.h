@@ -1,14 +1,16 @@
 #ifndef _BASETYPES_H_
 #define _BASETYPES_H_
 
-enum NODETYPE {
+enum _NODETYPE {
 	// black=maxnode, white=minnode
 	MAXNODE, MINNODE
 };
+typedef enum _NODETYPE NODETYPE;
 
-enum PEBBLE_COLOR {
+enum _PEBBLE_COLOR {
 	NONE=0, BLACK=1, WHITE=2
 };
+typedef enum _PEBBLE_COLOR PEBBLE_COLOR;
 
 struct BaseNode {
 	int depth;
@@ -30,7 +32,8 @@ struct BaseNode {
 typedef struct BaseNode *Configuration;
 
 struct Position {
-	int x, int y;
+	int x;
+	int y;
 };
 
 typedef struct Position Move;
@@ -89,7 +92,7 @@ int getLB(Configuration v);
  */
 void flipVertical(Configuration src, Configuration dest);
 
-void flipVertical(Configuration v);
+void selfFlipVertical(Configuration v);
 
 /**
  * flip the src configuration horizontally and 
@@ -97,10 +100,10 @@ void flipVertical(Configuration v);
  */
 void flipHorizontal(Configuration src, Configuration dest);
 
-void flipHorizontal(Configuration v);
+void selfFlipHorizontal(Configuration v);
 
 void rotateBoard(Configuration src, Configuration dest);
 
-void rotateBoard(Configuration v);
+void selfRotateBoard(Configuration v);
 
 #endif

@@ -8,6 +8,6 @@
  * the alpha-beta search engine
  */
 
-int alphaBeta(Configuration v, int alpha, int beta, int depth);
+ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth);
 
 #endif

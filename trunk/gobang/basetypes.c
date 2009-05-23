@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include "basetypes.h"
+#include "enginetypes.h"
 
 int _reverse[1 << 16]={0};
 
 PEBBLE_COLOR getOppositePlayer(PEBBLE_COLOR p){
-	switch (PEBBLE_COLOR) {
+	switch (p) {
 		case WHITE:
 			return BLACK;
 		case BLACK:
@@ -39,9 +40,11 @@ void initializeBaseType(){
 void initializeConfiguration(Configuration v, PEBBLE_COLOR p){
 	// TODO
 	v->depth=0;
-	v->NODETYPE=MAXNODE;
-	memset(*(v->hboard), 0, sizeof(int)*16);
-	memset(*(v->vboard), 0, sizeof(int)*16);
+	v->type=MAXNODE;
+	v->hboard=malloc(sizeof(int)*16);
+	v->vboard=malloc(sizeof(int)*16);
+	memset((void*)((v->hboard)), 0, sizeof(int)*16);
+	memset((void*)((v->vboard)), 0, sizeof(int)*16);
 	v->lowerbound=-INFINITY;
 	v->upperbound=INFINITY;
 }
@@ -152,9 +155,9 @@ void flipVertical(Configuration src, Configuration dest){
 	}
 }
 
-void flipVertical(Configuration v) {
+void selfFlipVertical(Configuration v) {
 	int i;
-	int *ptr;
+	int ptr;
 	for (i=0; i<15; ++i) {
 		v->vboard[i]=reverseLine(v->vboard[i]);
 		if (i<7){
@@ -177,9 +180,9 @@ void flipHorizontal(Configuration src, Configuration dest){
 	}
 }
 
-void flipHorizontal(Configuration v){
+void selfFlipHorizontal(Configuration v){
 	int i;
-	int *ptr;
+	int ptr;
 	for (i=0; i<15; ++i) {
 		v->hboard[i]=reverseLine(v->hboard[i]);
 		if (i<7) {
@@ -203,14 +206,11 @@ void undoMove(Configuration v, Move m){
 }
 
 void rotateBoard(Configuration src, Configuration dest){
-	int i;
-	for (i=0; i<15; ++i) {
-		memcpy(dest->hboard[i], src->vboard[i], sizeof(int)*16);
-		memcpy(dest->vboard[i], src->hboard[i], sizeof(int)*16);
-	}
+	memcpy(dest->hboard, src->vboard, sizeof(int)*16);
+	memcpy(dest->vboard, src->hboard, sizeof(int)*16);
 }
 
-void rotateBoard(Configuration v){
+void selfRotateBoard(Configuration v){
 	int *ptr=v->hboard;
 	v->hboard=v->vboard;
 	v->vboard=ptr;

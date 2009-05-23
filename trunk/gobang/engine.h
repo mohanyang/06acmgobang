@@ -8,14 +8,14 @@
  * initialize the whole search engine, including hashset, 
  * history, etc.
  */
-void initialize();
+void initializeEngine();
 
 /**
  * search below the current configuration,
  * the root corresponds to player with
  * specified color
  */
-ReturnValue search(Configuration v, PEBBLE_COLOR player);
+ReturnValue search(PEBBLE_COLOR player);
 
 /**
  * the frontend should use this to inform the search

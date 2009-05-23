@@ -10,10 +10,12 @@ struct HNode{
 	int next;
 };
 
+typedef struct HNode HashNode;
+
 enum {
 	// TODO use different table size
-	MAX_TABLE_SIZE = 10000;
-	MAX_HASH_SIZE = 10000;
+	MAX_TABLE_SIZE = 10000,
+	MAX_HASH_SIZE = 10000
 };
 
 // TODO finalize
@@ -39,20 +41,19 @@ int getHash(Configuration v){
 	for (i=0; i<15; ++i)
 		key ^= v->hboard[i];
 	key = ~key + (key << 15);
-	key = key ^ (key >>> 12);
+	key = key ^ (key >> 12);
 	key = key + (key << 2);
-	key = key ^ (key >>> 4);
+	key = key ^ (key >> 4);
 	key = key * 2057;
-	key = key ^ (key >>> 16);
+	key = key ^ (key >> 16);
 	return key % MAX_HASH_SIZE;
 }
 
 void hashInitialize(){
-	int i;
 	pointer=malloc(MAX_HASH_SIZE*sizeof(int));
-	memset(pointer, 0, sizeof(int)*MAX_HASH_SIZE);
+	memset((void*)pointer, 0, sizeof(int)*MAX_HASH_SIZE);
 	container=malloc(MAX_TABLE_SIZE*sizeof(struct HNode));
-	memset(container, 0, sizeof(struct HNode)*MAX_TABLE_SIZE);
+	memset((void*)container, 0, sizeof(struct HNode)*MAX_TABLE_SIZE);
 	tempconf=allocConfiguration();
 	tempmove=malloc(sizeof(Move));
 }
@@ -65,37 +66,13 @@ HashRetVal retrieve(Configuration v){
 		// TODO iterate the list
 		struct HNode *ptr=&(container[pointer[key]]);
 		HashRetVal ret;
-		ret.lowerbound=ptr->lb;
-		ret.upperbound=ptr->ub;
-		ret.mv=ptr->move;
+		ret->lowerbound=ptr->lb;
+		ret->upperbound=ptr->ub;
+		ret->mv=ptr->move;
 		return ret;
 	}
 	else
 		return NULL;
-}
-
-void store(Configuration v, Move m){
-	int key=getHash(v);
-	int i, j, k;
-	if (v->depth>MAX_TRANSPOSITION_DEPTH)
-		return NULL;
-	else {
-		memcpy(*tempconf, *v, sizeof(*Configuration));
-		memcpy(*tempmove, m, sizeof(Move));
-		for (i=0; i<2; ++i) {
-			flipVertical(tempconf);
-			flipMoveVertical(tempmove);
-			for (j=0; j<2; ++j) {
-				flipHorizontal(tempconf);
-				flipMoveHorizontal(tempmove);
-				for (k=0; k<4; ++k) {
-					rotateBoard(tempconf);
-					rotateMove(tempmove);
-					saveConfiguration(tempconf, tempmove);
-				}
-			}
-		}
-	}
 }
 
 void flipMoveHorizontal(Move *m){
@@ -120,13 +97,13 @@ void saveConfiguration(Configuration v, Move *m){
 		// step of the found is not as deep as the 
 		// current)
 		int p=pointer[key];
-		if (container[p]->step<v->step) {
+		if (container[p].step<v->step) {
 			struct HNode *ptr=&(container[containersize]);
 			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
 			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
 			ptr->lb=v->lowerbound;
 			ptr->ub=v->upperbound;
-			ptr->move=v->mv;
+			ptr->move=*m;
 			ptr->depth=v->depth;
 			ptr->step=v->step;
 		}
@@ -138,9 +115,29 @@ void saveConfiguration(Configuration v, Move *m){
 		memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
 		ptr->lb=v->lowerbound;
 		ptr->ub=v->upperbound;
-		ptr->move=v->mv;
+		ptr->move=*m;
 		ptr->depth=v->depth;
 		ptr->step=v->step;
 		ptr->next=0;
+	}
+}
+
+void store(Configuration v, Move m){
+	int key=getHash(v);
+	int i, j, k;
+	memcpy((void*)(tempconf), (void*)v, sizeof(struct BaseNode));
+	memcpy((void*)tempmove, (void*)&m, sizeof(Move));
+	for (i=0; i<2; ++i) {
+		selfFlipVertical(tempconf);
+		flipMoveVertical(tempmove);
+		for (j=0; j<2; ++j) {
+			selfFlipHorizontal(tempconf);
+			flipMoveHorizontal(tempmove);
+			for (k=0; k<4; ++k) {
+				selfRotateBoard(tempconf);
+				rotateMove(tempmove);
+				saveConfiguration(tempconf, tempmove);
+			}
+		}
 	}
 }

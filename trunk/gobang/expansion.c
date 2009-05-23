@@ -10,8 +10,8 @@ ChildIterator getExpansion(Configuration v) {
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==NONE) {
-				retval->x=i;
-				retval->y=j;
+				retval->current.x=i;
+				retval->current.y=j;
 				return retval;
 			}
 	return NULL;
@@ -21,16 +21,16 @@ void getNext(ChildIterator itr) {
 	if (itr==NULL)
 		return;
 	int i,j;
-	for (i=itr->y; i<15; ++i)
-		if (getColor(itr->v, itr->x, i)==NONE){
-			itr->y=i;
+	for (i=itr->current.y; i<15; ++i)
+		if (getColor(itr->v, itr->current.x, i)==NONE){
+			itr->current.y=i;
 			return;
 		}
-	for (i=itr->x+1; i<15; ++i)
+	for (i=itr->current.x+1; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if (getColor(itr->v, i, j)==NONE) {
-				itr->x=i;
-				itr->y=j;
+				itr->current.x=i;
+				itr->current.y=j;
 				return;
 			}
 	free(itr);
