@@ -3,6 +3,7 @@
 #include "mtdfengine.h"
 #include "timer.h"
 #include "transposition.h"
+#include "evaluator.h"
 
 Configuration glbl;
 
@@ -10,6 +11,7 @@ void initializeEngine(){
 	initializeBaseType();
 	initializeTimer();
 	hashInitialize();
+	initializeEvaluate();
 	glbl=allocConfiguration();
 }
 

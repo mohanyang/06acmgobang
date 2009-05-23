@@ -3,15 +3,14 @@
 
 #include "basetypes.h"
 
-struct ChildPointer{
-	Configuration v;
-	Move current;
-};
+struct ChildPointer;
 
 typedef struct ChildPointer *ChildIterator;
 
 ChildIterator getExpansion(Configuration v);
 
 void getNext(ChildIterator *itr);
+
+Move getCurrent(ChildIterator itr);
 
 #endif
