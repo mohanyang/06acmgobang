@@ -109,6 +109,8 @@ void saveConfiguration(Configuration v, Move *m){
 		}
 	}
 	else {
+		if (containersize>=MAX_TABLE_SIZE)
+			return;
 		++containersize;
 		struct HNode *ptr=&(container[containersize]);
 		memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
