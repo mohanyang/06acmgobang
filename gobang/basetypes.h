@@ -108,4 +108,6 @@ void selfRotateBoard(Configuration v);
 
 void printBoard(Configuration v);
 
+void printBoardNonBlock(Configuration v);
+
 #endif

@@ -218,6 +218,11 @@ void selfRotateBoard(Configuration v){
 }
 
 void printBoard(Configuration v){
+	printBoardNonBlock(v);
+	getchar();
+}
+
+void printBoardNonBlock(Configuration v){
 	int i,j;
 	for (i=0; i<15; ++i){
 		for (j=0;j<15;++j)
@@ -232,6 +237,5 @@ void printBoard(Configuration v){
 					printf("- ");
 			}
 		printf("\n");
-	}
-	getchar();
+	}	
 }

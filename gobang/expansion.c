@@ -16,8 +16,12 @@ struct ChildPointer {
 
 // TODO a repository for struct ChildPointer
 
-int _compMoves(const void *x, const void *y){
+int _compMovesInc(const void *x, const void *y){
 	return ((MoveListType*)x)->val-((MoveListType*)y)->val;
+}
+
+int _compMovesDec(const void *x, const void *y){
+	return ((MoveListType*)y)->val-((MoveListType*)x)->val;
 }
 
 ChildIterator getExpansion(Configuration v) {
@@ -37,13 +41,19 @@ ChildIterator getExpansion(Configuration v) {
 						retval->mllen].m));
 				++(retval->mllen);
 			}
-	qsort(retval->movelist, retval->mllen, sizeof(MoveListType), _compMoves);
+	if (getType(v)==MAXNODE)
+		qsort(retval->movelist, retval->mllen,
+			  sizeof(MoveListType), _compMovesDec);		
+	else
+		qsort(retval->movelist, retval->mllen,
+			sizeof(MoveListType), _compMovesInc);
 	/*
 	printf("mllen=%d\n", retval->mllen);
 	for (i=0; i<retval->mllen; ++i){
 		printf("- %d %d\n", retval->movelist[i].m.x,
 			  retval->movelist[i].m.y);
-	}*/
+	}
+	*/
 	return retval;
 }
 
@@ -51,9 +61,10 @@ void getNext(ChildIterator *itr) {
 	if (*itr==NULL)
 		return;
 	++((*itr)->currentidx);
-	if ((*itr)->currentidx>=(*itr)->mllen)
-	free(*itr);
-	*itr=NULL;
+	if ((*itr)->currentidx>=(*itr)->mllen) {
+		free(*itr);
+		*itr=NULL;
+	}
 }
 
 /**

@@ -17,6 +17,7 @@ void initializeEngine(){
 
 ReturnValue search(PEBBLE_COLOR p){
 //	initializeConfiguration(glbl, p);
+	glbl->step=0;
 	return id_mtdf(glbl);
 }
 
