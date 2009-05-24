@@ -14,8 +14,8 @@ typedef struct HNode HashNode;
 
 enum {
 	// TODO use different table size
-	MAX_TABLE_SIZE = 10000,
-	MAX_HASH_SIZE = 10000
+	MAX_TABLE_SIZE = 100000,
+	MAX_HASH_SIZE = 100000
 };
 
 // TODO finalize
@@ -62,17 +62,26 @@ HashRetVal retrieve(Configuration v){
 	// TODO optimize v so that do not 
 	// need to calculate hash every time
 	int key=getHash(v);
+//	printf("hashkey=%d\n", key);
+	/*
 	if (pointer[key]!=0){
 		// TODO iterate the list
 		struct HNode *ptr=&(container[pointer[key]]);
-		HashRetVal ret;
+		if (ptr->step<v->step) {
+			printf("miss\n");
+			return NULL;
+		}
+		printf("hit! %d %d\n", ptr->step, v->step);
+		HashRetVal ret=malloc(sizeof(struct HashRet));
 		ret->lowerbound=ptr->lb;
 		ret->upperbound=ptr->ub;
 		ret->mv=ptr->move;
 		return ret;
 	}
-	else
+	else */{
+//		printf("miss\n");
 		return NULL;
+	}
 }
 
 void flipMoveHorizontal(Move *m){
@@ -121,6 +130,9 @@ void saveConfiguration(Configuration v, Move *m){
 		ptr->depth=v->depth;
 		ptr->step=v->step;
 		ptr->next=0;
+		pointer[key]=containersize;
+//		printf("pos=%d, key=%d\n", containersize,
+//			  key);
 	}
 }
 

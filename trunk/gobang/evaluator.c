@@ -50,8 +50,8 @@ int isWin(Configuration v, Move *m){
 	tmp=getConsecutive(v, t, m, SW)+getConsecutive(v, t, m, NE);
 	if (tmp>mx)
 		mx=tmp;
-	if (mx!=0)
-		printf("iswin return %d\n", mx);
+//	if (mx>=3)
+//		printf("iswin return %d\n", mx);
 	return mx;
 }
 

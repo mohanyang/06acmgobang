@@ -4,7 +4,7 @@
 #include "timer.h"
 
 enum {
-	MAX_SEARCH_DEPTH = 1
+	MAX_SEARCH_DEPTH = 4
 };
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
@@ -16,9 +16,10 @@ ReturnValue id_mtdf(Configuration v){
 	resetTimer();
 	// TODO read from configuration and 
 	// use heuristics
-	for (depth=1; depth<=MAX_SEARCH_DEPTH; ++depth) {
+	for (depth=MAX_SEARCH_DEPTH; depth<=MAX_SEARCH_DEPTH; ++depth) {
+		printf("id depth = %d\n", depth);
 		f=mtdf(v, f.value, depth);
-		if (tickTimer())
+		if (tickTimer()==0)
 			break;
 	}
 	return f;
@@ -34,6 +35,7 @@ ReturnValue mtdf(Configuration v, int firstguess, int depth){
 	int ub=INFINITY, lb=-INFINITY;
 	int beta;
 	do {
+		printf(">>>>> search restart\n");
 		if (g.value==lb)
 			beta=g.value+1;
 		else
