@@ -25,14 +25,24 @@ int evaluateBoard(Configuration v, PEBBLE_COLOR c){
 int evaluate(Configuration v, Move *m){
 	int k=isWin(v, m);
 	if (v->type==MAXNODE) {
-		if (k>=5)
+		if (k>=3) {
+			printf("max inf\n");
+			printBoardNonBlock(v);
+			printf("%d %d\n", m->x, m->y);
+			getchar();
 			return INFINITY;
+		}
 		else
 			return _priority[m->x][m->y];
 	}
 	else {
-		if (k>=5)
+		if (k>=3) {
+			printf("min inf\n");
+			printBoardNonBlock(v);
+			printf("%d %d\n", m->x, m->y);
+			getchar();
 			return -INFINITY;
+		}
 		else
 			return -_priority[m->x][m->y];
 	}

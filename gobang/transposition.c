@@ -63,22 +63,25 @@ HashRetVal retrieve(Configuration v){
 	// need to calculate hash every time
 	int key=getHash(v);
 //	printf("hashkey=%d\n", key);
-	/*
 	if (pointer[key]!=0){
 		// TODO iterate the list
 		struct HNode *ptr=&(container[pointer[key]]);
-		if (ptr->step<v->step) {
-			printf("miss\n");
+		if (ptr->step<v->step
+		   || ptr->depth<v->depth) {
+		//	printf("miss\n");
 			return NULL;
 		}
+		/*
 		printf("hit! %d %d\n", ptr->step, v->step);
+		printf("containersize=%d\n", containersize);
+		*/
 		HashRetVal ret=malloc(sizeof(struct HashRet));
 		ret->lowerbound=ptr->lb;
 		ret->upperbound=ptr->ub;
 		ret->mv=ptr->move;
 		return ret;
 	}
-	else */{
+	else {
 //		printf("miss\n");
 		return NULL;
 	}
@@ -121,6 +124,8 @@ void saveConfiguration(Configuration v, Move *m){
 		if (containersize>=MAX_TABLE_SIZE)
 			return;
 		++containersize;
+		if (containersize % 1000==0)
+			printf("container reached %d\n", containersize);
 		struct HNode *ptr=&(container[containersize]);
 		memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
 		memcpy(ptr->vconf, v->vboard, sizeof(int)*16);

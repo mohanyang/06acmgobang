@@ -13,11 +13,11 @@ void initializeEngine(){
 	hashInitialize();
 	initializeEvaluate();
 	glbl=allocConfiguration();
+	initializeConfiguration(glbl, BLACK);
 }
 
 ReturnValue search(PEBBLE_COLOR p){
 //	initializeConfiguration(glbl, p);
-	glbl->step=0;
 	return id_mtdf(glbl);
 }
 

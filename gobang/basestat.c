@@ -37,7 +37,7 @@ int getClosestOpponent(Configuration v, PEBBLE_COLOR c, Move *m, DIR d){
 			return distance;
 		++distance;
 	}
-	return -1;
+	return distance+1;
 }
 
 void applyDir(DIR d, Move *m){

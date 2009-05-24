@@ -54,8 +54,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 //				getCurrent(itr).y);
 			if (tickTimer()==0)
 				break;
+			/*
 			if (getCurrent(itr).x==5 && getCurrent(itr).y==5)
 				printf("5 5\n");
+			*/
 			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
 			temp=alphaBeta(v, a, beta, depth-1);

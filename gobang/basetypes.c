@@ -40,7 +40,8 @@ void initializeBaseType(){
 
 void initializeConfiguration(Configuration v, PEBBLE_COLOR p){
 	// TODO
-	v->depth=0;
+//	v->depth=0;
+	v->step=0;
 	v->type=MAXNODE;
 	v->hboard=malloc(sizeof(int)*16);
 	v->vboard=malloc(sizeof(int)*16);
@@ -88,7 +89,7 @@ void removePebble(Configuration v, int x, int y){
 	v->vboard[y] &= ~((1 << x) | (1 << (x+16)));
 	v->hboard[x] &= ~((1 << y) | (1 << (y+16)));
 }
-
+/*
 void increaseDepth(Configuration v){
 	++(v->depth);
 }
@@ -96,7 +97,7 @@ void increaseDepth(Configuration v){
 void decreaseDepth(Configuration v){
 	--(v->depth);
 }
-
+*/
 int getDepth(Configuration v){
 	return v->depth;
 }
@@ -197,12 +198,14 @@ void selfFlipHorizontal(Configuration v){
 void applyMove(Configuration v, Move m){
 	putPebble(v, m.x, m.y, getMover(v));
 	++(v->step);
+	--(v->depth);
 	v->type=getOppositeType(v->type);
 }
 
 void undoMove(Configuration v, Move m){
 	removePebble(v, m.x, m.y);
 	--(v->step);
+	++(v->depth);
 	v->type=getOppositeType(v->type);
 }
 
