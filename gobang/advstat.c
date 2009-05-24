@@ -3,6 +3,7 @@
 
 AdvancedStat tempadvstatinfo;
 
+// TODO need to cache this
 void calculate(Configuration v){
 	memset((void*)tempadvstatinfo, 0, sizeof(AdvancedStat));
 	int i, j;
@@ -171,14 +172,75 @@ void calculate(Configuration v){
 						++tempadvstatinfo.stat[FTHREE][1];
 				}
 			}
-	
 }
 
 int getScore(PEBBLE_COLOR col){
-	if (col==BLACK)
-		return tempadvstatinfo.score[0];
-	else if (col==WHITE)
-		return tempadvstatinfo.score[1];
-	else
-		return 0;
+	switch (col){
+		case BLACK:
+			if (tempadvstatinfo.stat[FIVE][0])
+				return INFINITY;
+			else if (tempadvstatinfo.stat[DFOUR][1])
+				return -1000;
+			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
+				return -990;
+			else if (tempadvstatinfo.stat[AFOUR][1])
+				return -980;
+			else if (tempadvstatinfo.stat[DFOUR][0])
+				return 1000;
+			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
+				return 990;
+			else if (tempadvstatinfo.stat[AFOUR][0])
+				return 980;
+			else if (tempadvstatinfo.stat[FTHREE][0])
+				return 960;
+			else if (tempadvstatinfo.stat[FTHREE][1])
+				return -960;
+			else if (tempadvstatinfo.stat[DTHREE][1])
+				return -950;
+			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
+				return -940;
+			else if (tempadvstatinfo.stat[DTHREE][0] 
+							  && tempadvstatinfo.stat[DTHREE][1]==0)
+				return 930;
+			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
+				return 900;
+			else {
+				return (tempadvstatinfo.stat[ACTIVE_TWO][0]*2
+						-tempadvstatinfo.stat[ACTIVE_TWO][1]);
+			}
+		case WHITE:
+			if (tempadvstatinfo.stat[FIVE][1])
+				return -INFINITY;
+			else if (tempadvstatinfo.stat[DFOUR][0])
+				return 1000;
+			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
+				return 990;
+			else if (tempadvstatinfo.stat[AFOUR][0])
+				return 980;
+			else if (tempadvstatinfo.stat[DFOUR][1])
+				return -1000;
+			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
+				return -990;
+			else if (tempadvstatinfo.stat[AFOUR][1])
+				return -980;
+			else if (tempadvstatinfo.stat[FTHREE][1])
+				return -960;
+			else if (tempadvstatinfo.stat[FTHREE][0])
+				return 960;
+			else if (tempadvstatinfo.stat[DTHREE][0])
+				return 950;
+			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
+				return 940;
+			else if (tempadvstatinfo.stat[DTHREE][1] 
+							  && tempadvstatinfo.stat[DTHREE][0]==0)
+				return -930;
+			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
+				return -900;
+			else {
+				return -(tempadvstatinfo.stat[ACTIVE_TWO][1]*2
+						+tempadvstatinfo.stat[ACTIVE_TWO][0]);
+			}
+		default:
+			return 0;
+	}
 }
