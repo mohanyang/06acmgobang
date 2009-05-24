@@ -1,6 +1,7 @@
 #include "evaluator.h"
 #include "basestat.h"
 #include "enginetypes.h"
+#include "advstat.h"
 
 int _priority[15][15];
 
@@ -78,11 +79,4 @@ void initializeEvaluate(){
 			_priority[15-1-i][j]=k;
 			_priority[15-1-i][15-1-j]=k;
 		}
-	/*
-	for (i=0; i<15; ++i) {
-		for (j=0; j<15; ++j)
-			printf("%d ", _priority[i][j]);
-		printf("\n");
-	}
-	*/
 }
