@@ -71,11 +71,11 @@ void removePebble(Configuration v, int x, int y);
 NODETYPE getType(Configuration v);
 
 void setType(Configuration v, NODETYPE t);
-
+/*
 void increaseDepth(Configuration v);
 
 void decreaseDepth(Configuration v);
-
+*/
 int getDepth(Configuration v);
 
 void setUB(Configuration v, int u);
