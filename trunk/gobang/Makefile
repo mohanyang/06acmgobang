@@ -16,7 +16,7 @@ OBJS =		globalconst.o \
 			simpleshell.o
 			
 DLLOBJS	=	$(OBJS) \
-			gobang_JNIAdapter.o
+			gobang_JNIAdapter.c
 
 LIBS =
 

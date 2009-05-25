@@ -21,7 +21,6 @@ enum {
 };
 
 // TODO finalize
-// TODO consider zohrist
 
 static int hitcount=0, misscount=0;
 

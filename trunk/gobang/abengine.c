@@ -145,9 +145,9 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	}
 	else if (ret.value>alpha && ret.value<beta) {
 		/* accurate window */
-		v->upperbound=v->lowerbound=ret.value;
 		if (depth>0)
 			store(v, ret.move);
+		v->upperbound=v->lowerbound=ret.value;
 	}
 	else {
 		/* fail high */
