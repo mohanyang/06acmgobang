@@ -24,4 +24,9 @@ ReturnValue search(PEBBLE_COLOR player);
  * configuration would be alternated automatically.
  */
 void playMove(Move m);
+
+int generate();
+
+void playchess(int c);
+
 #endif

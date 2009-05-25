@@ -21,7 +21,19 @@ ReturnValue search(PEBBLE_COLOR p){
 	return id_mtdf(glbl);
 }
 
+int generate(){
+	ReturnValue r=search(getMover(glbl));
+	return (r.move.x << 8) | r.move.y;
+}
+
 void playMove(Move m){
 	applyMove(glbl, m);
 	printBoardNonBlock(glbl);
+}
+
+void playchess(int c){
+	Move m;
+	m.x=(c >> 8) & 0xff;
+	m.y=c & 0xff;
+	playMove(m);
 }
