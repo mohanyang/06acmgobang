@@ -24,7 +24,6 @@ struct BaseNode {
 	 */
 	int *hboard, *vboard;
 	int lowerbound, upperbound;
-	// TODO calculate hash when possible
 	int step;
 	int hash;
 };
@@ -109,5 +108,7 @@ void selfRotateBoard(Configuration v);
 void printBoard(Configuration v);
 
 void printBoardNonBlock(Configuration v);
+
+void printVertical(int *a);
 
 #endif

@@ -1,4 +1,6 @@
+#include <assert.h>
 #include <stdlib.h>
+#include <time.h>
 #include "transposition.h"
 
 struct HNode{
@@ -38,17 +40,25 @@ int containersize=0;
 Configuration tempconf;
 Move *tempmove;
 
-int getHash(Configuration v){
-	int i, key=0;
+int _zohrist[2][16][16];
+
+/**
+ * returns 0 if configuration v and hasnode p
+ * represents the same configuration
+ */
+int compare(Configuration v, int p){
+	int i;
 	for (i=0; i<15; ++i)
-		key ^= v->hboard[i];
-	key = ~key + (key << 15);
-	key = key ^ (key >> 12);
-	key = key + (key << 2);
-	key = key ^ (key >> 4);
-	key = key * 2057;
-	key = key ^ (key >> 16);
-	return key % MAX_HASH_SIZE;
+		if (v->hboard[i]!=container[p].hconf[i])
+			return -1;
+	return 0;
+}
+
+int getHash(Configuration v){
+	int i, res=0;
+	for (i=0; i<15; ++i)
+		res=(res * 4099)+v->hboard[i];
+	return res % MAX_HASH_SIZE;
 }
 
 void hashInitialize(){
@@ -58,24 +68,42 @@ void hashInitialize(){
 	memset((void*)container, 0, sizeof(struct HNode)*MAX_TABLE_SIZE);
 	tempconf=allocConfiguration();
 	tempmove=malloc(sizeof(Move));
+	int i,j,k;
+	srand(time(NULL));
+	for (i=0; i<2; ++i)
+		for (j=0; j<16; ++j)
+			for (k=0; k<16; ++k)
+				_zohrist[i][j][k]=(rand() << 16) | rand();
+}
+
+void updateHash(Configuration v, int x, int y, PEBBLE_COLOR c){
+	switch (c){
+		case BLACK:
+			v->hash ^= _zohrist[0][x][y];
+			break;
+		case WHITE:
+			v->hash ^= _zohrist[1][x][y];
+			break;
+		default:
+			break;
+	}
 }
 
 HashRetVal retrieve(Configuration v){
 	// TODO optimize v so that do not 
 	// need to calculate hash every time
 	int key=getHash(v);
-//	printf("hashkey=%d\n", key);
 	/*
 	if (hitcount % 1000==0){
 		printf("%d %d\n", hitcount, misscount);
 		getchar();
 	}
 	*/
-	/*
+	
 	if (pointer[key]!=0){
 		// TODO iterate the list
 		struct HNode *ptr=&(container[pointer[key]]);
-		if (ptr->depth<v->depth) {
+		if (ptr->step<v->step || ptr->depth<v->depth) {
 		//	printf("miss\n");
 			++misscount;
 			return NULL;
@@ -85,9 +113,14 @@ HashRetVal retrieve(Configuration v){
 		ret->lowerbound=ptr->lb;
 		ret->upperbound=ptr->ub;
 		ret->mv=ptr->move;
+		/*
+		printf("===retrieved %d===\n", key);
+		printVertical(container[pointer[key]].vconf);
+		printf("======\n");
+		*/
 		return ret;
 	}
-	else */{
+	else {
 //		printf("miss\n");
 		++misscount;
 		return NULL;
@@ -110,14 +143,36 @@ void rotateMove(Move *m){
 
 void saveConfiguration(Configuration v, Move *m){
 	int key=getHash(v);
+	/*
+	printf("===storing %d / %d ~ %d===\n", key, v->lowerbound, 
+		  v->upperbound);
+	printBoardNonBlock(v);
+	printf("======\n");
+	*/
 	if (pointer[key]!=0) {
 		// TODO currently, we just check
 		// if we can overwrite (i.e., the 
 		// step of the found is not as deep as the 
 		// current)
+		/*
+		if (compare(v, pointer[key])!=0){
+			printf("conflict detected!\n");
+			int i;
+			printBoardNonBlock(v);
+			for (i=0; i<15; ++i)
+				printf("%d: %u\n", i, v->vboard[i]);
+			printf("%d\n", v->hash);
+			printVertical(container[pointer[key]].vconf);
+			for (i=0; i<15; ++i)
+				printf("%d: %u\n", i, container[pointer[key]].vconf[i]);
+			printf("%d\n", key);
+			getchar();
+			assert(compare(v, pointer[key])==0);
+		}
+		*/
 		int p=pointer[key];
 		if (container[p].step<v->step) {
-			struct HNode *ptr=&(container[containersize]);
+			struct HNode *ptr=&(container[pointer[key]]);
 			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
 			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
 			ptr->lb=v->lowerbound;
@@ -159,9 +214,10 @@ void store(Configuration v, Move m){
 		for (j=0; j<2; ++j) {
 			selfFlipHorizontal(tempconf);
 			flipMoveHorizontal(tempmove);
-			for (k=0; k<4; ++k) {
+			for (k=0; k<2; ++k) {
 				selfRotateBoard(tempconf);
 				rotateMove(tempmove);
+//				printf("%d %d %d\n", i, j, k);
 				saveConfiguration(tempconf, tempmove);
 			}
 		}

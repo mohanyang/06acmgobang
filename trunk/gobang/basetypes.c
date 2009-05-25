@@ -78,14 +78,17 @@ void putPebble(Configuration v, int x, int y, PEBBLE_COLOR col){
 	if (col==BLACK){
 		v->vboard[y] |= (1 << x);
 		v->hboard[x] |= (1 << y);
+		updateHash(v, x, y, col);
 	}
 	else if (col==WHITE){
 		v->vboard[y] |= (1 << (x+16));
 		v->hboard[x] |= (1 << (y+16));
+		updateHash(v, x, y, col);
 	}
 }
 
 void removePebble(Configuration v, int x, int y){
+	updateHash(v, x, y, getColor(v, x, y));
 	v->vboard[y] &= ~((1 << x) | (1 << (x+16)));
 	v->hboard[x] &= ~((1 << y) | (1 << (y+16)));
 }
@@ -153,7 +156,7 @@ void flipVertical(Configuration src, Configuration dest){
 	int i;
 	for (i=0; i<15; ++i) {
 		dest->vboard[i]=reverseLine(src->vboard[i]);
-		dest->hboard[i]=src->hboard[15-i];
+		dest->hboard[i]=src->hboard[15-1-i];
 	}
 }
 
@@ -178,7 +181,7 @@ void flipHorizontal(Configuration src, Configuration dest){
 	int i;
 	for (i=0; i<15; ++i) {
 		dest->hboard[i]=reverseLine(src->hboard[i]);
-		dest->vboard[i]=src->vboard[15-i];
+		dest->vboard[i]=src->vboard[15-1-i];
 	}
 }
 
@@ -239,6 +242,20 @@ void printBoardNonBlock(Configuration v){
 				default:
 					printf("- ");
 			}
+		printf("\n");
+	}	
+}
+
+void printVertical(int *a){
+	int i,j;
+	for (i=0; i<15; ++i){
+		for (j=0; j<15; ++j)
+			if ((a[j] & (1 << i))!=0)
+				printf("X ");
+			else if ((a[j] & (1 << (i+16)))!=0)
+				printf("O ");
+			else
+				printf("- ");
 		printf("\n");
 	}	
 }
