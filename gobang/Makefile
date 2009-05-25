@@ -1,3 +1,4 @@
+CC	= gcc
 CFLAGS =	-O2 -g -Wall -fmessage-length=0
 
 OBJS =		globalconst.o \
