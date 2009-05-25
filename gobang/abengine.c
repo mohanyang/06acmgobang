@@ -136,13 +136,13 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	else if (ret.value>alpha && ret.value<beta) {
 		/* accurate window */
 		v->upperbound=v->lowerbound=ret.value;
+		if (depth>0)
+			store(v, ret.move);
 	}
 	else {
 		/* fail high */
 		v->lowerbound=ret.value;
 	}
-	if (depth>0)
-		store(v, ret.move);
 //	printf("ab return %d (%d,%d))\n", ret.value, ret.move.x,
 //		  ret.move.y);
 	--stackcount;

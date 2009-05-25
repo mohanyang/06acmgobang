@@ -23,5 +23,5 @@ ReturnValue search(PEBBLE_COLOR p){
 
 void playMove(Move m){
 	applyMove(glbl, m);
-	printBoard(glbl);
+	printBoardNonBlock(glbl);
 }

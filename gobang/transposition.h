@@ -28,4 +28,6 @@ HashRetVal retrieve(Configuration v);
  */
 void store(Configuration v, Move m);
 
+void updateHash(Configuration v, int x, int y, PEBBLE_COLOR c);
+
 #endif
