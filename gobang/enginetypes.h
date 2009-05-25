@@ -4,7 +4,7 @@
 #include "basetypes.h"
 
 enum CONSTANTS {
-	INFINITY = 0x7fffff
+	INFINITY = 1000
 };
 
 struct RV {

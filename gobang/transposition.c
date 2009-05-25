@@ -63,6 +63,7 @@ HashRetVal retrieve(Configuration v){
 	// need to calculate hash every time
 	int key=getHash(v);
 //	printf("hashkey=%d\n", key);
+	/*
 	if (pointer[key]!=0){
 		// TODO iterate the list
 		struct HNode *ptr=&(container[pointer[key]]);
@@ -75,13 +76,14 @@ HashRetVal retrieve(Configuration v){
 		printf("hit! %d %d\n", ptr->step, v->step);
 		printf("containersize=%d\n", containersize);
 		*/
+	/*
 		HashRetVal ret=malloc(sizeof(struct HashRet));
 		ret->lowerbound=ptr->lb;
 		ret->upperbound=ptr->ub;
 		ret->mv=ptr->move;
 		return ret;
 	}
-	else {
+	else */ {
 //		printf("miss\n");
 		return NULL;
 	}

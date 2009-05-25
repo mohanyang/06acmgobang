@@ -16,7 +16,7 @@ int min(int a, int b){
 }
 
 ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
-//	printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
+	printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
 	HashRetVal s=retrieve(v);
 	ReturnValue ret;
 	ReturnValue temp;
@@ -36,10 +36,13 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		}
 		ret.alpha=max(alpha, s->lowerbound);
 		ret.beta=min(beta, s->upperbound);
+		ret.move=s->mv;
 	}
 	if (depth==0) {
-		ret.value=evaluateBoard(v, getMover(v));
-//		printf("eval %d\n", ret.value);
+		EvalRetVal x=evaluateBoard(v, getMover(v));
+		ret.value=x.value;
+		ret.move=x.mv;
+		printf("eval %d\n", ret.value);
 	}
 	else if (getType(v)==MAXNODE) {
 //		printf("*\n");
@@ -87,11 +90,12 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (tickTimer()==0)
 				break;
 			applyMove(v, getCurrent(itr));
+			printf("try %d %d\n", getCurrent(itr).x, getCurrent(itr).y);
 			temp=alphaBeta(v, alpha, b, depth-1);
 			if (temp.value<ret.value){
 				ret.value=temp.value;
 				ret.move=getCurrent(itr);
-//				printf("current white move = %d %d\n", ret.move.x, ret.move.y);
+				printf("current white move = %d %d\n", ret.move.x, ret.move.y);
 			}
 			undoMove(v, getCurrent(itr));
 			if (b<ret.value){
@@ -117,5 +121,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	}
 	if (depth>0)
 		store(v, ret.move);
+	printf("ab return %d (%d,%d))\n", ret.value, ret.move.x,
+		  ret.move.y);
 	return ret;
 }
