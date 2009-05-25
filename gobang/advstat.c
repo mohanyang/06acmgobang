@@ -128,7 +128,7 @@ void calculate(Configuration v){
 						case 0:
 							break;
 						case 1:
-							printf("black athree %d %d\n", i, j);
+//							printf("black athree %d %d\n", i, j);
 							++tempadvstatinfo.stat
 									[ACTIVE_THREE][0];
 							break;
@@ -166,7 +166,7 @@ void calculate(Configuration v){
 						case 1:
 							++tempadvstatinfo.stat
 									[ACTIVE_THREE][1];
-							printf("white athree %d %d\n", i, j);
+							//printf("white athree %d %d\n", i, j);
 							break;
 						default:
 							++tempadvstatinfo.stat[DTHREE][1];
@@ -189,7 +189,9 @@ void calculate(Configuration v){
 int getScore(PEBBLE_COLOR col){
 	switch (col){
 		case BLACK:
-			if (tempadvstatinfo.stat[FIVE][0])
+			if (tempadvstatinfo.stat[FIVE][1])
+				return -INFINITY;
+			else if (tempadvstatinfo.stat[FIVE][0])
 				return INFINITY;
 			else if (tempadvstatinfo.stat[DFOUR][1])
 				return -1000;
@@ -221,7 +223,9 @@ int getScore(PEBBLE_COLOR col){
 						-tempadvstatinfo.stat[ACTIVE_TWO][1]);
 			}
 		case WHITE:
-			if (tempadvstatinfo.stat[FIVE][1])
+			if (tempadvstatinfo.stat[FIVE][0])
+				return INFINITY;
+			else if (tempadvstatinfo.stat[FIVE][1])
 				return -INFINITY;
 			else if (tempadvstatinfo.stat[DFOUR][0])
 				return 1000;

@@ -48,13 +48,13 @@ ChildIterator getExpansion(Configuration v) {
 	else
 		qsort(retval->movelist, retval->mllen,
 			sizeof(MoveListType), _compMovesInc);
-	
+	/*
 	printf("mllen=%d\n", retval->mllen);
 	
 	for (i=0; i<1; ++i){
 		printf("- %d %d %d\n", retval->movelist[i].m.x,
 			  retval->movelist[i].m.y, retval->movelist[i].val);
-	}
+	}*/
 	//getchar();
 	
 	return retval;
@@ -64,7 +64,7 @@ void getNext(ChildIterator *itr) {
 	if (*itr==NULL)
 		return;
 	++((*itr)->currentidx);
-	if ((*itr)->currentidx>=(*itr)->mllen) {
+	if ((*itr)->currentidx>=(*itr)->mllen || (*itr)->currentidx>20) {
 		free(*itr);
 		*itr=NULL;
 	}

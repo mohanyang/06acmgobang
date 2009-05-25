@@ -15,8 +15,17 @@ int min(int a, int b){
 	return a<b?a:b;
 }
 
+static int stackcount=0;
+
+void printstack(){
+	int i;
+	for (i=0; i<stackcount; ++i)
+		printf(" ");
+}
+
 ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
-	printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
+//	printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
+	++stackcount;
 	HashRetVal s=retrieve(v);
 	ReturnValue ret;
 	ReturnValue temp;
@@ -27,11 +36,13 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		if (s->lowerbound>=beta) {
 			ret.value=getLB(v);
 			ret.move=s->mv;
+			--stackcount;
 			return ret;
 		}
 		if (s->upperbound<=alpha) {
 			ret.value=getUB(v);
 			ret.move=s->mv;
+			--stackcount;
 			return ret;
 		}
 		ret.alpha=max(alpha, s->lowerbound);
@@ -42,7 +53,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		EvalRetVal x=evaluateBoard(v, getMover(v));
 		ret.value=x.value;
 		ret.move=x.mv;
-		printf("eval %d\n", ret.value);
+//		printf("eval %d\n", ret.value);
 	}
 	else if (getType(v)==MAXNODE) {
 //		printf("*\n");
@@ -63,7 +74,13 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			*/
 			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
+			printstack();
+			printf("black trying %d %d\n", 
+				   getCurrent(itr).x, getCurrent(itr).y);
 			temp=alphaBeta(v, a, beta, depth-1);
+			printstack();
+			printf("black try %d %d, result=%d\n", 
+				   getCurrent(itr).x, getCurrent(itr).y, temp.value);
 			if (temp.value>ret.value) {
 				ret.value=temp.value;
 				ret.move=getCurrent(itr);
@@ -90,12 +107,17 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (tickTimer()==0)
 				break;
 			applyMove(v, getCurrent(itr));
-			printf("try %d %d\n", getCurrent(itr).x, getCurrent(itr).y);
+			printstack();
+			printf("white trying %d %d\n", 
+				   getCurrent(itr).x, getCurrent(itr).y);
 			temp=alphaBeta(v, alpha, b, depth-1);
+			printstack();
+			printf("white try %d %d, result=%d\n", 
+				   getCurrent(itr).x, getCurrent(itr).y, temp.value);
 			if (temp.value<ret.value){
 				ret.value=temp.value;
 				ret.move=getCurrent(itr);
-				printf("current white move = %d %d\n", ret.move.x, ret.move.y);
+	//			printf("current white move = %d %d\n", ret.move.x, ret.move.y);
 			}
 			undoMove(v, getCurrent(itr));
 			if (b<ret.value){
@@ -121,7 +143,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	}
 	if (depth>0)
 		store(v, ret.move);
-	printf("ab return %d (%d,%d))\n", ret.value, ret.move.x,
-		  ret.move.y);
+//	printf("ab return %d (%d,%d))\n", ret.value, ret.move.x,
+//		  ret.move.y);
+	--stackcount;
 	return ret;
 }

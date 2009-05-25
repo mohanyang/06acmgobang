@@ -21,6 +21,8 @@ enum {
 // TODO finalize
 // TODO consider zohrist
 
+static int hitcount=0, misscount=0;
+
 /**
  * an array that stores the pointer to 
  * hashnodes, according to the depth,
@@ -64,27 +66,30 @@ HashRetVal retrieve(Configuration v){
 	int key=getHash(v);
 //	printf("hashkey=%d\n", key);
 	/*
+	if (hitcount % 1000==0){
+		printf("%d %d\n", hitcount, misscount);
+		getchar();
+	}
+	*/
+	/*
 	if (pointer[key]!=0){
 		// TODO iterate the list
 		struct HNode *ptr=&(container[pointer[key]]);
-		if (ptr->step<v->step
-		   || ptr->depth<v->depth) {
+		if (ptr->depth<v->depth) {
 		//	printf("miss\n");
+			++misscount;
 			return NULL;
 		}
-		/*
-		printf("hit! %d %d\n", ptr->step, v->step);
-		printf("containersize=%d\n", containersize);
-		*/
-	/*
+		++hitcount;
 		HashRetVal ret=malloc(sizeof(struct HashRet));
 		ret->lowerbound=ptr->lb;
 		ret->upperbound=ptr->ub;
 		ret->mv=ptr->move;
 		return ret;
 	}
-	else */ {
+	else */{
 //		printf("miss\n");
+		++misscount;
 		return NULL;
 	}
 }
