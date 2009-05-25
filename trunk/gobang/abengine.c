@@ -74,13 +74,18 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			*/
 			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
+			/*
 			printstack();
 			printf("black trying %d %d\n", 
 				   getCurrent(itr).x, getCurrent(itr).y);
+			*/
 			temp=alphaBeta(v, a, beta, depth-1);
+			/*
 			printstack();
 			printf("black try %d %d, result=%d\n", 
-				   getCurrent(itr).x, getCurrent(itr).y, temp.value);
+				   getCurrent(itr).x, getCurrent(itr).y,
+			 	temp.value);
+			*/
 			if (temp.value>ret.value) {
 				ret.value=temp.value;
 				ret.move=getCurrent(itr);
@@ -107,13 +112,18 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (tickTimer()==0)
 				break;
 			applyMove(v, getCurrent(itr));
+			/*
 			printstack();
 			printf("white trying %d %d\n", 
 				   getCurrent(itr).x, getCurrent(itr).y);
+			*/
 			temp=alphaBeta(v, alpha, b, depth-1);
+			/*
 			printstack();
 			printf("white try %d %d, result=%d\n", 
-				   getCurrent(itr).x, getCurrent(itr).y, temp.value);
+				   getCurrent(itr).x, getCurrent(itr).y,
+					temp.value);
+			*/
 			if (temp.value<ret.value){
 				ret.value=temp.value;
 				ret.move=getCurrent(itr);

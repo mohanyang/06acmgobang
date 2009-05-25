@@ -203,19 +203,19 @@ int getScore(PEBBLE_COLOR col){
 				return 999;
 			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
 				return 989;
-			else if (tempadvstatinfo.stat[AFOUR][0])
-				return 979;
-			else if (tempadvstatinfo.stat[FTHREE][0])
-				return 959;
 			else if (tempadvstatinfo.stat[FTHREE][1])
 				return -960;
 			else if (tempadvstatinfo.stat[DTHREE][1])
 				return -950;
+			else if (tempadvstatinfo.stat[AFOUR][0])
+				return 949;
+			else if (tempadvstatinfo.stat[FTHREE][0])
+				return 939;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
-				return -940;
+				return -920;
 			else if (tempadvstatinfo.stat[DTHREE][0] 
 							  && tempadvstatinfo.stat[DTHREE][1]==0)
-				return 929;
+				return 909;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
 				return 899;
 			else {
@@ -237,19 +237,19 @@ int getScore(PEBBLE_COLOR col){
 				return -999;
 			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
 				return -989;
-			else if (tempadvstatinfo.stat[AFOUR][1])
-				return -979;
-			else if (tempadvstatinfo.stat[FTHREE][1])
-				return -959;
 			else if (tempadvstatinfo.stat[FTHREE][0])
 				return 960;
 			else if (tempadvstatinfo.stat[DTHREE][0])
 				return 950;
+			else if (tempadvstatinfo.stat[AFOUR][1])
+				return -949;
+			else if (tempadvstatinfo.stat[FTHREE][1])
+				return -939;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
-				return 940;
+				return 920;
 			else if (tempadvstatinfo.stat[DTHREE][1] 
 							  && tempadvstatinfo.stat[DTHREE][0]==0)
-				return -929;
+				return 909;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
 				return -899;
 			else {
