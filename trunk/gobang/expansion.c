@@ -1,4 +1,5 @@
 #include "expansion.h"
+#include "evaluator.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -47,13 +48,15 @@ ChildIterator getExpansion(Configuration v) {
 	else
 		qsort(retval->movelist, retval->mllen,
 			sizeof(MoveListType), _compMovesInc);
+	
 	printf("mllen=%d\n", retval->mllen);
-	/*
-	for (i=0; i<retval->mllen; ++i){
-		printf("- %d %d\n", retval->movelist[i].m.x,
-			  retval->movelist[i].m.y);
+	
+	for (i=0; i<1; ++i){
+		printf("- %d %d %d\n", retval->movelist[i].m.x,
+			  retval->movelist[i].m.y, retval->movelist[i].val);
 	}
-	*/
+	//getchar();
+	
 	return retval;
 }
 

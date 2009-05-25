@@ -23,5 +23,8 @@ $(TARGET):	$(OBJS)
 
 all:	$(TARGET)
 
+evaltest:
+	$(CC) globalconst.c basetypes.c basestat.c advstat.c advevaltest.c -o evaltest
+
 clean:
 	rm -f $(OBJS) $(TARGET)

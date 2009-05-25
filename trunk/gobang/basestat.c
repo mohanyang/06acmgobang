@@ -72,7 +72,7 @@ void applyDir(DIR d, Move *m){
 			return;
 		case SE:
 			m->x=-1;
-			m->y=-1;
+			m->y=1;
 			return;
 		default:
 			return;
