@@ -14,6 +14,9 @@ OBJS =		globalconst.o \
 			mtdfengine.o \
 			engine.o \
 			simpleshell.o
+			
+DLLOBJS	=	$(OBJS) \
+			gobang_JNIAdapter.o
 
 LIBS =
 
@@ -29,3 +32,8 @@ evaltest:
 
 clean:
 	rm -f $(OBJS) $(TARGET)
+
+dll:
+	gcc -Wl,--kill-at -I "c:\program files\java\jdk1.6.0_03\include" \
+			-I "c:\program files\java\jdk1.6.0_03\include\win32" \
+			-shared -o JNIAdapter.dll $(DLLOBJS)
