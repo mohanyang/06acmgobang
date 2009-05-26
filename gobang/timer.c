@@ -1,7 +1,8 @@
+#include <stdio.h>
 #include "timer.h"
 
 // TODO read from config or test when load
-const int MAX_NODE_COUNT = 500000;
+const int MAX_NODE_COUNT = 5000;
 
 int _timer_counter;
 

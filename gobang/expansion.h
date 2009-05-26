@@ -13,4 +13,6 @@ void getNext(ChildIterator *itr);
 
 Move getCurrent(ChildIterator itr);
 
+int getCurrentValue(ChildIterator itr);
+
 #endif

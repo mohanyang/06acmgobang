@@ -1,3 +1,5 @@
+#include <string.h>
+#include <stdio.h>
 #include "advstat.h"
 #include "basestat.h"
 #include "enginetypes.h"
@@ -194,30 +196,29 @@ int getScore(PEBBLE_COLOR col){
 			else if (tempadvstatinfo.stat[FIVE][0])
 				return INFINITY;
 			else if (tempadvstatinfo.stat[DFOUR][1])
-				return -1000;
+				return -INFINITY;
 			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
-				return -990;
+				return -INFINITY;
 			else if (tempadvstatinfo.stat[AFOUR][1])
-				return -980;
-			else if (tempadvstatinfo.stat[DFOUR][0])
-				return 999;
-			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
-				return 989;
+				return -INFINITY;
 			else if (tempadvstatinfo.stat[FTHREE][1])
-				return -960;
-			else if (tempadvstatinfo.stat[DTHREE][1])
-				return -950;
-			else if (tempadvstatinfo.stat[AFOUR][0])
-				return 949;
+				return -INFINITY;
+			else if (tempadvstatinfo.stat[DFOUR][0])
+				return INFINITY;
+			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
+				return INFINITY;
 			else if (tempadvstatinfo.stat[FTHREE][0])
-				return 939;
+				return INFINITY;
+			else if (tempadvstatinfo.stat[DTHREE][1])
+				return -INFINITY;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
-				return -920;
-			else if (tempadvstatinfo.stat[DTHREE][0] 
-							  && tempadvstatinfo.stat[DTHREE][1]==0)
-				return 909;
+				return -INFINITY;
+			else if (tempadvstatinfo.stat[DTHREE][0])
+				return 900;
+			else if (tempadvstatinfo.stat[AFOUR][0])
+				return 850;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
-				return 899;
+				return 800;
 			else {
 				return (tempadvstatinfo.stat[ACTIVE_TWO][0]*2
 						-tempadvstatinfo.stat[ACTIVE_TWO][1]);
@@ -228,30 +229,29 @@ int getScore(PEBBLE_COLOR col){
 			else if (tempadvstatinfo.stat[FIVE][1])
 				return -INFINITY;
 			else if (tempadvstatinfo.stat[DFOUR][0])
-				return 1000;
+				return INFINITY;
 			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
-				return 990;
+				return INFINITY;
 			else if (tempadvstatinfo.stat[AFOUR][0])
-				return 980;
-			else if (tempadvstatinfo.stat[DFOUR][1])
-				return -999;
-			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
-				return -989;
+				return INFINITY;
 			else if (tempadvstatinfo.stat[FTHREE][0])
-				return 960;
-			else if (tempadvstatinfo.stat[DTHREE][0])
-				return 950;
-			else if (tempadvstatinfo.stat[AFOUR][1])
-				return -949;
+				return INFINITY;
+			else if (tempadvstatinfo.stat[DFOUR][1])
+				return -INFINITY;
+			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
+				return -INFINITY;
 			else if (tempadvstatinfo.stat[FTHREE][1])
-				return -939;
+				return -INFINITY;
+			else if (tempadvstatinfo.stat[DTHREE][0])
+				return INFINITY;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
-				return 920;
-			else if (tempadvstatinfo.stat[DTHREE][1] 
-							  && tempadvstatinfo.stat[DTHREE][0]==0)
-				return 909;
+				return INFINITY;
+			else if (tempadvstatinfo.stat[DTHREE][1])
+				return -900;
+			else if (tempadvstatinfo.stat[AFOUR][1])
+				return -850;
 			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
-				return -899;
+				return -800;
 			else {
 				return -(tempadvstatinfo.stat[ACTIVE_TWO][1]*2
 						+tempadvstatinfo.stat[ACTIVE_TWO][0]);

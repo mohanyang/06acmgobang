@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "evaluator.h"
 #include "basestat.h"
 #include "enginetypes.h"
@@ -13,6 +14,7 @@ int _priority[15][15];
  * after applying move m
  */
 int isWin(Configuration v, Move *m);
+int evaluateStatic(Configuration v, Move *m, PEBBLE_COLOR c);
 
 EvalRetVal evaluateBoard(Configuration v, PEBBLE_COLOR c){
 	EvalRetVal ret;
@@ -22,7 +24,7 @@ EvalRetVal evaluateBoard(Configuration v, PEBBLE_COLOR c){
 		for (t.x=0; t.x<15; ++t.x)
 			for (t.y=0; t.y<15; ++t.y)
 				if (getColor(v, t.x, t.y)==NONE){
-					cval=evaluate(v, &t);
+					cval=evaluateStatic(v, &t, c);
 					if (cval>val){
 						opt=t;
 						val=cval;
@@ -37,7 +39,7 @@ EvalRetVal evaluateBoard(Configuration v, PEBBLE_COLOR c){
 		for (t.x=0; t.x<15; ++t.x)
 			for (t.y=0; t.y<15; ++t.y)
 				if (getColor(v, t.x, t.y)==NONE){
-					cval=evaluate(v, &t);
+					cval=evaluateStatic(v, &t, c);
 					if (cval<val){
 						opt=t;
 						val=cval;
@@ -51,6 +53,31 @@ EvalRetVal evaluateBoard(Configuration v, PEBBLE_COLOR c){
 
 int evaluate(Configuration v, Move *m){
 	applyMove(v, *m);
+	calculate(v);
+	int ret=getScore(getOppositePlayer(getMover(v)));
+	if (abs(ret)<200){
+		int i,j;
+//		printf("* %d\n", ret);
+		for (i=0; i<15; ++i)
+			for (j=0; j<15; ++j)
+				switch (getColor(v, i, j)){
+					case BLACK:
+						ret+=_priority[i][j];
+						break;
+					case WHITE:
+						ret-=_priority[i][j];
+						break;
+					default:
+						break;
+				}
+	}
+	undoMove(v, *m);
+	assert(abs(ret)<=1000);
+	return ret;
+}
+
+int evaluateStatic(Configuration v, Move *m, PEBBLE_COLOR c){
+	putPebble(v, m->x, m->y, c);
 	calculate(v);
 	int ret=getScore(getMover(v));
 	if (abs(ret)<200){
@@ -69,7 +96,7 @@ int evaluate(Configuration v, Move *m){
 						break;
 				}
 	}
-	undoMove(v, *m);
+	removePebble(v, m->x, m->y);
 	assert(abs(ret)<=1000);
 	return ret;
 }

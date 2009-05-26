@@ -4,10 +4,15 @@
 #include <stdlib.h>
 #include "basetypes.h"
 
+typedef enum {
+	EXACT, FAIL_LOW, FAIL_HIGH
+} HashNodeType;
+
 struct HashRet {
 	int lowerbound;
 	int upperbound;
 	Move mv;
+	HashNodeType type;
 };
 
 typedef struct HashRet *HashRetVal;
@@ -26,7 +31,7 @@ HashRetVal retrieve(Configuration v);
 /**
  * stores the current configuration into the transposition table
  */
-void store(Configuration v, Move m);
+void store(Configuration v, Move m, HashNodeType type);
 
 void updateHash(Configuration v, int x, int y, PEBBLE_COLOR c);
 
