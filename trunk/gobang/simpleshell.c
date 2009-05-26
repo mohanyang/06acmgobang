@@ -10,6 +10,8 @@ int main(){
 	while (1) {
 		printf("black: ");
 		scanf("%d %d", &(m.x), &(m.y));
+		if (m.x<0)
+			break;
 		printf("%d %d\n", m.x, m.y);
 		playMove(m);
 		r=search(WHITE);

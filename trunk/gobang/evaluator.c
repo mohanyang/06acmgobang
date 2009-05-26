@@ -16,39 +16,9 @@ int _priority[15][15];
 int isWin(Configuration v, Move *m);
 int evaluateStatic(Configuration v, Move *m, PEBBLE_COLOR c);
 
-EvalRetVal evaluateBoard(Configuration v, PEBBLE_COLOR c){
-	EvalRetVal ret;
-	if (c==BLACK){
-		Move t, opt;
-		int val=-INFINITY-1, cval;
-		for (t.x=0; t.x<15; ++t.x)
-			for (t.y=0; t.y<15; ++t.y)
-				if (getColor(v, t.x, t.y)==NONE){
-					cval=evaluateStatic(v, &t, c);
-					if (cval>val){
-						opt=t;
-						val=cval;
-					}
-				}
-		ret.value=val;
-		ret.mv=opt;
-	}
-	else {
-		Move t, opt;
-		int val=INFINITY+1, cval;
-		for (t.x=0; t.x<15; ++t.x)
-			for (t.y=0; t.y<15; ++t.y)
-				if (getColor(v, t.x, t.y)==NONE){
-					cval=evaluateStatic(v, &t, c);
-					if (cval<val){
-						opt=t;
-						val=cval;
-					}
-				}
-		ret.value=val;
-		ret.mv=opt;
-	}
-	return ret;
+int evaluateBoard(Configuration v, PEBBLE_COLOR c){
+	calculate(v);
+	return getScore(c);
 }
 
 int evaluate(Configuration v, Move *m){

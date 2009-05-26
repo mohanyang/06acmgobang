@@ -72,9 +72,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		free(s);
 	}
 	if (depth==0) {
-		EvalRetVal x=evaluateBoard(v, getMover(v));
-		ret.value=x.value;
-		ret.move=x.mv;
+		ChildIterator itr=getExpansion(v);
+		ret.value=getCurrentValue(itr);
+		ret.move=getCurrent(itr);
+		releaseChildIterator(itr);
 		/*
 		printstack();
 		printf("eval %d\n", ret.value);
@@ -87,52 +88,45 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		int a=alpha;
 		ret.value=-INFINITY;
 		ret.move=getCurrent(itr);
-		// TODO cannot directly prune, may be many
-		// choices
-		if (getCurrentValue(itr)==INFINITY) {
-			ret.value=INFINITY;
-			a=INFINITY;
-		}
-		else {
-			while (itr!=NULL && ret.value<beta) {
+		while (itr!=NULL && ret.value<beta) {
 //			printf("depth=%d, move=%d %d\n",
 //				depth, getCurrent(itr).x, 
 //				getCurrent(itr).y);
-				if (tickTimer()==0)
-					break;
+			if (tickTimer()==0)
+				break;
 			/*
 				if (getCurrent(itr).x==5 && getCurrent(itr).y==5)
 				printf("5 5\n");
 			*/
-				applyMove(v, getCurrent(itr));
+			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
 			/*
 				printstack();
 				printf("black trying %d %d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y);
+					getCurrent(itr).x, getCurrent(itr).y);
 			*/
-				temp=alphaBeta(v, a, beta, depth-1);
+			temp=alphaBeta(v, a, beta, depth-1);
 			/*
 				printstack();
 				printf("black try %d %d, result=%d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y,
-								  temp.value);
+					getCurrent(itr).x, getCurrent(itr).y,
+								temp.value);
 			*/
-				if (temp.value>ret.value) {
-					ret.value=temp.value;
-					ret.move=getCurrent(itr);
+			if (temp.value>ret.value) {
+				ret.value=temp.value;
+				ret.move=getCurrent(itr);
 //				printf("current black move = %d %d\n", ret.move.x, ret.move.y);
-				}
-				undoMove(v, getCurrent(itr));
-//			printBoard(v);
-				if (a>ret.value){
-					a=ret.value;
-				}
-//			printf("a=%d ret.value=%d\n", a, ret.value);
-				getNext(&itr);
-//			printf("e: %d %d\n", itr->current.x, itr->current.y);
 			}
+			undoMove(v, getCurrent(itr));
+//			printBoard(v);
+			if (a>ret.value){
+				a=ret.value;
+			}
+//			printf("a=%d ret.value=%d\n", a, ret.value);
+			getNext(&itr);
+//			printf("e: %d %d\n", itr->current.x, itr->current.y);
 		}
+		releaseChildIterator(itr);
 	}
 	else {
 //		printf("-\n");
@@ -141,40 +135,35 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		int b=beta;
 		ret.value=INFINITY;
 		ret.move=getCurrent(itr);
-		if (getCurrentValue(itr)==-INFINITY) {
-			ret.value=-INFINITY;
-			b=-INFINITY;
-		}
-		else {
-			while (itr!=NULL && ret.value>alpha) {
-				if (tickTimer()==0)
-					break;
-				applyMove(v, getCurrent(itr));
+		while (itr!=NULL && ret.value>alpha) {
+			if (tickTimer()==0)
+				break;
+			applyMove(v, getCurrent(itr));
 			/*
 				printstack();
 				printf("white trying %d %d\n", 
 					   getCurrent(itr).x, getCurrent(itr).y);
 			*/
-				temp=alphaBeta(v, alpha, b, depth-1);
+			temp=alphaBeta(v, alpha, b, depth-1);
 			/*
 				printstack();
 				printf("white try %d %d, result=%d\n", 
 					   getCurrent(itr).x, getCurrent(itr).y,
 								  temp.value);
 			*/
-				if (temp.value<ret.value){
-					ret.value=temp.value;
-					ret.move=getCurrent(itr);
+			if (temp.value<ret.value){
+				ret.value=temp.value;
+				ret.move=getCurrent(itr);
 	//			printf("current white move = %d %d\n", ret.move.x, ret.move.y);
-				}
-				undoMove(v, getCurrent(itr));
-				if (b<ret.value){
-					b=ret.value;
-				}
-//			printf("a=%d ret.value=%d\n", b, ret.value);
-				getNext(&itr);
 			}
+			undoMove(v, getCurrent(itr));
+			if (b<ret.value){
+				b=ret.value;
+			}
+//			printf("a=%d ret.value=%d\n", b, ret.value);
+			getNext(&itr);
 		}
+		releaseChildIterator(itr);
 	}
 
 	if (ret.value<=alpha) {

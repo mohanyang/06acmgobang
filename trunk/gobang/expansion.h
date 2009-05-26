@@ -15,4 +15,6 @@ Move getCurrent(ChildIterator itr);
 
 int getCurrentValue(ChildIterator itr);
 
+void releaseChildIterator(ChildIterator itr);
+
 #endif
