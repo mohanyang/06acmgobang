@@ -1,7 +1,8 @@
-#include "expansion.h"
-#include "evaluator.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "expansion.h"
+#include "evaluator.h"
+#include "enginetypes.h"
 
 typedef struct {
 	Move m;
@@ -32,7 +33,13 @@ ChildIterator getExpansion(Configuration v) {
 	retval->mllen=0;
 	retval->currentidx=0;
 	// TODO what if no expansion is possible
-	for (i=0; i<15; ++i)
+	int target;
+	int flag=0;
+	if (getMover(v)==BLACK)
+		target=INFINITY;
+	else
+		target=-INFINITY;
+	for (i=0; i<15; ++i) {
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==NONE) {
 				retval->movelist[retval->mllen].m.x=i;
@@ -41,7 +48,18 @@ ChildIterator getExpansion(Configuration v) {
 						evaluate(v, &(retval->movelist[
 						retval->mllen].m));
 				++(retval->mllen);
+				if (retval->movelist[retval->mllen-1].val==target) {
+					retval->mllen=1;
+					retval->movelist[0].m.x=i;
+					retval->movelist[0].m.y=j;
+					retval->movelist[0].val=target;
+					flag=1;
+					break;
+				}
 			}
+		if (flag)
+			break;
+	}
 	if (getType(v)==MAXNODE)
 		qsort(retval->movelist, retval->mllen,
 			  sizeof(MoveListType), _compMovesDec);		
@@ -64,7 +82,7 @@ void getNext(ChildIterator *itr) {
 	if (*itr==NULL)
 		return;
 	++((*itr)->currentidx);
-	if ((*itr)->currentidx>=(*itr)->mllen || (*itr)->currentidx>20) {
+	if ((*itr)->currentidx>=(*itr)->mllen || (*itr)->currentidx>225) {
 		free(*itr);
 		*itr=NULL;
 	}
@@ -75,4 +93,8 @@ void getNext(ChildIterator *itr) {
  */
 Move getCurrent(ChildIterator itr) {
 	return (itr->movelist[itr->currentidx]).m;
+}
+
+int getCurrentValue(ChildIterator itr) {
+	return (itr->movelist[itr->currentidx]).val;
 }

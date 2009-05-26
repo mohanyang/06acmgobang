@@ -1,12 +1,15 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
+#include <string.h>
 #include "transposition.h"
 
 struct HNode{
 	int hconf[16], vconf[16];
 	int lb, ub;
 	Move move;
+	HashNodeType type;
 	int depth, step;
 	// next in the hash list
 	int next;
@@ -54,7 +57,8 @@ int compare(Configuration v, int p){
 }
 
 int getHash(Configuration v){
-	int i, res=0;
+	int i;
+	unsigned int res=0;
 	for (i=0; i<15; ++i)
 		res=(res * 4099)+v->hboard[i];
 	return res % MAX_HASH_SIZE;
@@ -91,6 +95,8 @@ void updateHash(Configuration v, int x, int y, PEBBLE_COLOR c){
 HashRetVal retrieve(Configuration v){
 	// TODO optimize v so that do not 
 	// need to calculate hash every time
+	// TODO how to deal with fail lo and fail hi nodes
+	//return NULL;
 	int key=getHash(v);
 	/*
 	if (hitcount % 1000==0){
@@ -98,11 +104,30 @@ HashRetVal retrieve(Configuration v){
 		getchar();
 	}
 	*/
-	
+	key=pointer[key];
+	while (key!=0) {
+		if (compare(v, key)==0){
+			// hit!
+			struct HNode *ptr=&(container[key]);
+			// TODO repository
+			if (ptr->depth>=v->depth) {
+				HashRetVal ret=malloc(sizeof(struct HashRet));
+				ret->lowerbound=ptr->lb;
+				ret->upperbound=ptr->ub;
+				ret->mv=ptr->move;
+				ret->type=ptr->type;
+				++hitcount;
+				return ret;
+			}
+		}
+		key=container[key].next;
+	}
+	++misscount;
+	return NULL;
+/*	
 	if (pointer[key]!=0){
-		// TODO iterate the list
 		struct HNode *ptr=&(container[pointer[key]]);
-		if (ptr->step<v->step || ptr->depth<v->depth) {
+		if (ptr->depth<v->depth) {
 		//	printf("miss\n");
 			++misscount;
 			return NULL;
@@ -112,11 +137,10 @@ HashRetVal retrieve(Configuration v){
 		ret->lowerbound=ptr->lb;
 		ret->upperbound=ptr->ub;
 		ret->mv=ptr->move;
-		/*
+		ret->type=ptr->type;
 		printf("===retrieved %d===\n", key);
 		printVertical(container[pointer[key]].vconf);
 		printf("======\n");
-		*/
 		return ret;
 	}
 	else {
@@ -124,6 +148,7 @@ HashRetVal retrieve(Configuration v){
 		++misscount;
 		return NULL;
 	}
+*/
 }
 
 void flipMoveHorizontal(Move *m){
@@ -140,7 +165,7 @@ void rotateMove(Move *m){
 	m->x=tmp;
 }
 
-void saveConfiguration(Configuration v, Move *m){
+void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 	int key=getHash(v);
 	/*
 	printf("===storing %d / %d ~ %d===\n", key, v->lowerbound, 
@@ -149,10 +174,23 @@ void saveConfiguration(Configuration v, Move *m){
 	printf("======\n");
 	*/
 	if (pointer[key]!=0) {
-		// TODO currently, we just check
-		// if we can overwrite (i.e., the 
-		// step of the found is not as deep as the 
-		// current)
+		key=pointer[key];
+		while (key && compare(v, key)!=0){
+			key=container[key].next;
+		}
+		if (key==0)
+			return;
+		else {
+			struct HNode *ptr=&(container[key]);
+			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
+			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
+			ptr->lb=v->lowerbound;
+			ptr->ub=v->upperbound;
+			ptr->move=*m;
+			ptr->depth=v->depth;
+			ptr->step=v->step;
+			ptr->type=type;
+		}
 		/*
 		if (compare(v, pointer[key])!=0){
 			printf("conflict detected!\n");
@@ -169,6 +207,7 @@ void saveConfiguration(Configuration v, Move *m){
 			assert(compare(v, pointer[key])==0);
 		}
 		*/
+		/*
 		int p=pointer[key];
 		if (container[p].step<v->step) {
 			struct HNode *ptr=&(container[pointer[key]]);
@@ -179,7 +218,9 @@ void saveConfiguration(Configuration v, Move *m){
 			ptr->move=*m;
 			ptr->depth=v->depth;
 			ptr->step=v->step;
+			ptr->type=type;
 		}
+		*/
 	}
 	else {
 		if (containersize>=MAX_TABLE_SIZE)
@@ -196,14 +237,14 @@ void saveConfiguration(Configuration v, Move *m){
 		ptr->depth=v->depth;
 		ptr->step=v->step;
 		ptr->next=0;
+		ptr->type=type;
 		pointer[key]=containersize;
 //		printf("pos=%d, key=%d\n", containersize,
 //			  key);
 	}
 }
 
-void store(Configuration v, Move m){
-	int key=getHash(v);
+void store(Configuration v, Move m, HashNodeType type){
 	int i, j, k;
 	memcpy((void*)(tempconf), (void*)v, sizeof(struct BaseNode));
 	memcpy((void*)tempmove, (void*)&m, sizeof(Move));
@@ -217,7 +258,7 @@ void store(Configuration v, Move m){
 				selfRotateBoard(tempconf);
 				rotateMove(tempmove);
 //				printf("%d %d %d\n", i, j, k);
-				saveConfiguration(tempconf, tempmove);
+				saveConfiguration(tempconf, tempmove, type);
 			}
 		}
 	}

@@ -1,3 +1,4 @@
+#include <string.h>
 #include "basestat.h"
 
 /**
@@ -11,7 +12,6 @@ int inBoard(Move *pos, Move *dir, int step);
 int getConsecutive(Configuration v, PEBBLE_COLOR c, Move *m, DIR d){
 	applyDir(d, &_tempdir);
 	int count=0;
-	int i;
 	while (1) {
 		if (inBoard(m, &_tempdir, count+1)==0)
 			break;

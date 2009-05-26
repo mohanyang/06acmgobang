@@ -26,6 +26,7 @@ struct BaseNode {
 	int lowerbound, upperbound;
 	int step;
 	int hash;
+	// TODO add an array
 };
 
 typedef struct BaseNode *Configuration;
