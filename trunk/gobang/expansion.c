@@ -82,8 +82,10 @@ ChildIterator getExpansion(Configuration v) {
 			++i;
 		if (i>0) {
 			retval->mllen=i;
+			/*
 			printf("mllen=%d\n", retval->mllen);
 			getchar();
+			*/
 		}
 	}
 	/*
