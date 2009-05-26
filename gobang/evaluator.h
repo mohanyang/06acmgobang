@@ -12,6 +12,6 @@ void initializeEvaluate();
 
 int evaluate(Configuration v, Move *m);
 
-EvalRetVal evaluateBoard(Configuration v, PEBBLE_COLOR c);
+int evaluateBoard(Configuration v, PEBBLE_COLOR c);
 
 #endif
