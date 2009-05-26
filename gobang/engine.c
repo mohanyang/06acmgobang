@@ -18,7 +18,10 @@ void initializeEngine(){
 
 ReturnValue search(PEBBLE_COLOR p){
 //	initializeConfiguration(glbl, p);
-	return id_mtdf(glbl);
+	ReturnValue ret=id_mtdf(glbl);
+	printf("====search finished, returned %d %d %d====\n",
+		  ret.move.x, ret.move.y, ret.value);
+	return ret;
 }
 
 int generate(){
