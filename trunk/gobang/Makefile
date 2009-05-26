@@ -38,3 +38,8 @@ dll:
 	gcc -Wl,--kill-at -I "c:\program files\java\jdk1.6.0_03\include" \
 			-I "c:\program files\java\jdk1.6.0_03\include\win32" \
 			-shared -o JNIAdapter.dll $(DLLOBJS)
+			
+so:
+	gcc -Wl,--kill-at -I "home\java\jdk1.6.0_03\include" \
+			-I "home\java\jdk1.6.0_03\include\linux" \
+			-shared -o JNIAdapter.so $(DLLOBJS)			
