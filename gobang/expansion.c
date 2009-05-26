@@ -80,8 +80,11 @@ ChildIterator getExpansion(Configuration v) {
 		int i=0;
 		while (retval->movelist[i].val==target)
 			++i;
-		if (i>0)
+		if (i>0) {
 			retval->mllen=i;
+			printf("mllen=%d\n", retval->mllen);
+			getchar();
+		}
 	}
 	/*
 	printf("mllen=%d\n", retval->mllen);
