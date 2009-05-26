@@ -3,7 +3,7 @@
 #include "enginetypes.h"
 #include <stdio.h>
 
-int main(){
+void main(){
 	Move m;
 	ReturnValue r;
 	initializeEngine();
