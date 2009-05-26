@@ -7,12 +7,24 @@ void main(){
 	Move m;
 	ReturnValue r;
 	initializeEngine();
-	while (1) {
+	/*
+	m.x=7;	m.y=7;
+	playMove(m);
+	m.x=6; m.y=6;
+	playMove(m);
+	m.x=6; m.y=8;
+	playMove(m);
+	m.x=5; m.y=6;
+	playMove(m);
+	m.x=5; m.y=9;
+	playMove(m);
+	getchar();
+	r=search(WHITE);
+	playMove(r.move);
+	*/
+	while (1){
 		printf("black: ");
 		scanf("%d %d", &(m.x), &(m.y));
-		if (m.x<0)
-			break;
-		printf("%d %d\n", m.x, m.y);
 		playMove(m);
 		r=search(WHITE);
 		printf("white: %d %d\n", r.move.x, r.move.y);

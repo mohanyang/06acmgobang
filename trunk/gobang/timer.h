@@ -16,4 +16,6 @@ void resetTimer();
  */
 int tickTimer();
 
+void showTimer();
+
 #endif

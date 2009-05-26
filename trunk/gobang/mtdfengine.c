@@ -13,6 +13,11 @@ int _globalcount=0;
 
 ReturnValue id_mtdf(Configuration v){
 	ReturnValue f;
+	int target;
+	if (getMover(v)==BLACK)
+		target=INFINITY;
+	else
+		target=-INFINITY;
 	f.value=0;
 	int depth=1;
 	resetTimer();
@@ -27,6 +32,8 @@ ReturnValue id_mtdf(Configuration v){
 			printf("id depth = %d\n", depth);
 			f=mtdf(v, f.value, depth);
 			if (tickTimer()==0)
+				break;
+			if (f.value==target)
 				break;
 		}
 	}
