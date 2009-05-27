@@ -80,7 +80,6 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
 /*		printstack();
 		printf("eval %d\n", ret.value);*/
-		
 	}
 	else if (getType(v)==MAXNODE) {
 //		printf("*\n");
@@ -95,10 +94,6 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 //				getCurrent(itr).y);
 			if (tickTimer()==0)
 				break;
-			/*
-				if (getCurrent(itr).x==5 && getCurrent(itr).y==5)
-				printf("5 5\n");
-			*/
 			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
 			
@@ -124,11 +119,12 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (a>ret.value){
 				a=ret.value;
 			}
-			// TODO should use better evaluation
-			// to eliminate dangerous moves first
-			if (temp.value==-INFINITY)
-				break;
 //			printf("a=%d ret.value=%d\n", a, ret.value);
+			if (ret.value>INFINITY)
+				break;
+			// TODO to be verified
+			if (temp.value<=-INFINITY)
+				break;
 			getNext(&itr);
 //			printf("e: %d %d\n", itr->current.x, itr->current.y);
 		}
@@ -168,11 +164,12 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (b<ret.value){
 				b=ret.value;
 			}
-			// TODO should use better evaluation
-			// to eliminate dangerous moves first
-			if (temp.value==INFINITY)
-				break;
 //			printf("a=%d ret.value=%d\n", b, ret.value);
+			if (ret.value<-INFINITY)
+				break;
+			// TODO to be verified
+			if (temp.value>=INFINITY)
+				break;
 			getNext(&itr);
 		}
 		releaseChildIterator(itr);

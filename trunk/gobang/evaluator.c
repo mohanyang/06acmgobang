@@ -42,7 +42,7 @@ int evaluate(Configuration v, Move *m){
 				}
 	}
 	undoMove(v, *m);
-	assert(abs(ret)<=1000);
+//	assert(abs(ret)<=1000);
 	return ret;
 }
 
