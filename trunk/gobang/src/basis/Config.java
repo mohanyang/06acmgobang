@@ -24,15 +24,10 @@ public final class Config {
 	 */
 	public static void load(String fileName) {
 		configFile = fileName;
-		Lib.seedRandom(System.currentTimeMillis());
-
-		// System.out.println("Loading " + fileName + "...");
-
 		try {
 			config = new HashMap<String, String>();
 
 			File file = new File(configFile);
-			// System.out.println(file.getAbsolutePath());
 			Reader reader = new FileReader(file);
 			StreamTokenizer s = new StreamTokenizer(reader);
 
