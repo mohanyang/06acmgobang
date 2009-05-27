@@ -3,6 +3,6 @@
 
 #include "basetypes.h"
 
-int forbid(Configuration v, int y, int x);
+int forbid(Configuration v, int x, int y);
 
 #endif
