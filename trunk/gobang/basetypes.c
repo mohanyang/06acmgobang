@@ -85,12 +85,14 @@ void putPebble(Configuration v, int x, int y, PEBBLE_COLOR col){
 		v->hboard[x] |= (1 << (y+16));
 //		updateHash(v, x, y, col);
 	}
+	v->data[x][y]=col;
 }
 
 void removePebble(Configuration v, int x, int y){
 //	updateHash(v, x, y, getColor(v, x, y));
 	v->vboard[y] &= ~((1 << x) | (1 << (x+16)));
 	v->hboard[x] &= ~((1 << y) | (1 << (y+16)));
+	v->data[x][y]=NONE;
 }
 /*
 void increaseDepth(Configuration v){
@@ -286,9 +288,17 @@ int havePebbleAround(Configuration v, int x, int y){
 	int i;
 	int lb=(x>=2)?(x-2):0;
 	int ub=(x<=12)?(x+2):14;
-	int mask=((1 << 5)-1) >> (y-2);
+	int mask=((1 << 5)-1) << (y-2);
+	mask |= (mask << 16);
 	for (i=lb; i<=ub; ++i)
 		if ((v->hboard[i]) & mask)
 			return 1;
+/*	printf("========have pebble around=======\n");
+	printBoardNonBlock(v);
+	printf("(%d, %d) val=%d\n", x, y, 0);
+	printf("%d %d %d\n", lb, ub, mask);
+	for (i=0; i<15; ++i)
+		printf("%d\n", v->hboard[i]);
+	printf("=================================\n");*/
 	return 0;
 }

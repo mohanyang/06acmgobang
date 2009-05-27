@@ -49,5 +49,5 @@ void playchess(int c){
 }
 
 int getCurrentSolution(){
-	return (glblretval.x << 8) | glblretval.y;
+	return (glblretval.move.x << 8) | glblretval.move.y;
 }

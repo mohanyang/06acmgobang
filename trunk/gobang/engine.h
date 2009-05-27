@@ -17,7 +17,7 @@ void initializeEngine();
  */
 ReturnValue search(PEBBLE_COLOR player);
 
-ReturnValue getCurrentSolution();
+int getCurrentSolution();
 
 /**
  * the frontend should use this to inform the search

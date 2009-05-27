@@ -200,6 +200,12 @@ void match(Configuration v, int y, int x, int dy, int dx, int n) {
 
 void convertStat() {
   int i;
+  memset(&astat, 0, sizeof(astat));
+/*  printf(">>>>>>>>>>>>>\n");
+  for (i=0; i<nTypes; ++i)
+	  printf("%d ", match_types[i]);
+  printf("\n");
+  printf("<<<<<<<<<<<<<\n");*/
   for (i = 0; i < nTypes; ++i) {
     int ty = abs(match_types[i]);
     int owner = match_types[i] < 0;

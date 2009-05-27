@@ -9,6 +9,6 @@
  * from the specified configuration, and 
  * return the search value
  */
-ReturnValue id_mtdf(Configuration v, Returnval *ret);
+ReturnValue id_mtdf(Configuration v, ReturnValue *ret);
 
 #endif

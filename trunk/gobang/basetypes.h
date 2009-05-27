@@ -7,11 +7,9 @@ enum _NODETYPE {
 };
 typedef enum _NODETYPE NODETYPE;
 
-enum _PEBBLE_COLOR {
+typedef enum  {
 	NONE=0, BLACK=1, WHITE=2, FORBID=3
-};
-
-typedef enum _PEBBLE_COLOR PEBBLE_COLOR;
+} PEBBLE_COLOR;
 
 struct BaseNode {
 	int depth;
@@ -27,7 +25,7 @@ struct BaseNode {
 	int lowerbound, upperbound;
 	int step;
 	int hash;
-	// TODO add an array
+	PEBBLE_COLOR data[15][15];
 };
 
 typedef struct BaseNode *Configuration;
