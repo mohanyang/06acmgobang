@@ -36,10 +36,10 @@ public class ChessInfo {
 
 	public String toString() {
 		if (color == Color.BLACK)
-			return "BLACK Chess@[" + col + ", " + row + "]";
+			return "BLACK@" + (char) (col + 'A') + (row + 1);
 		else if (color == Color.WHITE)
-			return "WHITE Chess@[" + col + ", " + row + "]";
+			return "WHITE@" + (char) (col + 'A') + (row + 1);
 		else
-			return "NONE  Chess@[" + col + ", " + row + "]";
+			return "NONE @" + (char) (col + 'A') + (row + 1);
 	}
 }

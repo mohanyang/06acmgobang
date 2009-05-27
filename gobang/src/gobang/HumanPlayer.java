@@ -24,7 +24,7 @@ public class HumanPlayer implements BoardListener, Runnable {
 		this.mode = mode;
 		if (mode > 0)
 			jni = new JNIAdapter();
-		cf = new ChessFrame(false);
+		cf = new ChessFrame(false, "human player");
 		cf.addBoardListener(this);
 	}
 
