@@ -3,8 +3,8 @@
 #include "string.h"
 #include "opening.h"
 
-#define MAX_NODE 1000000
-#define MAX_EDGE 1000000
+#define MAX_NODE 500000
+#define MAX_EDGE 500000
 
 #define COOR_TO_ID(y, x) ((y)*15+(x))
 
