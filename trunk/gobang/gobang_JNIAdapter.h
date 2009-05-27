@@ -25,14 +25,6 @@ JNIEXPORT jint JNICALL Java_gobang_JNIAdapter_generateChessInfo
 
 /*
  * Class:     gobang_JNIAdapter
- * Method:    getCurrentSolution
- * Signature: ()I
- */
-JNIEXPORT jint JNICALL Java_gobang_JNIAdapter_getCurrentSolution
-  (JNIEnv *, jobject);
-
-/*
- * Class:     gobang_JNIAdapter
  * Method:    playChess
  * Signature: (I)V
  */

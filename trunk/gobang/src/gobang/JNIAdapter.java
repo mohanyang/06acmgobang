@@ -7,8 +7,6 @@ public class JNIAdapter {
 
 	public native int generateChessInfo();
 
-	public native int getCurrentSolution();
-
 	public native void playChess(int info);
 
 	static {
