@@ -1,0 +1,1 @@
+javah gobang.JNIAdapter
