@@ -24,6 +24,7 @@ typedef struct {
 	 * compatible with the enum in this header
 	 */
 	int stat[10][2];
+	Configuration assoc;
 } AdvancedStat;
 
 /**
@@ -31,5 +32,7 @@ typedef struct {
  * col player has moved
  */
 int getScore(AdvancedStat *info, PEBBLE_COLOR col);
+
+void initializeAdvStat();
 
 #endif

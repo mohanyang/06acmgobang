@@ -239,7 +239,7 @@ int evaluateBoard(Configuration v, PEBBLE_COLOR c) {
   }
 
   convertStat();
-
+  astat.assoc=v;
   return getScore(&astat, c);
 
 }
