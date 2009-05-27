@@ -8,35 +8,51 @@ int main(){
 	ReturnValue r;
 	initializeEngine();
 	
-	m.x=7;	m.y=7;
+/*	m.x=7;	m.y=7;
 	playMove(m);
-	m.x=6; m.y=6;
-	playMove(m);
-	m.x=7; m.y=6;
-	playMove(m);
-	m.x=6; m.y=7;
-	playMove(m);
-	m.x=7; m.y=5;
+	m.x=5; m.y=5;
 	playMove(m);
 	m.x=7; m.y=8;
 	playMove(m);
-	m.x=7; m.y=4;
+	m.x=3; m.y=3;
 	playMove(m);
-	m.x=7; m.y=3;
+	m.x=7; m.y=9;
 	playMove(m);
-	m.x=6; m.y=5;
+	m.x=7; m.y=6;
 	playMove(m);
-	m.x=4; m.y=5;
+	m.x=7; m.y=10;
+	playMove(m);
+	m.x=7; m.y=11;
+	playMove(m);
+	m.x=5; m.y=9;
+	playMove(m);
+	m.x=2; m.y=2;
+	playMove(m);
+	m.x=4; m.y=4;
+	playMove(m);
+	m.x=0; m.y=2;
+	playMove(m);
+	m.x=6; m.y=9;
+	playMove(m);
+	m.x=4; m.y=9;
+	playMove(m);
+	m.x=8; m.y=9;
+	playMove(m);
+	m.x=9; m.y=9;
+	playMove(m);
+	m.x=6; m.y=11;
+	playMove(m);
+	m.x=5; m.y=12;
+	playMove(m);
+	m.x=6; m.y=7;
 	playMove(m);
 	m.x=5; m.y=6;
 	playMove(m);
-	m.x=8; m.y=3;
-	playMove(m);
-	m.x=4; m.y=7;
+	m.x=6; m.y=8;
 	playMove(m);
 	r=search(WHITE);
-	playMove(r.move);
-	/*
+	playMove(r.move);*/
+	
 	FILE *fp=fopen("log.txt", "w");
 	while (1){
 		printf("black: ");
@@ -51,6 +67,5 @@ int main(){
 		fprintf(fp, "white: %d %d\n", r.move.x, r.move.y);
 	}
 	fclose(fp);
-	*/
 	return 0;
 }

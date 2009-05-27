@@ -10,8 +10,6 @@ typedef struct {
 
 void initializeEvaluate();
 
-int evaluate(Configuration v, Move *m);
-
 int evaluateBoard(Configuration v, PEBBLE_COLOR c);
 
 #endif

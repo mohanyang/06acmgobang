@@ -43,7 +43,8 @@ ChildIterator getExpansion(Configuration v) {
 	// TODO what if no expansion is possible
 	int target;
 	int flag=0;
-	if (getMover(v)==BLACK)
+	PEBBLE_COLOR player=getMover(v);
+	if (player==BLACK)
 		target=INFINITY;
 	else
 		target=-INFINITY;
@@ -53,15 +54,19 @@ ChildIterator getExpansion(Configuration v) {
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==NONE 
 						 && havePebbleAround(v, i, j)) {
-//				printf("%d,%d\n", i, j);
+// 				printf("%d,%d\n", i, j);
 				retval->movelist[retval->mllen].m.x=i;
 				retval->movelist[retval->mllen].m.y=j;
 				retval->movelist[retval->mllen].val=
 						getMoveEvaluate(v, i, j, &flag);
 				if (flag){
+					// TODO should think of calculating
+					// incrementally
+					putPebble(v, i, j, player);
+// 					printBoardNonBlock(v);
 					retval->movelist[retval->mllen].val=
-						evaluate(v, &(retval->movelist[
-						retval->mllen].m));
+						evaluateBoard(v, player);
+					removePebble(v, i, j);
 /*					printf("recalc %d\n", 
 						   retval->movelist[retval->mllen].val);*/
 				}

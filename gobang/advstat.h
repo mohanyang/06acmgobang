@@ -17,31 +17,17 @@ enum {
 	ACTIVE_THREE = 4,
 	SLEEPY_THREE = 5,
 	ACTIVE_TWO = 6,
-	
-
-	FTHREE = 7, 
-	DTHREE = 8,
-	DFOUR = 9, 
 };
 
 typedef struct {
 	/**
-	 * 0 - active two
-	 * 1 - active three
-	 * 2 - active four
-	 * 3 - consecutive five
-	 * 4 - double four
-	 * 5 - about four
-	 * 6 - four + three
-	 * 7 - double three
+	 * compatible with the enum in this header
 	 */
 	int stat[10][2];
 } AdvancedStat;
 
-void calculate(Configuration v);
-
 /**
- * the score of the board after the 
+ * the score of the board AFTER the 
  * col player has moved
  */
 int getScore(AdvancedStat *info, PEBBLE_COLOR col);
