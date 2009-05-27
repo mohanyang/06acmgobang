@@ -1,8 +1,10 @@
 package gobang;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.Socket;
 
 import types.ChessInfo;
@@ -27,6 +29,7 @@ public class SocketPlayer implements Runnable {
 	private boolean uiOn = false;
 	private ChessFrame cf = null;
 	private JNIAdapter jni = null;
+	private PrintStream out = null;
 
 	public SocketPlayer() {
 		try {
@@ -39,6 +42,7 @@ public class SocketPlayer implements Runnable {
 			uiOn = Config.getBoolean("ui");
 			if (uiOn)
 				cf = new ChessFrame(true, "AI player");
+			out = new PrintStream(new File("log.txt"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -134,6 +138,7 @@ public class SocketPlayer implements Runnable {
 
 	synchronized void handleOver() {
 		jni.reset();
+		out.println("new game");
 		if (uiOn)
 			cf.reset();
 		status = Status.UNSTART;
@@ -146,6 +151,7 @@ public class SocketPlayer implements Runnable {
 
 	synchronized void handleChessmove() {
 		readChessInfo();
+		out.println(lastMove);
 		System.out.println(lastMove);
 		if (uiOn)
 			cf.drawChess(lastMove.col, lastMove.row, lastMove.color, true);
@@ -203,6 +209,7 @@ public class SocketPlayer implements Runnable {
 			sout.close();
 			sin.close();
 			socket.close();
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
