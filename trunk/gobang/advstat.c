@@ -4,11 +4,11 @@
 #include "basestat.h"
 #include "enginetypes.h"
 
-AdvancedStat tempadvstatinfo;
+AdvancedStat into->
 
 // TODO need to cache this
 void calculate(Configuration v){
-	memset((void*)(&tempadvstatinfo), 0, sizeof(AdvancedStat));
+	memset((void*)(&into->, 0, sizeof(AdvancedStat));
 	int i, j;
 	int k1, k2;
 	int l1, l2;
@@ -115,146 +115,146 @@ void calculate(Configuration v){
 				
 				if (cur==BLACK){
 					if (a[5])
-						++tempadvstatinfo.stat[FIVE][0];
+						++into->stat[FIVE][0];
 					switch (a[4]){
 						case 0:
 							break;
 						case 1:
-							++tempadvstatinfo.stat
+							++into->stat
 									[ACTIVE_FOUR][0];
 							break;
 						default:
-							++tempadvstatinfo.stat[DFOUR][0];
+							++into->stat[DFOUR][0];
 					}
 					switch (a[3]){
 						case 0:
 							break;
 						case 1:
 //							printf("black athree %d %d\n", i, j);
-							++tempadvstatinfo.stat
+							++into->stat
 									[ACTIVE_THREE][0];
 							break;
 						default:
-							++tempadvstatinfo.stat[DTHREE][0];
+							++into->stat[DTHREE][0];
 					}
 					if (a[2]){
-						++tempadvstatinfo.stat[ACTIVE_TWO][0];
+						++into->stat[ACTIVE_TWO][0];
 					}
 					if (s4) {
 						if (a[4])
-							++tempadvstatinfo.stat[DFOUR][0];
+							++into->stat[DFOUR][0];
 						else
-							++tempadvstatinfo.stat[AFOUR][0];
+							++into->stat[AFOUR][0];
 					}
 					if ((a[4] || s4) && a[3])
-						++tempadvstatinfo.stat[FTHREE][0];
+						++into->stat[FTHREE][0];
 				}
 				else {
 					if (a[5])
-						++tempadvstatinfo.stat[FIVE][1];
+						++into->stat[FIVE][1];
 					switch (a[4]){
 						case 0:
 							break;
 						case 1:
-							++tempadvstatinfo.stat
+							++into->stat
 									[ACTIVE_FOUR][1];
 							break;
 						default:
-							++tempadvstatinfo.stat[DFOUR][1];
+							++into->stat[DFOUR][1];
 					}
 					switch (a[3]){
 						case 0:
 							break;
 						case 1:
-							++tempadvstatinfo.stat
+							++into->stat
 									[ACTIVE_THREE][1];
 							//printf("white athree %d %d\n", i, j);
 							break;
 						default:
-							++tempadvstatinfo.stat[DTHREE][1];
+							++into->stat[DTHREE][1];
 					}
 					if (a[2]){
-						++tempadvstatinfo.stat[ACTIVE_TWO][1];
+						++into->stat[ACTIVE_TWO][1];
 					}
 					if (s4) {
 						if (a[4])
-							++tempadvstatinfo.stat[DFOUR][1];
+							++into->stat[DFOUR][1];
 						else
-							++tempadvstatinfo.stat[AFOUR][1];
+							++into->stat[AFOUR][1];
 					}
 					if ((a[4] || s4) && a[3])
-						++tempadvstatinfo.stat[FTHREE][1];
+						++into->stat[FTHREE][1];
 				}
 			}
 }
 
-int getScore(PEBBLE_COLOR col){
+int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 	switch (col){
 		case BLACK:
-			if (tempadvstatinfo.stat[FIVE][1])
+			if (into->stat[FIVE][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[FIVE][0])
+			else if (into->stat[FIVE][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[DFOUR][1])
+			else if (into->stat[DFOUR][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
+			else if (into->stat[ACTIVE_FOUR][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[AFOUR][1])
+			else if (into->stat[AFOUR][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[FTHREE][1])
+			else if (into->stat[FTHREE][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[DFOUR][0])
+			else if (into->stat[DFOUR][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
+			else if (into->stat[ACTIVE_FOUR][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[FTHREE][0])
+			else if (into->stat[FTHREE][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[DTHREE][1])
+			else if (into->stat[DTHREE][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
+			else if (into->stat[ACTIVE_THREE][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[DTHREE][0])
+			else if (into->stat[DTHREE][0])
 				return 900;
-			else if (tempadvstatinfo.stat[AFOUR][0])
+			else if (into->stat[AFOUR][0])
 				return 850;
-			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
+			else if (into->stat[ACTIVE_THREE][0])
 				return 800;
 			else {
-				return (tempadvstatinfo.stat[ACTIVE_TWO][0]*2
-						-tempadvstatinfo.stat[ACTIVE_TWO][1]);
+				return (into->stat[ACTIVE_TWO][0]*2
+						-into->stat[ACTIVE_TWO][1]);
 			}
 		case WHITE:
-			if (tempadvstatinfo.stat[FIVE][0])
+			if (into->stat[FIVE][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[FIVE][1])
+			else if (into->stat[FIVE][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[DFOUR][0])
+			else if (into->stat[DFOUR][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[ACTIVE_FOUR][0])
+			else if (into->stat[ACTIVE_FOUR][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[AFOUR][0])
+			else if (into->stat[AFOUR][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[FTHREE][0])
+			else if (into->stat[FTHREE][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[DFOUR][1])
+			else if (into->stat[DFOUR][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[ACTIVE_FOUR][1])
+			else if (into->stat[ACTIVE_FOUR][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[FTHREE][1])
+			else if (into->stat[FTHREE][1])
 				return -INFINITY;
-			else if (tempadvstatinfo.stat[DTHREE][0])
+			else if (into->stat[DTHREE][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[ACTIVE_THREE][0])
+			else if (into->stat[ACTIVE_THREE][0])
 				return INFINITY;
-			else if (tempadvstatinfo.stat[DTHREE][1])
+			else if (into->stat[DTHREE][1])
 				return -900;
-			else if (tempadvstatinfo.stat[AFOUR][1])
+			else if (into->stat[AFOUR][1])
 				return -850;
-			else if (tempadvstatinfo.stat[ACTIVE_THREE][1])
+			else if (into->stat[ACTIVE_THREE][1])
 				return -800;
 			else {
-				return -(tempadvstatinfo.stat[ACTIVE_TWO][1]*2
-						+tempadvstatinfo.stat[ACTIVE_TWO][0]);
+				return -(into->stat[ACTIVE_TWO][1]*2
+						+into->stat[ACTIVE_TWO][0]);
 			}
 		default:
 			return 0;
@@ -265,6 +265,6 @@ void dumpcalc(){
 	int i,j;
 	for (i=0; i<8; ++i)
 		for (j=0; j<2; ++j)
-			printf("%d ", tempadvstatinfo.stat[i][j]);
+			printf("%d ", into->stat[i][j]);
 	printf("\n");
 }
