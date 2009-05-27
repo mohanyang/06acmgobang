@@ -4,12 +4,12 @@
 #include "timer.h"
 
 enum {
-	MAX_SEARCH_DEPTH = 6
+	MAX_SEARCH_DEPTH = 8
 };
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
 
-int _globalcount=0;
+int _globalcount=10;
 
 ReturnValue id_mtdf(Configuration v){
 	ReturnValue f;
@@ -23,7 +23,7 @@ ReturnValue id_mtdf(Configuration v){
 	resetTimer();
 	// TODO increase globalcount here??
 	++_globalcount;
-	if (_globalcount<3)
+	if (_globalcount<5)
 		f=mtdf(v, f.value, 2);
 	else {
 	// TODO read from configuration and 
@@ -47,6 +47,7 @@ ReturnValue id_mtdf(Configuration v){
  */
 ReturnValue mtdf(Configuration v, int firstguess, int depth){
 	ReturnValue g;
+	ReturnValue temp;
 	g.value=firstguess;
 	int ub=INFINITY, lb=-INFINITY;
 	int beta;
@@ -58,12 +59,15 @@ ReturnValue mtdf(Configuration v, int firstguess, int depth){
 			beta=g.value;
 		printf(">>>>> search restart %d %d\n", beta, depth);
 		g=alphaBeta(v, beta-1, beta, depth);
+		if (tickTimer())
+			temp=g;
 		if (g.value<beta)
 			ub=g.value;
 		else
 			lb=g.value;
 		printf("ub=%d, lb=%d\n", ub, lb);
-		printf("value=%d\n", g.value);
+		printf("value=%d, move=(%d, %d)\n", g.value,
+			  g.move.x, g.move.y);
 	} while (ub>lb);
-	return g;
+	return temp;
 }

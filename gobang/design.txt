@@ -1,6 +1,3 @@
-ID support
-	provide heuristics in the order of children
-	
 transposition table support
 
 hash: how to deal with collision and old data

@@ -8,29 +8,49 @@ int main(){
 	ReturnValue r;
 	initializeEngine();
 	
-/*	m.x=7;	m.y=7;
+	m.x=7;	m.y=7;
 	playMove(m);
 	m.x=6; m.y=6;
 	playMove(m);
-	m.x=6; m.y=8;
+	m.x=7; m.y=6;
+	playMove(m);
+	m.x=6; m.y=7;
+	playMove(m);
+	m.x=7; m.y=5;
+	playMove(m);
+	m.x=7; m.y=8;
+	playMove(m);
+	m.x=7; m.y=4;
+	playMove(m);
+	m.x=7; m.y=3;
+	playMove(m);
+	m.x=6; m.y=5;
+	playMove(m);
+	m.x=4; m.y=5;
 	playMove(m);
 	m.x=5; m.y=6;
 	playMove(m);
-	m.x=8; m.y=6;
+	m.x=8; m.y=3;
+	playMove(m);
+	m.x=4; m.y=7;
 	playMove(m);
 	r=search(WHITE);
-	playMove(r.move);*/
-	
+	playMove(r.move);
+	/*
+	FILE *fp=fopen("log.txt", "w");
 	while (1){
 		printf("black: ");
 		scanf("%d %d", &(m.x), &(m.y));
 		if (m.x<0)
 			break;
+		fprintf(fp, "black: %d %d\n", m.x, m.y);
 		playMove(m);
 		r=search(WHITE);
 		printf("white: %d %d\n", r.move.x, r.move.y);
 		playMove(r.move);
+		fprintf(fp, "white: %d %d\n", r.move.x, r.move.y);
 	}
-	
+	fclose(fp);
+	*/
 	return 0;
 }
