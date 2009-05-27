@@ -11,14 +11,17 @@
  */
 
 enum {
-	ACTIVE_TWO = 0,
-	ACTIVE_THREE = 1,
+	FIVE = 1,
 	ACTIVE_FOUR = 2,
-	FIVE = 3,
-	DFOUR = 4, 
-	AFOUR = 5, 
-	FTHREE = 6, 
-	DTHREE = 7
+	AFOUR = 3, 
+	ACTIVE_THREE = 4,
+	SLEEPY_THREE = 5,
+	ACTIVE_TWO = 6,
+	
+
+	FTHREE = 7, 
+	DTHREE = 8,
+	DFOUR = 9, 
 };
 
 typedef struct {
@@ -32,7 +35,7 @@ typedef struct {
 	 * 6 - four + three
 	 * 7 - double three
 	 */
-	int stat[8][2];
+	int stat[10][2];
 } AdvancedStat;
 
 void calculate(Configuration v);
