@@ -108,15 +108,19 @@ public class SocketPlayer implements Runnable {
 			try {
 				new Thread() {
 					public void run() {
-						ret = jni.GenerateChessInfo();
+						ret = jni.generateChessInfo();
 					}
 				}.join(timeLimit);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
-			if (ret == null)
-				System.exit(0);
+			if (ret == null) {
+				ret = jni.getCurrentSolution();
+				if (ret == null)
+					System.exit(0);
+			}
+
 			ChessInfo info = new ChessInfo(color, ret);
 			status = Status.WAITRES;
 			writeChessInfo(info);

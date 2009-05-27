@@ -5,7 +5,9 @@ import basis.Config;
 public class JNIAdapter {
 	public native void reset();
 
-	public native int GenerateChessInfo();
+	public native int generateChessInfo();
+
+	public native int getCurrentSolution();
 
 	public native void playChess(int info);
 
