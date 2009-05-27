@@ -35,11 +35,12 @@ public class ChessInfo {
 	}
 
 	public String toString() {
-		if (color == Color.BLACK)
-			return "BLACK@" + (char) (col + 'A') + (row + 1);
-		else if (color == Color.WHITE)
-			return "WHITE@" + (char) (col + 'A') + (row + 1);
-		else
-			return "NONE @" + (char) (col + 'A') + (row + 1);
+		// if (color == Color.BLACK)
+		// return "BLACK@" + (char) (col + 'A') + (row + 1);
+		// else if (color == Color.WHITE)
+		// return "WHITE@" + (char) (col + 'A') + (row + 1);
+		// else
+		// return "NONE @" + (char) (col + 'A') + (row + 1);
+		return col + " " + row;
 	}
 }
