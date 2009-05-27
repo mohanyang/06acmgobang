@@ -1,7 +1,9 @@
+#include <stdio.h>
 #include "engine.h"
 #include "basetypes.h"
 #include "mtdfengine.h"
 #include "timer.h"
+#include "hashsrv.h"
 #include "transposition.h"
 #include "evaluator.h"
 
@@ -10,8 +12,10 @@ Configuration glbl;
 void initializeEngine(){
 	initializeBaseType();
 	initializeTimer();
+	initializeHashService();
 	hashInitialize();
 	initializeEvaluate();
+	initializeMoveHeuristic();
 	glbl=allocConfiguration();
 	initializeConfiguration(glbl, BLACK);
 }

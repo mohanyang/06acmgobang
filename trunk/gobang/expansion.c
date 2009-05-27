@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "expansion.h"
 #include "evaluator.h"
 #include "enginetypes.h"
+#include "moveheuristic.h"
 
 typedef struct {
 	Move m;
@@ -47,6 +49,7 @@ ChildIterator getExpansion(Configuration v) {
 		target=INFINITY;
 	else
 		target=-INFINITY;
+// 	printf("eeeeeeeeeeeeeeee\n");
 	for (i=0; i<15; ++i) {
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==NONE) {
@@ -54,8 +57,14 @@ ChildIterator getExpansion(Configuration v) {
 				retval->movelist[retval->mllen].m.x=i;
 				retval->movelist[retval->mllen].m.y=j;
 				retval->movelist[retval->mllen].val=
+						getMoveEvaluate(v, i, j, &flag);
+				if (flag){
+					retval->movelist[retval->mllen].val=
 						evaluate(v, &(retval->movelist[
 						retval->mllen].m));
+/*					printf("recalc %d\n", 
+						   retval->movelist[retval->mllen].val);*/
+				}
 				++(retval->mllen);
 				/*
 				if (retval->movelist[retval->mllen-1].val==target) {
@@ -67,8 +76,6 @@ ChildIterator getExpansion(Configuration v) {
 					break;
 				}*/
 			}
-		if (flag)
-			break;
 	}
 	if (getType(v)==MAXNODE)
 		qsort(retval->movelist, retval->mllen,
@@ -97,6 +104,7 @@ ChildIterator getExpansion(Configuration v) {
 	}
 	getchar();
 	*/
+// 	printf("ddddddddddddddddd\n");
 	return retval;
 }
 

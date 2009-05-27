@@ -3,12 +3,14 @@ CFLAGS =	-g -Wall -fmessage-length=0
 
 OBJS =		globalconst.o \
 			basetypes.o \
+			hashsrv.o \
 			basestat.o \
 			advstat.o \
 			timer.o \
 			enginetypes.o \
 			transposition.o \
 			historyheuristic.o \
+			moveheuristic.o \
 			evaluator.o \
 			expansion.o \
 			abengine.o \
