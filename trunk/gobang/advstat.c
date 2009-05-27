@@ -4,8 +4,6 @@
 #include "basestat.h"
 #include "enginetypes.h"
 
-AdvancedStat into->
-
 // TODO need to cache this
 void calculate(Configuration v){
 	memset((void*)(&into->, 0, sizeof(AdvancedStat));
@@ -259,12 +257,4 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 		default:
 			return 0;
 	}
-}
-
-void dumpcalc(){
-	int i,j;
-	for (i=0; i<8; ++i)
-		for (j=0; j<2; ++j)
-			printf("%d ", into->stat[i][j]);
-	printf("\n");
 }

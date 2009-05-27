@@ -44,6 +44,6 @@ void calculate(Configuration v);
  * the score of the board after the 
  * col player has moved
  */
-int getScore(PEBBLE_COLOR col);
+int getScore(AdvancedStat *info, PEBBLE_COLOR col);
 
 #endif
