@@ -177,7 +177,10 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 		}
 		for (int i = 0; i < height; ++i) {
 			y1 = (i + 1) * gridWidth;
-			g.drawString(String.valueOf(i + 1), gridWidth / 2 - 12, y1 + 4);
+			if (i < 9)
+				g.drawString(String.valueOf(i + 1), gridWidth / 2 - 8, y1 + 4);
+			else
+				g.drawString(String.valueOf(i + 1), gridWidth / 2 - 12, y1 + 4);
 			g.drawLine(gridHeight, y1, width * gridHeight, y1);
 		}
 		for (int i = 1; i <= 3; ++i)
