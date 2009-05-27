@@ -17,8 +17,6 @@ void initializeEngine();
  */
 ReturnValue search(PEBBLE_COLOR player);
 
-int getCurrentSolution();
-
 /**
  * the frontend should use this to inform the search
  * engine that the specified move is played.

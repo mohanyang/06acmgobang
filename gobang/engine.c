@@ -8,7 +8,6 @@
 #include "evaluator.h"
 
 Configuration glbl;
-ReturnValue glblretval;
 
 void initializeEngine(){
 	initializeBaseType();
@@ -23,8 +22,8 @@ void initializeEngine(){
 
 ReturnValue search(PEBBLE_COLOR p){
 //	initializeConfiguration(glbl, p);
-//	initializeTimer();
-	ReturnValue ret=id_mtdf(glbl, &glblretval);
+	initializeTimer();
+	ReturnValue ret=id_mtdf(glbl);
 	printf("====search finished, returned %d %d %d====\n",
 		  ret.move.x, ret.move.y, ret.value);
 	showTimer();
@@ -46,8 +45,4 @@ void playchess(int c){
 	m.x=(c >> 8) & 0xff;
 	m.y=c & 0xff;
 	playMove(m);
-}
-
-int getCurrentSolution(){
-	return (glblretval.move.x << 8) | glblretval.move.y;
 }

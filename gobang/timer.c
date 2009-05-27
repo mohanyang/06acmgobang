@@ -1,10 +1,10 @@
 #include <stdio.h>
+#include <sys/timeb.h>
 #include "timer.h"
 
-// TODO read from config or test when load
-const int MAX_NODE_COUNT = 3000;
-
 int _timer_counter;
+
+struct timeb _timer_time, _timer_ori;
 
 void initializeTimer(){
 	resetTimer();
@@ -12,13 +12,21 @@ void initializeTimer(){
 
 void resetTimer(){
 	_timer_counter=0;
+	ftime(&_timer_ori);
+	ftime(&_timer_time);
 }
 
 int tickTimer(){
 	++_timer_counter;
-	if (_timer_counter % 10000==0)
-		printf("ticked: %d\n", _timer_counter);
-	return (_timer_counter<MAX_NODE_COUNT)?1:0;
+	if (_timer_counter % 50==0){
+		ftime(&_timer_time);
+	}
+	if (_timer_time.time-_timer_ori.time<=8
+			|| (_timer_time.time-_timer_ori.time==9
+			   && _timer_time.millitm-_timer_ori.millitm>=500))
+		return 1;
+	else
+		return 0;
 }
 
 void showTimer(){
