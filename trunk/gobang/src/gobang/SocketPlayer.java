@@ -24,6 +24,7 @@ public class SocketPlayer implements Runnable {
 	private ChessInfo lastMove;
 
 	private int status;
+	private boolean uiOn = false;
 	private ChessFrame cf = null;
 	private JNIAdapter jni = null;
 
@@ -35,7 +36,9 @@ public class SocketPlayer implements Runnable {
 			sin = socket.getInputStream();
 			sout = socket.getOutputStream();
 			jni = new JNIAdapter();
-			cf = new ChessFrame(true, "AI player");
+			uiOn = Config.getBoolean("ui");
+			if (uiOn)
+				cf = new ChessFrame(true, "AI player");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -74,17 +77,20 @@ public class SocketPlayer implements Runnable {
 			status = Status.STARTED;
 			curColor = Color.BLACK;
 			jni.reset();
-			cf.reset();
+			if (uiOn)
+				cf.reset();
 			break;
 		case Message.COMM_MSG_FIRST:
 			color = Color.BLACK;
 			System.out.println("player color " + color);
-			cf.setTitle("Gobang AI player BLACK");
+			if (uiOn)
+				cf.setTitle("Gobang AI player BLACK");
 			writeByte(Message.COMM_MSG_GAME_REQUIRE_START);
 			break;
 		case Message.COMM_MSG_SECOND:
 			color = Color.WHITE;
-			cf.setTitle("Gobang AI player WHITE");
+			if (uiOn)
+				cf.setTitle("Gobang AI player WHITE");
 			System.out.println("player color " + color);
 			writeByte(Message.COMM_MSG_GAME_REQUIRE_START);
 			break;
@@ -127,7 +133,8 @@ public class SocketPlayer implements Runnable {
 
 	void handleOver() {
 		jni.reset();
-		cf.reset();
+		if (uiOn)
+			cf.reset();
 		status = Status.UNSTART;
 		curColor = Color.BLACK;
 	}
@@ -139,7 +146,8 @@ public class SocketPlayer implements Runnable {
 	void handleChessmove() {
 		readChessInfo();
 		System.out.println(lastMove);
-		cf.drawChess(lastMove.col, lastMove.row, lastMove.color, true);
+		if (uiOn)
+			cf.drawChess(lastMove.col, lastMove.row, lastMove.color, true);
 		jni.playChess(lastMove.toInt());
 		curColor = (byte) (Color.SUM - lastMove.color);
 		status = Status.STARTED;
