@@ -6,6 +6,7 @@
 #include "hashsrv.h"
 #include "transposition.h"
 #include "evaluator.h"
+#include "advstat.h"
 
 Configuration glbl;
 
@@ -16,6 +17,7 @@ void initializeEngine(){
 	hashInitialize();
 	initializeEvaluate();
 	initializeMoveHeuristic();
+	initializeAdvStat();
 	glbl=allocConfiguration();
 	initializeConfiguration(glbl, BLACK);
 }

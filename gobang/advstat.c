@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "advstat.h"
 #include "basestat.h"
 #include "enginetypes.h"
@@ -36,8 +37,23 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			else if (info->stat[AFOUR][0])
 				return 700;
 			else {
+				// TODO quick calculation
+				int i, j, k=0;
+				for (i=0; i<15; ++i)
+					for (j=0; j<15; ++j)
+						switch (getColor(info->assoc, i, j)){
+							case BLACK:
+								k+=_localpriority[i][j];
+								break;
+							case WHITE:
+								k-=_localpriority[i][j];
+								break;
+							default:
+								break;
+						}
 				return (info->stat[SLEEPY_THREE][0]*2
-						-info->stat[SLEEPY_THREE][1])*100;
+						-info->stat[SLEEPY_THREE][1])*100
+						;
 			}
 		case WHITE:
 			if (info->stat[FIVE][0])
@@ -69,4 +85,13 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 		default:
 			return 0;
 	}
+}
+
+void initializeAdvStat(){
+	int i, j;
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			_localpriority[i][j]=7-
+					abs(7-i)>abs(7-j)?
+					abs(7-i):abs(7-j);
 }
