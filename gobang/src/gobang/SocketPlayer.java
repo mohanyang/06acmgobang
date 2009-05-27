@@ -27,6 +27,7 @@ public class SocketPlayer implements Runnable {
 	private boolean uiOn = false;
 	private ChessFrame cf = null;
 	private JNIAdapter jni = null;
+	private int timeLimit = 0;
 
 	public SocketPlayer() {
 		try {
@@ -37,6 +38,7 @@ public class SocketPlayer implements Runnable {
 			sout = socket.getOutputStream();
 			jni = new JNIAdapter();
 			uiOn = Config.getBoolean("ui");
+			timeLimit = Config.getInteger("timelimit") * 9 / 10;
 			if (uiOn)
 				cf = new ChessFrame(true, "AI player");
 		} catch (IOException e) {
@@ -69,7 +71,7 @@ public class SocketPlayer implements Runnable {
 		}
 	}
 
-	void handleUnstart() {
+	synchronized void handleUnstart() {
 		byte msg = readByte();
 		switch (msg) {
 		case Message.COMM_MSG_GAME_START:
@@ -97,10 +99,25 @@ public class SocketPlayer implements Runnable {
 		}
 	}
 
-	void handleStarted() {
+	Integer ret;
+
+	synchronized void handleStarted() {
 		if (curColor == color) {
 			System.out.println("generating chess info...");
-			ChessInfo info = new ChessInfo(color, jni.GenerateChessInfo());
+			ret = null;
+			try {
+				new Thread() {
+					public void run() {
+						ret = jni.GenerateChessInfo();
+					}
+				}.join(timeLimit);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			if (ret == null)
+				System.exit(0);
+			ChessInfo info = new ChessInfo(color, ret);
 			status = Status.WAITRES;
 			writeChessInfo(info);
 		} else {
@@ -108,7 +125,7 @@ public class SocketPlayer implements Runnable {
 		}
 	}
 
-	void handleWaitRes() {
+	synchronized void handleWaitRes() {
 		byte msg = readByte();
 		switch (msg) {
 		case Message.COMM_MSG_REJECTED:
@@ -131,7 +148,7 @@ public class SocketPlayer implements Runnable {
 		}
 	}
 
-	void handleOver() {
+	synchronized void handleOver() {
 		jni.reset();
 		if (uiOn)
 			cf.reset();
@@ -139,11 +156,11 @@ public class SocketPlayer implements Runnable {
 		curColor = Color.BLACK;
 	}
 
-	void handleSolProb() {
+	synchronized void handleSolProb() {
 		// TODO: problem unhandled
 	}
 
-	void handleChessmove() {
+	synchronized void handleChessmove() {
 		readChessInfo();
 		System.out.println(lastMove);
 		if (uiOn)
@@ -153,12 +170,12 @@ public class SocketPlayer implements Runnable {
 		status = Status.STARTED;
 	}
 
-	void handleTimeout() {
+	synchronized void handleTimeout() {
 		if (readByte() == Message.COMM_MSG_LOSE)
 			handleOver();
 	}
 
-	byte readByte() {
+	synchronized byte readByte() {
 		byte res = 0;
 		try {
 			res = (byte) sin.read();
@@ -168,7 +185,7 @@ public class SocketPlayer implements Runnable {
 		return res;
 	}
 
-	void writeByte(byte b) {
+	synchronized void writeByte(byte b) {
 		try {
 			sout.write(b);
 		} catch (IOException ioe) {
@@ -176,7 +193,7 @@ public class SocketPlayer implements Runnable {
 		}
 	}
 
-	ChessInfo readChessInfo() {
+	synchronized ChessInfo readChessInfo() {
 		try {
 			byte[] buf = new byte[8];
 			sin.read(buf);
@@ -186,7 +203,7 @@ public class SocketPlayer implements Runnable {
 		}
 	}
 
-	void writeChessInfo(ChessInfo info) {
+	synchronized void writeChessInfo(ChessInfo info) {
 		writeByte(Message.COMM_MSG_CHESS);
 		try {
 			sout.write(info.toBytes());
