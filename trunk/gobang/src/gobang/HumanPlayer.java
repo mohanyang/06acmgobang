@@ -77,8 +77,8 @@ public class HumanPlayer implements BoardListener, Runnable {
 	synchronized void judgeOver() {
 		if (isOver) {
 			int n = JOptionPane.showConfirmDialog(null,
-					(wins == Color.WHITE ? "Whie" : "Black")
-							+ " wins! Click y to restart, n to exit.",
+					(wins == Color.WHITE ? "WHITE" : "BLACK")
+							+ " wins!\nClick Y to restart, N to exit.",
 					"Gobang", JOptionPane.YES_NO_CANCEL_OPTION);
 			if (n == JOptionPane.OK_OPTION) {
 				playerReset();
