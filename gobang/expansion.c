@@ -88,15 +88,15 @@ ChildIterator getExpansion(Configuration v) {
 			*/
 		}
 	}
-	/*
-	printf("mllen=%d\n", retval->mllen);
 	
-	for (i=0; i<1; ++i){
+//	printf("mllen=%d\n", retval->mllen);
+	/*
+	for (i=0; i<retval->mllen; ++i){
 		printf("- %d %d %d\n", retval->movelist[i].m.x,
 			  retval->movelist[i].m.y, retval->movelist[i].val);
-	}*/
-	//getchar();
-	
+	}
+	getchar();
+	*/
 	return retval;
 }
 

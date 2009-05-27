@@ -76,10 +76,9 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ret.value=getCurrentValue(itr);
 		ret.move=getCurrent(itr);
 		releaseChildIterator(itr);
-		/*
-		printstack();
-		printf("eval %d\n", ret.value);
-		*/
+/*		printstack();
+		printf("eval %d\n", ret.value);*/
+		
 	}
 	else if (getType(v)==MAXNODE) {
 //		printf("*\n");
@@ -100,18 +99,18 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			*/
 			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
-			/*
-				printstack();
-				printf("black trying %d %d\n", 
-					getCurrent(itr).x, getCurrent(itr).y);
-			*/
+			
+/*			printstack();
+			printf("black trying %d %d\n", 
+				getCurrent(itr).x, getCurrent(itr).y);*/
+			
 			temp=alphaBeta(v, a, beta, depth-1);
-			/*
-				printstack();
-				printf("black try %d %d, result=%d\n", 
-					getCurrent(itr).x, getCurrent(itr).y,
-								temp.value);
-			*/
+			
+/*			printstack();
+			printf("black try %d %d, result=%d\n", 
+				getCurrent(itr).x, getCurrent(itr).y,
+							temp.value);*/
+			
 			if (temp.value>ret.value) {
 				ret.value=temp.value;
 				ret.move=getCurrent(itr);
@@ -122,6 +121,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (a>ret.value){
 				a=ret.value;
 			}
+			// TODO should use better evaluation
+			// to eliminate dangerous moves first
+			if (temp.value==-INFINITY)
+				break;
 //			printf("a=%d ret.value=%d\n", a, ret.value);
 			getNext(&itr);
 //			printf("e: %d %d\n", itr->current.x, itr->current.y);
@@ -139,18 +142,18 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (tickTimer()==0)
 				break;
 			applyMove(v, getCurrent(itr));
-			/*
-				printstack();
-				printf("white trying %d %d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y);
-			*/
+			
+/*			printstack();
+			printf("white trying %d %d\n", 
+					getCurrent(itr).x, getCurrent(itr).y);*/
+			
 			temp=alphaBeta(v, alpha, b, depth-1);
-			/*
-				printstack();
-				printf("white try %d %d, result=%d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y,
-								  temp.value);
-			*/
+			
+/*			printstack();
+			printf("white try %d %d, result=%d\n", 
+					getCurrent(itr).x, getCurrent(itr).y,
+								temp.value);*/
+			
 			if (temp.value<ret.value){
 				ret.value=temp.value;
 				ret.move=getCurrent(itr);
@@ -160,6 +163,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (b<ret.value){
 				b=ret.value;
 			}
+			// TODO should use better evaluation
+			// to eliminate dangerous moves first
+			if (temp.value==INFINITY)
+				break;
 //			printf("a=%d ret.value=%d\n", b, ret.value);
 			getNext(&itr);
 		}
@@ -189,8 +196,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			store(v, ret.move, FAIL_HIGH);
 		*/
 	}
-//	printf("ab return %d (%d,%d))\n", ret.value, ret.move.x,
-//		  ret.move.y);
+/*	printstack();
+	printf("ab return %d (%d,%d))\n", ret.value, ret.move.x,
+		  ret.move.y);*/
+//	getchar();
 	--stackcount;
 	return ret;
 }
