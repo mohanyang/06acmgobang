@@ -4,7 +4,7 @@
 
 JNIEXPORT void JNICALL Java_gobang_JNIAdapter_reset(JNIEnv *env, jobject cl)
 {
-	initializeEngie();
+	initializeEngine();
 }
 
 
