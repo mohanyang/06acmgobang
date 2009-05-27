@@ -79,6 +79,8 @@ void decreaseDepth(Configuration v);
 */
 int getDepth(Configuration v);
 
+int havePebbleAround(Configuration v, int x, int y);
+
 void setUB(Configuration v, int u);
 
 int getUB(Configuration v);

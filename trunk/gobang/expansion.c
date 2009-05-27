@@ -22,8 +22,6 @@ struct ChildPointer {
 struct ChildPointer _childitrcontainer[100];
 int _childitrpointer=0;
 
-// TODO a repository for struct ChildPointer
-
 int _compMovesInc(const void *x, const void *y){
 	return ((MoveListType*)x)->val-((MoveListType*)y)->val;
 }
@@ -50,9 +48,11 @@ ChildIterator getExpansion(Configuration v) {
 	else
 		target=-INFINITY;
 // 	printf("eeeeeeeeeeeeeeee\n");
+	// TODO forbidden
 	for (i=0; i<15; ++i) {
 		for (j=0; j<15; ++j)
-			if (getColor(v, i, j)==NONE) {
+			if (getColor(v, i, j)==NONE 
+						 && havePebbleAround(v, i, j)) {
 //				printf("%d,%d\n", i, j);
 				retval->movelist[retval->mllen].m.x=i;
 				retval->movelist[retval->mllen].m.y=j;

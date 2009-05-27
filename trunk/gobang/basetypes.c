@@ -40,8 +40,6 @@ void initializeBaseType(){
 }
 
 void initializeConfiguration(Configuration v, PEBBLE_COLOR p){
-	// TODO
-//	v->depth=0;
 	v->step=0;
 	v->type=MAXNODE;
 	v->hboard=malloc(sizeof(int)*16);
@@ -67,12 +65,13 @@ void setMover(Configuration v, PEBBLE_COLOR c){
 }
 
 PEBBLE_COLOR getColor(Configuration v, int x, int y){
-	if ((v->vboard[y] & (1 << x))!=0)
+	return v->data[x][y];
+/*	if ((v->vboard[y] & (1 << x))!=0)
 		return BLACK;
 	else if ((v->vboard[y] & (1 << (x+16)))!=0)
 		return WHITE;
 	else
-		return NONE;
+		return NONE;*/
 }
 
 void putPebble(Configuration v, int x, int y, PEBBLE_COLOR col){
@@ -281,4 +280,15 @@ void printVertical(int *a){
 				printf("-  ");
 		printf("\n");
 	}	
+}
+
+int havePebbleAround(Configuration v, int x, int y){
+	int i;
+	int lb=(x>=2)?(x-2):0;
+	int ub=(x<=12)?(x+2):14;
+	int mask=((1 << 5)-1) >> (y-2);
+	for (i=lb; i<=ub; ++i)
+		if ((v->hboard[i]) & mask)
+			return 1;
+	return 0;
 }

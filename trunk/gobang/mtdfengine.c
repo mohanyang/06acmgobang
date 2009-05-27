@@ -11,7 +11,7 @@ ReturnValue mtdf(Configuration v, int firstguess, int depth);
 
 int _globalcount=10;
 
-ReturnValue id_mtdf(Configuration v){
+ReturnValue id_mtdf(Configuration v, Returnval *ret){
 	ReturnValue f;
 	int target;
 	if (getMover(v)==BLACK)
@@ -32,6 +32,7 @@ ReturnValue id_mtdf(Configuration v){
 		for (depth=0; depth<=MAX_SEARCH_DEPTH; depth+=2) {
 			printf("id depth = %d\n", depth);
 			f=mtdf(v, f.value, depth);
+			*ret=f.move;
 			if (tickTimer()==0)
 				break;
 			if (f.value==target)

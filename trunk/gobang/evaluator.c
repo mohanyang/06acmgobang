@@ -102,3 +102,5 @@ void initializeEvaluate(){
 			_priority[15-1-i][15-1-j]=k;
 		}
 }
+
+}
