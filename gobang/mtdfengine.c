@@ -4,12 +4,10 @@
 #include "timer.h"
 
 enum {
-	MAX_SEARCH_DEPTH = 8
+	MAX_SEARCH_DEPTH = 10
 };
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
-
-int _globalcount=10;
 
 ReturnValue id_mtdf(Configuration v){
 	ReturnValue f;
@@ -21,9 +19,6 @@ ReturnValue id_mtdf(Configuration v){
 		target=-INFINITY;
 	f.value=0;
 	int depth=1;
-	// TODO read from configuration and 
-	// use heuristics
-	// TODO unbounded search depth
 	for (depth=0; 1; depth+=2) {
 		printf("id depth = %d\n", depth);
 		f=mtdf(v, f.value, depth);

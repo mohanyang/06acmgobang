@@ -6,6 +6,7 @@
 #include "evaluator.h"
 #include "enginetypes.h"
 #include "moveheuristic.h"
+#include "forbid.h"
 
 typedef struct {
 	Move m;
@@ -21,6 +22,7 @@ struct ChildPointer {
 
 struct ChildPointer _childitrcontainer[100];
 int _childitrpointer=0;
+int _forbid[15][15];
 
 int _compMovesInc(const void *x, const void *y){
 	return ((MoveListType*)x)->val-((MoveListType*)y)->val;
@@ -32,7 +34,6 @@ int _compMovesDec(const void *x, const void *y){
 
 ChildIterator getExpansion(Configuration v) {
 	ChildIterator retval=&_childitrcontainer[_childitrpointer];
-	memset(retval, 0, sizeof(struct ChildPointer));
 	++_childitrpointer;
 //	printf("child pointer %d\n", _childitrpointer);
 	
@@ -49,37 +50,45 @@ ChildIterator getExpansion(Configuration v) {
 	else
 		target=-INFINITY;
 // 	printf("eeeeeeeeeeeeeeee\n");
-	// TODO forbidden
-	for (i=0; i<15; ++i) {
+	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==NONE 
-						 && havePebbleAround(v, i, j)) {
+					&& havePebbleAround(v, i, j)){
+				if (forbid(v, i, j) && player==BLACK)
+					_forbid[i][j]=-1;
+				else
+					_forbid[i][j]=1;
+			}
+			else
+				_forbid[i][j]=0;
+	for (i=0; i<15; ++i) {
+		for (j=0; j<15; ++j)
+			if (_forbid[i][j]==1) {
+			// TODO generate forbid
 // 				printf("%d,%d\n", i, j);
 				retval->movelist[retval->mllen].m.x=i;
 				retval->movelist[retval->mllen].m.y=j;
-				retval->movelist[retval->mllen].val=
-						getMoveEvaluate(v, i, j, &flag);
-				if (flag){
+				if (_forbid[i][j]==-1){
+					retval->movelist[retval->mllen].val=
+							-INFINITY;
+				}
+				else {
+					retval->movelist[retval->mllen].val=
+							getMoveEvaluate(v, i, j, &flag);
+					if (flag){
+					// not found in hash
 					// TODO should think of calculating
 					// incrementally
-					putPebble(v, i, j, player);
+						putPebble(v, i, j, player);
 // 					printBoardNonBlock(v);
-					retval->movelist[retval->mllen].val=
-						evaluateBoard(v, player);
-					removePebble(v, i, j);
+						retval->movelist[retval->mllen].val=
+								evaluateBoard(v, player);
+						removePebble(v, i, j);
 /*					printf("recalc %d\n", 
-						   retval->movelist[retval->mllen].val);*/
+						retval->movelist[retval->mllen].val);*/
+					}
+					++(retval->mllen);
 				}
-				++(retval->mllen);
-				/*
-				if (retval->movelist[retval->mllen-1].val==target) {
-					retval->mllen=1;
-					retval->movelist[0].m.x=i;
-					retval->movelist[0].m.y=j;
-					retval->movelist[0].val=target;
-					flag=1;
-					break;
-				}*/
 			}
 	}
 	if (getType(v)==MAXNODE)

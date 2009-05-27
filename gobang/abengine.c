@@ -79,7 +79,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		releaseChildIterator(itr);
 		updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
 /*		printstack();
-		printf("eval %d\n", ret.value);*/
+		printf("eval %d\n", ret.value);
+		printBoardNonBlock(v);*/
 	}
 	else if (getType(v)==MAXNODE) {
 //		printf("*\n");
@@ -97,17 +98,17 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
 			
-/*			printstack();
+			printstack();
 			printf("black trying %d %d\n", 
-				getCurrent(itr).x, getCurrent(itr).y);*/
+				getCurrent(itr).x, getCurrent(itr).y);
 			
 			temp=alphaBeta(v, a, beta, depth-1);
 			updateMoveHeuristic(v, temp.move.x,
 								temp.move.y, temp.value);
-/*			printstack();
+			printstack();
 			printf("black try %d %d, result=%d\n", 
 				getCurrent(itr).x, getCurrent(itr).y,
-							temp.value);*/
+							temp.value);
 			
 			if (temp.value>ret.value) {
 				ret.value=temp.value;
@@ -142,18 +143,18 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				break;
 			applyMove(v, getCurrent(itr));
 			
-/*			printstack();
+			printstack();
 			printf("white trying %d %d\n", 
-					getCurrent(itr).x, getCurrent(itr).y);*/
+					getCurrent(itr).x, getCurrent(itr).y);
 			
 			temp=alphaBeta(v, alpha, b, depth-1);
 			updateMoveHeuristic(v, temp.move.x,
 								temp.move.y, temp.value);
 			
-/*			printstack();
+			printstack();
 			printf("white try %d %d, result=%d\n", 
 					getCurrent(itr).x, getCurrent(itr).y,
-								temp.value);*/
+								temp.value);
 			
 			if (temp.value<ret.value){
 				ret.value=temp.value;
