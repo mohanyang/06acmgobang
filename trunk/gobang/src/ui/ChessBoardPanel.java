@@ -25,6 +25,7 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 	private int xl, xr, yl, yr;
 	private byte board[][];
 	private byte line[];
+	private BufferedImage bgImg = null;
 	private BufferedImage bg = null;
 	private BufferedImage bChess = null, wChess = null;
 	private int[] cx = null, cy = null;
@@ -57,6 +58,7 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 	public void init() {
 		bChess = ImageLoader.loadImageByName("black.png");
 		wChess = ImageLoader.loadImageByName("white.png");
+		bgImg = ImageLoader.loadImageByName("board.gif");
 		bg = new BufferedImage(400, 400, BufferedImage.TYPE_INT_RGB);
 
 		board = new byte[width][height];
@@ -163,8 +165,9 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 
 	synchronized void drawGrid(Graphics g) {
 		int x1, y1;
-		g.setColor(java.awt.Color.decode("#B8CFE5"));
-		g.fillRect(0, 0, 400, 400);
+		// g.setColor(java.awt.Color.decode("#B8CFE5"));
+		// g.fillRect(0, 0, 400, 400);
+		g.drawImage(bgImg, 0, 0, null);
 		g.setColor(java.awt.Color.BLACK);
 		for (int i = 0; i < width; ++i) {
 			x1 = (i + 1) * gridHeight;
