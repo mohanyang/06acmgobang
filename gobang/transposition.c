@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
+#include "hashsrv.h"
 #include "transposition.h"
 
 struct HNode{
@@ -42,8 +43,6 @@ int containersize=0;
 Configuration tempconf;
 Move *tempmove;
 
-int _zohrist[2][16][16];
-
 /**
  * returns 0 if configuration v and hasnode p
  * represents the same configuration
@@ -56,14 +55,6 @@ int compare(Configuration v, int p){
 	return 0;
 }
 
-int getHash(Configuration v){
-	int i;
-	unsigned int res=0;
-	for (i=0; i<15; ++i)
-		res=(res * 4099)+v->hboard[i];
-	return res % MAX_HASH_SIZE;
-}
-
 void hashInitialize(){
 	pointer=malloc(MAX_HASH_SIZE*sizeof(int));
 	memset((void*)pointer, 0, sizeof(int)*MAX_HASH_SIZE);
@@ -71,25 +62,6 @@ void hashInitialize(){
 	memset((void*)container, 0, sizeof(struct HNode)*MAX_TABLE_SIZE);
 	tempconf=allocConfiguration();
 	tempmove=malloc(sizeof(Move));
-	int i,j,k;
-	srand(time(NULL));
-	for (i=0; i<2; ++i)
-		for (j=0; j<16; ++j)
-			for (k=0; k<16; ++k)
-				_zohrist[i][j][k]=(rand() << 16) | rand();
-}
-
-void updateHash(Configuration v, int x, int y, PEBBLE_COLOR c){
-	switch (c){
-		case BLACK:
-			v->hash ^= _zohrist[0][x][y];
-			break;
-		case WHITE:
-			v->hash ^= _zohrist[1][x][y];
-			break;
-		default:
-			break;
-	}
 }
 
 HashRetVal retrieve(Configuration v){
@@ -97,7 +69,7 @@ HashRetVal retrieve(Configuration v){
 	// need to calculate hash every time
 	// TODO how to deal with fail lo and fail hi nodes
 	return NULL;
-	int key=getHash(v);
+	int key=calcHash(v, MAX_TABLE_SIZE);
 	/*
 	if (hitcount % 1000==0){
 		printf("%d %d\n", hitcount, misscount);
@@ -166,7 +138,7 @@ void rotateMove(Move *m){
 }
 
 void saveConfiguration(Configuration v, Move *m, HashNodeType type){
-	int key=getHash(v);
+	int key=calcHash(v, MAX_TABLE_SIZE);
 	/*
 	printf("===storing %d / %d ~ %d===\n", key, v->lowerbound, 
 		  v->upperbound);

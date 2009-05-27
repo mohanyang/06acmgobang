@@ -3,12 +3,12 @@
 #include "enginetypes.h"
 #include <stdio.h>
 
-void main(){
+int main(){
 	Move m;
 	ReturnValue r;
 	initializeEngine();
 	
-	m.x=7;	m.y=7;
+/*	m.x=7;	m.y=7;
 	playMove(m);
 	m.x=6; m.y=6;
 	playMove(m);
@@ -18,9 +18,8 @@ void main(){
 	playMove(m);
 	m.x=8; m.y=6;
 	playMove(m);
-	getchar();
 	r=search(WHITE);
-	playMove(r.move);
+	playMove(r.move);*/
 	
 	while (1){
 		printf("black: ");
@@ -32,4 +31,6 @@ void main(){
 		printf("white: %d %d\n", r.move.x, r.move.y);
 		playMove(r.move);
 	}
+	
+	return 0;
 }

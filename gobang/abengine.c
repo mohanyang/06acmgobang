@@ -6,6 +6,7 @@
 #include "evaluator.h"
 #include "expansion.h"
 #include "timer.h"
+#include "moveheuristic.h"
 
 int max(int a, int b){
 	return a>b?a:b;
@@ -76,6 +77,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ret.value=getCurrentValue(itr);
 		ret.move=getCurrent(itr);
 		releaseChildIterator(itr);
+		updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
 /*		printstack();
 		printf("eval %d\n", ret.value);*/
 		
@@ -105,7 +107,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				getCurrent(itr).x, getCurrent(itr).y);*/
 			
 			temp=alphaBeta(v, a, beta, depth-1);
-			
+			updateMoveHeuristic(v, temp.move.x,
+								temp.move.y, temp.value);
 /*			printstack();
 			printf("black try %d %d, result=%d\n", 
 				getCurrent(itr).x, getCurrent(itr).y,
@@ -148,6 +151,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					getCurrent(itr).x, getCurrent(itr).y);*/
 			
 			temp=alphaBeta(v, alpha, b, depth-1);
+			updateMoveHeuristic(v, temp.move.x,
+								temp.move.y, temp.value);
 			
 /*			printstack();
 			printf("white try %d %d, result=%d\n", 

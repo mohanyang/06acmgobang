@@ -33,6 +33,4 @@ HashRetVal retrieve(Configuration v);
  */
 void store(Configuration v, Move m, HashNodeType type);
 
-void updateHash(Configuration v, int x, int y, PEBBLE_COLOR c);
-
 #endif

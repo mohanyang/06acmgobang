@@ -4,12 +4,12 @@
 #include "timer.h"
 
 enum {
-	MAX_SEARCH_DEPTH = 4
+	MAX_SEARCH_DEPTH = 6
 };
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
 
-int _globalcount=3;
+int _globalcount=0;
 
 ReturnValue id_mtdf(Configuration v){
 	ReturnValue f;
@@ -21,6 +21,7 @@ ReturnValue id_mtdf(Configuration v){
 	f.value=0;
 	int depth=1;
 	resetTimer();
+	// TODO increase globalcount here??
 	++_globalcount;
 	if (_globalcount<3)
 		f=mtdf(v, f.value, 2);
