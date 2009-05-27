@@ -32,7 +32,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	ReturnValue temp;
 	ret.alpha=alpha;
 	ret.beta=beta;
-	if (s!=NULL) {
+/*	if (s!=NULL) {
 		switch (s->type){
 			case EXACT:
 				if (s->lowerbound>=beta) {
@@ -71,7 +71,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				break;
 		}
 		free(s);
-	}
+	}*/
 	if (depth==0) {
 		ChildIterator itr=getExpansion(v);
 		ret.value=getCurrentValue(itr);
