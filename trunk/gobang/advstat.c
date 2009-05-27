@@ -4,6 +4,8 @@
 #include "basestat.h"
 #include "enginetypes.h"
 
+int _localpriority[15][15];
+
 int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 /*	int i, j;
 	for (i=1; i<=5; ++i)
