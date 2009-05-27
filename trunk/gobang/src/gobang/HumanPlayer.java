@@ -98,7 +98,7 @@ public class HumanPlayer implements BoardListener, Runnable {
 
 	synchronized void AIPlay() {
 		cf.waitResponse();
-		lastMove = new ChessInfo(color, jni.GenerateChessInfo());
+		lastMove = new ChessInfo(color, jni.generateChessInfo());
 		System.out.println(lastMove);
 		jni.playChess(lastMove.toInt());
 		cf.drawChess(lastMove.col, lastMove.row, lastMove.color, false);

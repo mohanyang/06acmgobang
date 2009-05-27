@@ -17,10 +17,18 @@ JNIEXPORT void JNICALL Java_gobang_JNIAdapter_reset
 
 /*
  * Class:     gobang_JNIAdapter
- * Method:    GenerateChessInfo
+ * Method:    generateChessInfo
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_gobang_JNIAdapter_GenerateChessInfo
+JNIEXPORT jint JNICALL Java_gobang_JNIAdapter_generateChessInfo
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     gobang_JNIAdapter
+ * Method:    getCurrentSolution
+ * Signature: ()I
+ */
+JNIEXPORT jint JNICALL Java_gobang_JNIAdapter_getCurrentSolution
   (JNIEnv *, jobject);
 
 /*
