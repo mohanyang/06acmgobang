@@ -3,7 +3,7 @@
 #include "hashsrv.h"
 
 int _zobrist[2][16][16];
-
+// TODO calculate hash on the fly
 void initializeHashService(){
 	int i,j,k;
 	srand(time(0));
