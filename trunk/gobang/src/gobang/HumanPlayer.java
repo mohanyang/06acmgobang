@@ -1,5 +1,9 @@
 package gobang;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 import javax.swing.JOptionPane;
 
 import types.ChessInfo;
@@ -19,6 +23,7 @@ public class HumanPlayer implements BoardListener, Runnable {
 	private byte wins = Color.NONE;
 
 	private int mode = 0;
+	private PrintStream out = null;
 
 	public HumanPlayer(int mode) {
 		this.mode = mode;
@@ -26,6 +31,11 @@ public class HumanPlayer implements BoardListener, Runnable {
 			jni = new JNIAdapter();
 		cf = new ChessFrame(false, "human player");
 		cf.addBoardListener(this);
+		try {
+			out = new PrintStream(new File("log.txt"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void run() {
@@ -76,6 +86,7 @@ public class HumanPlayer implements BoardListener, Runnable {
 
 	synchronized void judgeOver() {
 		if (isOver) {
+			out.println((wins == Color.WHITE ? "WHITE" : "BLACK") + " wins");
 			int n = JOptionPane.showConfirmDialog(null,
 					(wins == Color.WHITE ? "WHITE" : "BLACK")
 							+ " wins!\nClick Y to restart, N to exit.",
@@ -99,6 +110,7 @@ public class HumanPlayer implements BoardListener, Runnable {
 	synchronized void AIPlay() {
 		cf.waitResponse();
 		lastMove = new ChessInfo(color, jni.generateChessInfo());
+		out.println(lastMove);
 		System.out.println(lastMove);
 		jni.playChess(lastMove.toInt());
 		cf.drawChess(lastMove.col, lastMove.row, lastMove.color, false);
@@ -112,6 +124,7 @@ public class HumanPlayer implements BoardListener, Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		out.println(lastMove);
 		System.out.println(lastMove);
 		if (jni != null)
 			jni.playChess(lastMove.toInt());
