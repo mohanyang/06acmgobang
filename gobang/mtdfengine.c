@@ -4,7 +4,7 @@
 #include "timer.h"
 
 enum {
-	MAX_SEARCH_DEPTH = 10
+	MAX_SEARCH_DEPTH = 40
 };
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
@@ -19,7 +19,7 @@ ReturnValue id_mtdf(Configuration v){
 		target=-INFINITY;
 	f.value=0;
 	int depth=1;
-	for (depth=0; 1; depth+=2) {
+	for (depth=0; depth<MAX_SEARCH_DEPTH; depth+=2) {
 		printf("id depth = %d\n", depth);
 		f=mtdf(v, f.value, depth);
 		if (tickTimer()==0)
