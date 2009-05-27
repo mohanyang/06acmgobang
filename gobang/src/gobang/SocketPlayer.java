@@ -27,7 +27,6 @@ public class SocketPlayer implements Runnable {
 	private boolean uiOn = false;
 	private ChessFrame cf = null;
 	private JNIAdapter jni = null;
-	private int timeLimit = 0;
 
 	public SocketPlayer() {
 		try {
@@ -38,7 +37,6 @@ public class SocketPlayer implements Runnable {
 			sout = socket.getOutputStream();
 			jni = new JNIAdapter();
 			uiOn = Config.getBoolean("ui");
-			timeLimit = Config.getInteger("timelimit") * 9 / 10;
 			if (uiOn)
 				cf = new ChessFrame(true, "AI player");
 		} catch (IOException e) {
@@ -99,28 +97,10 @@ public class SocketPlayer implements Runnable {
 		}
 	}
 
-	Integer ret;
-
 	synchronized void handleStarted() {
 		if (curColor == color) {
 			System.out.println("generating chess info...");
-			ret = null;
-			try {
-				new Thread() {
-					public void run() {
-						ret = jni.generateChessInfo();
-					}
-				}.join(timeLimit);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			if (ret == null) {
-				ret = jni.getCurrentSolution();
-				if (ret == null)
-					System.exit(0);
-			}
-
+			int ret = jni.generateChessInfo();
 			ChessInfo info = new ChessInfo(color, ret);
 			status = Status.WAITRES;
 			writeChessInfo(info);

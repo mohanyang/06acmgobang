@@ -14,12 +14,6 @@ JNIEXPORT jint JNICALL Java_gobang_JNIAdapter_generateChessInfo(JNIEnv *env, job
 	return ret;
 }
 
-JNIEXPORT jint JNICALL Java_gobang_JNIAdapter_getCurrentSolution(JNIEnv *env, jobject cl)
-{
-	jint ret = (jint)getCurrentSolution();
-	return ret;
-}
-
 JNIEXPORT void JNICALL Java_gobang_JNIAdapter_playChess(JNIEnv *env, jobject cl, jint info)
 {
 	playchess(info);
