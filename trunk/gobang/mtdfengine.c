@@ -11,7 +11,7 @@ ReturnValue mtdf(Configuration v, int firstguess, int depth);
 
 int _globalcount=10;
 
-ReturnValue id_mtdf(Configuration v, ReturnValue *ret){
+ReturnValue id_mtdf(Configuration v){
 	ReturnValue f;
 	ReturnValue temp;
 	int target;
@@ -21,26 +21,18 @@ ReturnValue id_mtdf(Configuration v, ReturnValue *ret){
 		target=-INFINITY;
 	f.value=0;
 	int depth=1;
-	resetTimer();
-	// TODO increase globalcount here??
-	++_globalcount;
-	if (_globalcount<5)
-		f=mtdf(v, f.value, 2);
-	else {
 	// TODO read from configuration and 
 	// use heuristics
 	// TODO unbounded search depth
-		for (depth=0; depth<=MAX_SEARCH_DEPTH; depth+=2) {
-			printf("id depth = %d\n", depth);
-			f=mtdf(v, f.value, depth);
-			*ret=f;
-			if (tickTimer()==0)
-				break;
-			else
-				temp=f;
-			if (f.value==target)
-				break;
-		}
+	for (depth=0; 1; depth+=2) {
+		printf("id depth = %d\n", depth);
+		f=mtdf(v, f.value, depth);
+		if (tickTimer()==0)
+			break;
+		else
+			temp=f;
+		if (f.value==target)
+			break;
 	}
 	return temp;
 }
