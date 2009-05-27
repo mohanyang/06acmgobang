@@ -206,12 +206,12 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 				byte oldColor = color;
 				drawChess(gridX, gridY, color, true);
 				judge();
-				for (BoardListener listener : list)
-					listener.onClick(oldColor, (byte) gridY, (byte) gridX);
 				if (isOver) {
 					for (BoardListener listener : list)
 						listener.reset(wins);
 				}
+				for (BoardListener listener : list)
+					listener.onClick(oldColor, (byte) gridY, (byte) gridX);
 			}
 		}
 	}
