@@ -9,7 +9,7 @@ enum {
 
 ReturnValue mtdf(Configuration v, int firstguess, int depth);
 
-int _globalcount=0;
+int _globalcount=3;
 
 ReturnValue id_mtdf(Configuration v){
 	ReturnValue f;
