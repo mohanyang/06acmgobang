@@ -143,9 +143,9 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				break;
 			applyMove(v, getCurrent(itr));
 			
-			/*printstack();
+/*			printstack();
 			printf("white trying %d %d\n", 
-			*/		getCurrent(itr).x, getCurrent(itr).y);
+					getCurrent(itr).x, getCurrent(itr).y);*/
 			
 			temp=alphaBeta(v, alpha, b, depth-1);
 			updateMoveHeuristic(v, temp.move.x,
