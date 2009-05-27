@@ -21,14 +21,14 @@ public class ChessFrame extends JFrame {
 	JList list = null;
 	JTextArea text = null;
 
-	public ChessFrame(boolean auto) {
+	public ChessFrame(boolean auto, String title) {
 		try {
 			UIManager.setLookAndFeel(UIManager
 					.getCrossPlatformLookAndFeelClassName());
 		} catch (Exception e) {
 		}
 		setIconImage(ImageLoader.systemIcon);
-		setTitle("Gobang");
+		setTitle("Gobang " + title);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		chessBoardPanel = new ChessBoardPanel(15, 15, auto);

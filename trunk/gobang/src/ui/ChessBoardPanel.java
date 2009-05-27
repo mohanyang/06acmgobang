@@ -113,9 +113,24 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 		for (int i = 0; i < count; ++i)
 			if (cc[i] == Color.BLACK) {
 				bf.drawImage(bChess, cx[i], cy[i], null);
+				bf.setColor(java.awt.Color.WHITE);
+				if (i < 10)
+					bf.drawString(String.valueOf(i + 1), cx[i] + 8, cy[i] + 16);
+				else if (i < 100)
+					bf.drawString(String.valueOf(i + 1), cx[i] + 4, cy[i] + 16);
+				else
+					bf.drawString(String.valueOf(i + 1), cx[i] + 0, cy[i] + 16);
 			} else if (cc[i] == Color.WHITE) {
 				bf.drawImage(wChess, cx[i], cy[i], null);
+				bf.setColor(java.awt.Color.BLACK);
+				if (i < 10)
+					bf.drawString(String.valueOf(i + 1), cx[i] + 8, cy[i] + 16);
+				else if (i < 100)
+					bf.drawString(String.valueOf(i + 1), cx[i] + 4, cy[i] + 16);
+				else
+					bf.drawString(String.valueOf(i + 1), cx[i] + 0, cy[i] + 16);
 			}
+		bf.setColor(java.awt.Color.BLACK);
 		if (newChess)
 			bf.drawRoundRect(cx[count - 1], cy[count - 1], gridWidth,
 					gridHeight, 5, 5);

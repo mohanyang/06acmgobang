@@ -35,7 +35,7 @@ public class SocketPlayer implements Runnable {
 			sin = socket.getInputStream();
 			sout = socket.getOutputStream();
 			jni = new JNIAdapter();
-			cf = new ChessFrame(true);
+			cf = new ChessFrame(true, "AI player");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -44,7 +44,6 @@ public class SocketPlayer implements Runnable {
 
 	public void run() {
 		while (true) {
-			System.out.println(status);
 			switch (status) {
 			case Status.UNSTART:
 				handleUnstart();
@@ -80,10 +79,12 @@ public class SocketPlayer implements Runnable {
 		case Message.COMM_MSG_FIRST:
 			color = Color.BLACK;
 			System.out.println("player color " + color);
+			cf.setTitle("Gobang AI player BLACK");
 			writeByte(Message.COMM_MSG_GAME_REQUIRE_START);
 			break;
 		case Message.COMM_MSG_SECOND:
 			color = Color.WHITE;
+			cf.setTitle("Gobang AI player WHITE");
 			System.out.println("player color " + color);
 			writeByte(Message.COMM_MSG_GAME_REQUIRE_START);
 			break;
@@ -91,8 +92,8 @@ public class SocketPlayer implements Runnable {
 	}
 
 	void handleStarted() {
-		System.err.println(curColor == color);
 		if (curColor == color) {
+			System.out.println("generating chess info...");
 			ChessInfo info = new ChessInfo(color, jni.GenerateChessInfo());
 			status = Status.WAITRES;
 			writeChessInfo(info);
@@ -108,7 +109,7 @@ public class SocketPlayer implements Runnable {
 			handleSolProb();
 			break;
 		case Message.COMM_MSG_ACCEPTED:
-			status = Status.STARTED;
+			// status = Status.STARTED;
 			break;
 		case Message.COMM_MSG_CHESS:
 			handleChessmove();
@@ -137,11 +138,11 @@ public class SocketPlayer implements Runnable {
 
 	void handleChessmove() {
 		readChessInfo();
-		System.out.println("chess move " + lastMove.col + " " + lastMove.row
-				+ " color " + lastMove.color);
+		System.out.println(lastMove);
 		cf.drawChess(lastMove.col, lastMove.row, lastMove.color, true);
 		jni.playChess(lastMove.toInt());
 		curColor = (byte) (Color.SUM - lastMove.color);
+		status = Status.STARTED;
 	}
 
 	void handleTimeout() {
@@ -153,7 +154,6 @@ public class SocketPlayer implements Runnable {
 		byte res = 0;
 		try {
 			res = (byte) sin.read();
-			System.out.println("read " + res);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
