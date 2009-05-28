@@ -7,6 +7,7 @@
 #include "enginetypes.h"
 #include "moveheuristic.h"
 #include "forbid.h"
+#include "dangerous.h"
 
 typedef struct {
 	Move m;
@@ -34,6 +35,7 @@ int _compMovesDec(const void *x, const void *y){
 
 ChildIterator getExpansion(Configuration v) {
 	ChildIterator retval=&_childitrcontainer[_childitrpointer];
+	int have2=0, temp;
 	++_childitrpointer;
 //	printf("child pointer %d\n", _childitrpointer);
 	
@@ -62,32 +64,37 @@ ChildIterator getExpansion(Configuration v) {
 		evaluateBoard(v, BLACK);
 		for (i=0; i<15; ++i)
 			for (j=0; j<15; ++j)
-				if (isDangerous(v, i, j, WHITE) 
+				if ((temp=isDangerous(v, i, j, WHITE)) 
 					&& _forbid[i][j]==1
 				   	&& getColor(v, i, j)==NONE){
-					retval->movelist[retval->mllen].m.x=i;
-					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val=2*INFINITY;
-					++(retval->mllen);
-				}
-		// if there is no hazard
-		for (i=0; i<15; ++i)
-			for (j=0; j<15; ++j)
-				if (isDangerous(v, i, j, WHITE)==0 
-					&& _forbid[i][j]==1
-					&& getColor(v, i, j)==NONE){
-					retval->movelist[retval->mllen].m.x=i;
-					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val
-							=getMoveEvaluate(v, i, j, &flag);
-					if (flag){
-						putPebble(v, i, j, player);
-						retval->movelist[retval->mllen].val
-								=evaluateBoard(v, player);
-						removePebble(v, i, j);
+					if (temp==2) {
+						have2=1;
 					}
+					retval->movelist[retval->mllen].m.x=i;
+					retval->movelist[retval->mllen].m.y=j;
+					retval->movelist[retval->mllen].val=INFINITY+5;
 					++(retval->mllen);
 				}
+		if (have2 || retval->mllen==0){
+			// if there is no hazard
+			for (i=0; i<15; ++i)
+				for (j=0; j<15; ++j)
+					if (isDangerous(v, i, j, WHITE)==0 
+					   && _forbid[i][j]==1
+					   && getColor(v, i, j)==NONE){
+						retval->movelist[retval->mllen].m.x=i;
+						retval->movelist[retval->mllen].m.y=j;
+						retval->movelist[retval->mllen].val
+								=getMoveEvaluate(v, i, j, &flag);
+						if (flag){
+							putPebble(v, i, j, player);
+							retval->movelist[retval->mllen].val
+								=evaluateBoard(v, player);
+							removePebble(v, i, j);
+						}
+						++(retval->mllen);
+				   }
+		}
 		if (retval->mllen==0){
 			// TODO if still nothing found
 		}
@@ -104,28 +111,33 @@ ChildIterator getExpansion(Configuration v) {
 			}
 		}*/
 		// if there is hazard, evaluate the score
-		l=0;
-		while (l<retval->mllen && retval->movelist[l].val==2*INFINITY){
-			retval->movelist[l].val
-				=getMoveEvaluate(v, 
-					retval->movelist[l].m.x,
-		  			retval->movelist[l].m.y,
-					&flag);
-			if (flag){
-				putPebble(v,
-					retval->movelist[l].m.x,
-					retval->movelist[l].m.y,
-  					player);
-				retval->movelist[l].val
-					=evaluateBoard(v, player);
-				removePebble(v,
-					retval->movelist[l].m.x,
-					retval->movelist[l].m.y);
-			}
-			++l;
+		if (retval->mllen>0 && retval->movelist[0].val>INFINITY+5){
+			retval->mllen=1;
 		}
-		qsort(retval->movelist, l, sizeof(MoveListType),
-			  _compMovesDec);
+		else {
+			l=0;
+			while (l<retval->mllen && retval->movelist[l].val==INFINITY+5){
+				retval->movelist[l].val
+					=getMoveEvaluate(v, 
+						retval->movelist[l].m.x,
+		 				retval->movelist[l].m.y,
+	 					&flag);
+				if (flag){
+					putPebble(v,
+						retval->movelist[l].m.x,
+		 				retval->movelist[l].m.y,
+   						player);
+					retval->movelist[l].val
+						=evaluateBoard(v, player);
+					removePebble(v,
+						retval->movelist[l].m.x,
+		 			retval->movelist[l].m.y);
+				}
+				++l;
+			}
+			qsort(retval->movelist, l, sizeof(MoveListType),
+				  _compMovesDec);
+		}
 	}
 	else {
 		target=-INFINITY;
@@ -135,57 +147,66 @@ ChildIterator getExpansion(Configuration v) {
 		for (i=0; i<15; ++i)
 			for (j=0; j<15; ++j)
 				if (getColor(v, i, j)==NONE
-					&& isDangerous(v, i, j, BLACK)) {
+					&& (temp=isDangerous(v, i, j, BLACK))) {
+					if (temp==2)
+						have2=1;
 					retval->movelist[retval->mllen].m.x=i;
 					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val=-2*INFINITY;
+					retval->movelist[retval->mllen].val=-INFINITY-5;
 					++(retval->mllen);
 				}
+		if (have2 || retval->mllen==0){
 		// if there is no hazard
-		for (i=0; i<15; ++i)
-			for (j=0; j<15; ++j)
-				if (isDangerous(v, i, j, BLACK)==0
-					&& getColor(v, i, j)==NONE
-					&& havePebbleAround(v, i, j)){
-					retval->movelist[retval->mllen].m.x=i;
-					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val
-							=getMoveEvaluate(v, i, j, &flag);
-					if (flag){
-						putPebble(v, i, j, player);
+			for (i=0; i<15; ++i)
+				for (j=0; j<15; ++j)
+					if (isDangerous(v, i, j, BLACK)==0
+					   && getColor(v, i, j)==NONE
+					   && havePebbleAround(v, i, j)){
+						retval->movelist[retval->mllen].m.x=i;
+						retval->movelist[retval->mllen].m.y=j;
 						retval->movelist[retval->mllen].val
-								=evaluateBoard(v, player);
-						removePebble(v, i, j);
-					}
-					++(retval->mllen);
-				}
+							=getMoveEvaluate(v, i, j, &flag);
+						if (flag){
+							putPebble(v, i, j, player);
+							retval->movelist[retval->mllen].val
+									=evaluateBoard(v, player);
+							removePebble(v, i, j);
+						}
+						++(retval->mllen);
+				   }
+		}
 		if (retval->mllen==0){
 			// TODO if still nothing found
 		}
 		qsort(retval->movelist, retval->mllen,
 			  sizeof(MoveListType), _compMovesInc);
-		l=0;
-		while (l<retval->mllen && retval->movelist[l].val==-2*INFINITY){
-			retval->movelist[l].val
-				=getMoveEvaluate(v, 
-					retval->movelist[l].m.x,
-					retval->movelist[l].m.y,
-					&flag);
-			if (flag){
-				putPebble(v,
-					retval->movelist[l].m.x,
-					retval->movelist[l].m.y,
-  					player);
-				retval->movelist[l].val
-					=evaluateBoard(v, player);
-				removePebble(v,
-					retval->movelist[l].m.x,
-					retval->movelist[l].m.y);
-			}
-			++l;
+		if (retval->mllen>0 && retval->movelist[0].val<-INFINITY-5){
+			retval->mllen=1;
 		}
-		qsort(retval->movelist, l, sizeof(MoveListType),
-			  _compMovesInc);
+		else {
+			l=0;
+			while (l<retval->mllen && retval->movelist[l].val==-INFINITY-5){
+				retval->movelist[l].val
+					=getMoveEvaluate(v, 
+						retval->movelist[l].m.x,
+						retval->movelist[l].m.y,
+						&flag);
+				if (flag){
+					putPebble(v,
+						retval->movelist[l].m.x,
+						retval->movelist[l].m.y,
+						player);
+					retval->movelist[l].val
+						=evaluateBoard(v, player);
+					removePebble(v,
+						retval->movelist[l].m.x,
+						retval->movelist[l].m.y);
+				}
+				++l;
+			}
+			qsort(retval->movelist, l, sizeof(MoveListType),
+				_compMovesInc);
+		}
 	}
 /*	printf(">>>>>>>>>>>>\n");
 	printf("altogether %d\n", retval->mllen);

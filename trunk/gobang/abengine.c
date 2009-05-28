@@ -8,6 +8,10 @@
 #include "timer.h"
 #include "moveheuristic.h"
 
+enum {
+	DEBUG_STACK = 0
+};
+
 int max(int a, int b){
 	return a>b?a:b;
 }
@@ -26,7 +30,11 @@ void printstack(){
 
 ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	int counter=0;
-//	printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
+	if (DEBUG_STACK){
+		printstack();
+		printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
+// 		printBoardNonBlock(v);
+	}
 	++stackcount;
 	HashRetVal s;
 	s=retrieve(v);
@@ -41,12 +49,16 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					ret.value=s->lowerbound;
 					ret.move=s->mv;
 					--stackcount;
+					printstack();
+					printf("hit exact 1\n");
 					return ret;
 				}
 				if (s->upperbound<=alpha) {
 					ret.value=s->upperbound;
 					ret.move=s->mv;
 					--stackcount;
+					printstack();
+					printf("hit exact 2\n");
 					return ret;
 				}
 				ret.alpha=max(alpha, s->lowerbound);
@@ -58,6 +70,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					ret.value=s->upperbound;
 					ret.move=s->mv;
 					--stackcount;
+					printstack();
+					printf("hit fail low\n");
 					return ret;
 				}
 				break;
@@ -66,6 +80,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					ret.value=s->lowerbound;
 					ret.move=s->mv;
 					--stackcount;
+					printstack();
+					printf("hit fail high\n");
 					return ret;
 				}
 				break;
@@ -80,9 +96,13 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ret.move=getCurrent(itr);
 		releaseChildIterator(itr);
 		updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
-/*		printstack();
-		printf("eval %d\n", ret.value);*/
-// 		printBoardNonBlock(v);
+		if (DEBUG_STACK){
+			printstack();
+			printf("eval %d\n", ret.value);
+			printstack();
+			printf("(%d, %d)\n", ret.move.x, ret.move.y);
+// 			printBoardNonBlock(v);
+		}
 	}
 	else if (getType(v)==MAXNODE) {
 //		printf("*\n");
@@ -100,17 +120,21 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			applyMove(v, getCurrent(itr));
 //			printBoardNonBlock(v);
 			
-/*			printstack();
-			printf("black trying %d %d\n", 
-				getCurrent(itr).x, getCurrent(itr).y);*/
+			if (DEBUG_STACK){
+				printstack();
+				printf("black trying %d %d\n", 
+					   getCurrent(itr).x, getCurrent(itr).y);
+			}
 			
 			temp=alphaBeta(v, a, beta, depth-1);
 			updateMoveHeuristic(v, temp.move.x,
 								temp.move.y, temp.value);
-/*			printstack();
-			printf("black try %d %d, result=%d\n", 
-				getCurrent(itr).x, getCurrent(itr).y,
-							temp.value);*/
+			if (DEBUG_STACK){
+				printstack();
+				printf("black try %d %d, result=%d\n", 
+					   getCurrent(itr).x, getCurrent(itr).y,
+								  temp.value);
+			}
 			
 			if (temp.value>ret.value) {
 				ret.value=temp.value;
@@ -126,13 +150,19 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (ret.value>=INFINITY)
 				break;
 			// TODO to be verified
-			if (temp.value<=-INFINITY){
+/*			if (temp.value<=-INFINITY){
 				++counter;
 			}
 			if (counter>2)
-				break;
+				break;*/
 			getNext(&itr);
 //			printf("e: %d %d\n", itr->current.x, itr->current.y);
+		}
+		if (DEBUG_STACK){
+			if (ret.value>=beta){
+				printstack();
+				printf("pruned\n");
+			}
 		}
 		releaseChildIterator(itr);
 	}
@@ -148,18 +178,22 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				break;
 			applyMove(v, getCurrent(itr));
 			
-/*			printstack();
-			printf("white trying %d %d\n", 
-					getCurrent(itr).x, getCurrent(itr).y);*/
+			if (DEBUG_STACK){
+				printstack();
+				printf("white trying %d %d\n", 
+					   getCurrent(itr).x, getCurrent(itr).y);
+			}
 			
 			temp=alphaBeta(v, alpha, b, depth-1);
 			updateMoveHeuristic(v, temp.move.x,
 								temp.move.y, temp.value);
 			
-/*			printstack();
-			printf("white try %d %d, result=%d\n", 
-					getCurrent(itr).x, getCurrent(itr).y,
-								temp.value);*/
+			if (DEBUG_STACK){
+				printstack();
+				printf("white try %d %d, result=%d\n", 
+					   getCurrent(itr).x, getCurrent(itr).y,
+								  temp.value);
+			}
 			
 			if (temp.value<ret.value){
 				ret.value=temp.value;
@@ -174,12 +208,18 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			if (ret.value<=-INFINITY)
 				break;
 			// TODO to be verified
-			if (temp.value>=INFINITY){
+/*			if (temp.value>=INFINITY){
 				++counter;
 			}
 			if (counter>2)
-				break;
+				break;*/
 			getNext(&itr);
+		}
+		if (DEBUG_STACK){
+			if (ret.value>alpha){
+				printstack();
+				printf("pruned\n");
+			}
 		}
 		releaseChildIterator(itr);
 	}
@@ -195,9 +235,9 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	}
 	else if (ret.value>alpha && ret.value<beta) {
 		/* accurate window */
+		v->upperbound=v->lowerbound=ret.value;
 		if (depth>0)
 			store(v, ret.move, EXACT);
-		v->upperbound=v->lowerbound=ret.value;
 	}
 	else {
 		/* fail high */
