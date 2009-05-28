@@ -203,8 +203,7 @@ void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
 }
 */
 
-#define match(v, y0, x0, dy, dx, n) {					\
-    int state, i, pid, y = y0, x = x0;					\
+#define match_state_machine(v, y0, x0, dy, dx, n) {			\
     nMatch = 0;								\
     for (state = 1, i = 0; i < n; ++i, y += dy, x += dx) {		\
       state = trie[state][v->data[y][x]];				\
@@ -219,6 +218,11 @@ void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
 	match_result[nMatch].type = ptype[pid];				\
       }									\
     }									\
+  }
+
+#define match(v, y0, x0, dy, dx, n) {					\
+    int state, i, pid, y = y0, x = x0;					\
+    match_state_machine(v, y0, x0, dy, dx, n);				\
     for (i = 1; i <= nMatch; ++i) {					\
       int ty = abs(match_result[i].type);				\
       int owner = match_result[i].type < 0;				\
@@ -228,20 +232,7 @@ void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
 
 #define match_and_mark(v, y0, x0, dy, dx, n) {				\
     int state, i, j, pid, y = y0, x = x0;				\
-    nMatch = 0;								\
-    for (state = 1, i = 0; i < n; ++i, y += dy, x += dx) {		\
-      state = trie[state][v->data[y][x]];				\
-      pid = rel_pattern[state];						\
-      if (pid) {							\
-	int left = i - plen[pid] + 1;					\
-	while (nMatch > 0 && match_result[nMatch].left >= left)		\
-	  --nMatch;							\
-	++nMatch;							\
-	match_result[nMatch].left = left;				\
-	match_result[nMatch].right = i;					\
-	match_result[nMatch].type = ptype[pid];				\
-      }									\
-    }									\
+    match_state_machine(v, y0, x0, dy, dx, n);				\
     for (i = 1; i <= nMatch; ++i) {					\
       int ty = abs(match_result[i].type);				\
       int owner = match_result[i].type < 0;				\
