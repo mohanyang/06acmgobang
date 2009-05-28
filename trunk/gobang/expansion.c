@@ -78,13 +78,14 @@ ChildIterator getExpansion(Configuration v) {
 //					flag=1;
 					if (flag){
 					// not found in hash
-					putPebble(v, i, j, player);
-// 					printBoardNonBlock(v);
-					retval->movelist[retval->mllen].val=
-							evaluateBoard(v, player);
-					removePebble(v, i, j);
-/*					printf("recalc %d\n", 
-						retval->movelist[retval->mllen].val);*/
+						applyMove(v, i, j);
+						
+						retval->movelist[retval->mllen].val=
+								evaluateBoard(v, player);
+// 						printBoardNonBlock(v);
+						removePebble(v, i, j);
+/*						printf("recalc %d\n", 
+							retval->movelist[retval->mllen].val);*/
 					}
 /*					printf(">>>>>>>>>>>>>\n");
 					printf("%d %d %d\n", i, j, retval->movelist[retval->mllen].val);
