@@ -9,6 +9,10 @@
 #include "forbid.h"
 #include "dangerous.h"
 
+enum {
+	DEBUG_EXPAND = 0
+};
+
 typedef struct {
 	Move m;
 	int val;
@@ -36,6 +40,7 @@ int _compMovesDec(const void *x, const void *y){
 ChildIterator getExpansion(Configuration v) {
 	ChildIterator retval=&_childitrcontainer[_childitrpointer];
 	int have2=0, temp;
+	int strict=0;
 	++_childitrpointer;
 //	printf("child pointer %d\n", _childitrpointer);
 	
@@ -76,26 +81,27 @@ ChildIterator getExpansion(Configuration v) {
 					retval->movelist[retval->mllen].val=INFINITY+5;
 					++(retval->mllen);
 				}
-		if (have2 || retval->mllen==0){
-			// if there is no hazard
-			for (i=0; i<15; ++i)
-				for (j=0; j<15; ++j)
-					if (isDangerous(v, i, j, WHITE)==0 
-					   && _forbid[i][j]==1
-					   && getColor(v, i, j)==NONE){
-						retval->movelist[retval->mllen].m.x=i;
-						retval->movelist[retval->mllen].m.y=j;
+		strict=(have2==0 && retval->mllen>0);
+		// if there is no hazard
+		for (i=0; i<15; ++i)
+			for (j=0; j<15; ++j)
+				if (isDangerous(v, i, j, WHITE)==0 
+					&& _forbid[i][j]==1
+					&& getColor(v, i, j)==NONE){
+					retval->movelist[retval->mllen].m.x=i;
+					retval->movelist[retval->mllen].m.y=j;
+					retval->movelist[retval->mllen].val
+							=getMoveEvaluate(v, i, j, &flag);
+					if (flag){
+						putPebble(v, i, j, player);
 						retval->movelist[retval->mllen].val
-								=getMoveEvaluate(v, i, j, &flag);
-						if (flag){
-							putPebble(v, i, j, player);
-							retval->movelist[retval->mllen].val
-								=evaluateBoard(v, player);
-							removePebble(v, i, j);
-						}
+							=evaluateBoard(v, player);
+						removePebble(v, i, j);
+					}
+					if (strict==0 
+						|| retval->movelist[retval->mllen].val>INFINITY+5)
 						++(retval->mllen);
-				   }
-		}
+				}
 		if (retval->mllen==0){
 			// TODO if still nothing found
 		}
@@ -157,26 +163,27 @@ ChildIterator getExpansion(Configuration v) {
 					retval->movelist[retval->mllen].val=-INFINITY-5;
 					++(retval->mllen);
 				}
-		if (have2 || retval->mllen==0){
+		strict=(have2==0 && retval->mllen>0);
 		// if there is no hazard
-			for (i=0; i<15; ++i)
-				for (j=0; j<15; ++j)
-					if (isDangerous(v, i, j, BLACK)==0
-					   && getColor(v, i, j)==NONE
-					   && havePebbleAround(v, i, j)){
-						retval->movelist[retval->mllen].m.x=i;
-						retval->movelist[retval->mllen].m.y=j;
+		for (i=0; i<15; ++i)
+			for (j=0; j<15; ++j)
+				if (isDangerous(v, i, j, BLACK)==0
+					&& getColor(v, i, j)==NONE
+					&& havePebbleAround(v, i, j)){
+					retval->movelist[retval->mllen].m.x=i;
+					retval->movelist[retval->mllen].m.y=j;
+					retval->movelist[retval->mllen].val
+						=getMoveEvaluate(v, i, j, &flag);
+					if (flag){
+						putPebble(v, i, j, player);
 						retval->movelist[retval->mllen].val
-							=getMoveEvaluate(v, i, j, &flag);
-						if (flag){
-							putPebble(v, i, j, player);
-							retval->movelist[retval->mllen].val
-									=evaluateBoard(v, player);
-							removePebble(v, i, j);
-						}
+								=evaluateBoard(v, player);
+						removePebble(v, i, j);
+					}
+					if (strict==0
+						|| retval->movelist[retval->mllen].val<-INFINITY-5)
 						++(retval->mllen);
-				   }
-		}
+				}
 		if (retval->mllen==0){
 			// TODO if still nothing found
 		}
@@ -210,11 +217,13 @@ ChildIterator getExpansion(Configuration v) {
 				_compMovesInc);
 		}
 	}
-/*	printf(">>>>>>>>>>>>\n");
-	printf("altogether %d\n", retval->mllen);
-	for (i=0; i<retval->mllen; ++i)
-		printf("%d, %d\n", retval->movelist[i].m.x, retval->movelist[i].m.y);
-	printf("<<<<<<<<<<<<\n");*/
+	if (DEBUG_EXPAND){
+		printf(">>>>>>>>>>>>\n");
+		printf("altogether %d\n", retval->mllen);
+		for (i=0; i<retval->mllen; ++i)
+			printf("%d, %d\n", retval->movelist[i].m.x, retval->movelist[i].m.y);
+		printf("<<<<<<<<<<<<\n");
+	}
 // 	getchar();
 	return retval;
 }
