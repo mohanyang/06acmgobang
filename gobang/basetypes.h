@@ -26,6 +26,7 @@ struct BaseNode {
 	int step;
 	int hash;
 	PEBBLE_COLOR data[15][15];
+	int statistics[15][15][10][2];
 };
 
 typedef struct BaseNode *Configuration;
