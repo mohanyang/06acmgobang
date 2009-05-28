@@ -12,9 +12,9 @@ ReturnValue id_mtdf(Configuration v){
 	ReturnValue temp;
 	int target;
 	if (getMover(v)==BLACK)
-		target=INFINITY;
+		target=INFINITY+1;
 	else
-		target=-INFINITY;
+		target=-INFINITY-1;
 	f.value=0;
 	int depth=0;
 	int MAXROUND=(225-_global_round_counter)/2;

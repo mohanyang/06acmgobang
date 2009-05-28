@@ -207,8 +207,22 @@ void applyMove(Configuration v, Move m){
 	v->type=getOppositeType(v->type);
 }
 
+void applyMoveD(Configuration v, int x, int y){
+	putPebble(v, x, y, getMover(v));
+	++(v->step);
+	--(v->depth);
+	v->type=getOppositeType(v->type);
+}
+
 void undoMove(Configuration v, Move m){
 	removePebble(v, m.x, m.y);
+	--(v->step);
+	++(v->depth);
+	v->type=getOppositeType(v->type);
+}
+
+void undoMoveD(Configuration v, int x, int y){
+	removePebble(v, x, y);
 	--(v->step);
 	++(v->depth);
 	v->type=getOppositeType(v->type);

@@ -45,6 +45,10 @@ void applyMove(Configuration v, Move m);
 
 void undoMove(Configuration v, Move m);
 
+void applyMoveD(Configuration v, int x, int y);
+
+void undoMoveD(Configuration v, int x, int y);
+
 Configuration allocConfiguration();
 
 /**

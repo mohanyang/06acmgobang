@@ -37,7 +37,7 @@ ChildIterator getExpansion(Configuration v) {
 	++_childitrpointer;
 //	printf("child pointer %d\n", _childitrpointer);
 	
-	int i,j;
+	int i, j, k, l;
 	retval->v=v;
 	retval->mllen=0;
 	retval->currentidx=0;
@@ -78,13 +78,11 @@ ChildIterator getExpansion(Configuration v) {
 //					flag=1;
 					if (flag){
 					// not found in hash
-					// TODO should think of calculating
-					// incrementally
-						putPebble(v, i, j, player);
+					putPebble(v, i, j, player);
 // 					printBoardNonBlock(v);
-						retval->movelist[retval->mllen].val=
-								evaluateBoard(v, player);
-						removePebble(v, i, j);
+					retval->movelist[retval->mllen].val=
+							evaluateBoard(v, player);
+					removePebble(v, i, j);
 /*					printf("recalc %d\n", 
 						retval->movelist[retval->mllen].val);*/
 					}
