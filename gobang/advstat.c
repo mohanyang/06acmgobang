@@ -16,9 +16,9 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 	switch (col){
 		case BLACK:
 			if (info->stat[FIVE][1])
-				return -INFINITY-1;
+				return -INFINITY-10;
 			else if (info->stat[FIVE][0])
-				return INFINITY+1;
+				return INFINITY+10;
 			else if (info->stat[ACTIVE_FOUR][1])
 				return -INFINITY;
 			else if (info->stat[AFOUR][1])
@@ -60,9 +60,9 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			}
 		case WHITE:
 			if (info->stat[FIVE][0])
-				return +INFINITY+1;
+				return +INFINITY+10;
 			else if (info->stat[FIVE][1])
-				return -INFINITY-1;
+				return -INFINITY-10;
 			else if (info->stat[ACTIVE_FOUR][0])
 				return INFINITY;
 			else if (info->stat[AFOUR][0])
