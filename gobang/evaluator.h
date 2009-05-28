@@ -12,4 +12,6 @@ void initializeEvaluate();
 
 int evaluateBoard(Configuration v, PEBBLE_COLOR c);
 
+void calculateStat(Configuration v);
+
 #endif

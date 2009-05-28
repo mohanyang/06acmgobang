@@ -171,6 +171,7 @@ struct interval {
 int nMatch;
 AdvancedStat astat;
 
+/*
 void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
   int state, i, j, pid, y = y0, x = x0;
   nMatch = 0;
@@ -178,60 +179,284 @@ void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
     state = trie[state][v->data[y][x]];
     pid = rel_pattern[state];
     if (pid) {
-      match_result[nMatch].left = i - plen[pid];
+      int left = i - plen[pid] + 1;
+      while (nMatch > 0 && match_result[nMatch].left >= left)
+	--nMatch;
+      ++nMatch;
+      match_result[nMatch].left = left;
       match_result[nMatch].right = i;
       match_result[nMatch].type = ptype[pid];
-      ++nMatch;
     }
   }
 
-  for (i = 0; i < nMatch; ++i) {
-    for (j = i + 1; j < nMatch; ++j) {
-      if (match_result[j].left <= match_result[i].left)
-	break;
-    }
-    if (j == nMatch) {
-      int ty = abs(match_result[i].type);
-      int owner = match_result[i].type < 0;
-      ++astat.stat[ty][owner];
-      for (j = match_result[i].left + 1; j <= match_result[i].right; ++j) {
+  for (i = 1; i <= nMatch; ++i) {
+    int ty = abs(match_result[i].type);
+    int owner = match_result[i].type < 0;
+    ++astat.stat[ty][owner];
+    for (j = match_result[i].left, y = y0 + j * dy, x = x0 + j * dx; j <= match_result[i].right; ++j, y += dy, x += dx) {
 #ifdef TEST_PATTERN
-	printf("%d %d %d %d\n", y0+j*dy, x0+j*dx, ty, owner);
+      printf("%d %d %d %d\n", y0+j*dy, x0+j*dx, ty, owner);
 #endif
-	++(v->statistics[y0+j*dy][x0+j*dx][ty][owner]);
-      }
+      ++(v->statistics[y][x][ty][owner]);
     }
   }
 }
+*/
+
+#define match(v, y0, x0, dy, dx, n) {					\
+    int state, i, pid, y = y0, x = x0;					\
+    nMatch = 0;								\
+    for (state = 1, i = 0; i < n; ++i, y += dy, x += dx) {		\
+      state = trie[state][v->data[y][x]];				\
+      pid = rel_pattern[state];						\
+      if (pid) {							\
+	int left = i - plen[pid] + 1;					\
+	while (nMatch > 0 && match_result[nMatch].left >= left)		\
+	  --nMatch;							\
+	++nMatch;							\
+	match_result[nMatch].left = left;				\
+	match_result[nMatch].right = i;					\
+	match_result[nMatch].type = ptype[pid];				\
+      }									\
+    }									\
+    for (i = 1; i <= nMatch; ++i) {					\
+      int ty = abs(match_result[i].type);				\
+      int owner = match_result[i].type < 0;				\
+      ++astat.stat[ty][owner];						\
+    }									\
+  }
+
+#define match_and_mark(v, y0, x0, dy, dx, n) {				\
+    int state, i, j, pid, y = y0, x = x0;				\
+    nMatch = 0;								\
+    for (state = 1, i = 0; i < n; ++i, y += dy, x += dx) {		\
+      state = trie[state][v->data[y][x]];				\
+      pid = rel_pattern[state];						\
+      if (pid) {							\
+	int left = i - plen[pid] + 1;					\
+	while (nMatch > 0 && match_result[nMatch].left >= left)		\
+	  --nMatch;							\
+	++nMatch;							\
+	match_result[nMatch].left = left;				\
+	match_result[nMatch].right = i;					\
+	match_result[nMatch].type = ptype[pid];				\
+      }									\
+    }									\
+    for (i = 1; i <= nMatch; ++i) {					\
+      int ty = abs(match_result[i].type);				\
+      int owner = match_result[i].type < 0;				\
+      for (j = match_result[i].left, y = y0 + j * dy, x = x0 + j * dx; j <= match_result[i].right; ++j, y += dy, x += dx) { \
+	++(v->statistics[y][x][ty][owner]);				\
+      }									\
+    }									\
+  }
 
 int evaluateBoard(Configuration v, PEBBLE_COLOR c) {
-  int y, x;
-  memset(v->statistics, 0, sizeof(v->statistics));
   memset(&astat, 0, sizeof(astat));
 
-  for (y = 0; y < 15; ++y) {
-    match(v, y, 0, 0, 1, 15);
-  }
-  for (x = 0; x < 15; ++x) {
-    match(v, 0, x, 1, 0, 15);
-  }
+  //  for (y = 0; y < 15; ++y) {
+  //    match(v, y, 0, 0, 1, 15);
+  //  }
+  match(v,  0, 0, 0, 1, 15);
+  match(v,  1, 0, 0, 1, 15);
+  match(v,  2, 0, 0, 1, 15);
+  match(v,  3, 0, 0, 1, 15);
+  match(v,  4, 0, 0, 1, 15);
+  match(v,  5, 0, 0, 1, 15);
+  match(v,  6, 0, 0, 1, 15);
+  match(v,  7, 0, 0, 1, 15);
+  match(v,  8, 0, 0, 1, 15);
+  match(v,  9, 0, 0, 1, 15);
+  match(v, 10, 0, 0, 1, 15);
+  match(v, 11, 0, 0, 1, 15);
+  match(v, 12, 0, 0, 1, 15);
+  match(v, 13, 0, 0, 1, 15);
+  match(v, 14, 0, 0, 1, 15);
 
-  for (y = 0; y < 11; ++y) {
-    match(v, y, 0, 1, 1, 15 - y);
-  }
-  for (x = 1; x < 11; ++x) {
-    match(v, 0, x, 1, 1, 15 - x);
-  }
+  //  for (x = 0; x < 15; ++x) {
+  //    match(v, 0, x, 1, 0, 15);
+  //  }
+  match(v, 0,  0, 1, 0, 15);
+  match(v, 0,  1, 1, 0, 15);
+  match(v, 0,  2, 1, 0, 15);
+  match(v, 0,  3, 1, 0, 15);
+  match(v, 0,  4, 1, 0, 15);
+  match(v, 0,  5, 1, 0, 15);
+  match(v, 0,  6, 1, 0, 15);
+  match(v, 0,  7, 1, 0, 15);
+  match(v, 0,  8, 1, 0, 15);
+  match(v, 0,  9, 1, 0, 15);
+  match(v, 0, 10, 1, 0, 15);
+  match(v, 0, 11, 1, 0, 15);
+  match(v, 0, 12, 1, 0, 15);
+  match(v, 0, 13, 1, 0, 15);
+  match(v, 0, 14, 1, 0, 15);
+  
+  //  for (y = 0; y < 11; ++y) {
+  //    match(v, y, 0, 1, 1, 15 - y);
+  //  }
+  match(v,  0, 0, 1, 1, 15);
+  match(v,  1, 0, 1, 1, 14);
+  match(v,  2, 0, 1, 1, 13);
+  match(v,  3, 0, 1, 1, 12);
+  match(v,  4, 0, 1, 1, 11);
+  match(v,  5, 0, 1, 1, 10);
+  match(v,  6, 0, 1, 1,  9);
+  match(v,  7, 0, 1, 1,  8);
+  match(v,  8, 0, 1, 1,  7);
+  match(v,  9, 0, 1, 1,  6);
+  match(v, 10, 0, 1, 1,  5);
 
-  for (y = 4; y < 15; ++y) {
-    match(v, y, 0, -1, 1, y + 1);
-  }
-  for (x = 1; x < 11; ++x) {
-    match(v, 14, x, -1, 1, 15 - x);
-  }
+  //  for (x = 1; x < 11; ++x) {
+  //    match(v, 0, x, 1, 1, 15 - x);
+  //  }
+  match(v, 0,  1, 1, 1, 14);
+  match(v, 0,  2, 1, 1, 13);
+  match(v, 0,  3, 1, 1, 12);
+  match(v, 0,  4, 1, 1, 11);
+  match(v, 0,  5, 1, 1, 10);
+  match(v, 0,  6, 1, 1,  9);
+  match(v, 0,  7, 1, 1,  8);
+  match(v, 0,  8, 1, 1,  7);
+  match(v, 0,  9, 1, 1,  6);
+  match(v, 0, 10, 1, 1,  5);
+  
+  //  for (y = 4; y < 15; ++y) {
+  //    match(v, y, 0, -1, 1, y + 1);
+  //  }
+  match(v,  4, 0, -1, 1,  5);
+  match(v,  5, 0, -1, 1,  6);
+  match(v,  6, 0, -1, 1,  7);
+  match(v,  7, 0, -1, 1,  8);
+  match(v,  8, 0, -1, 1,  9);
+  match(v,  9, 0, -1, 1, 10);
+  match(v, 10, 0, -1, 1, 11);
+  match(v, 11, 0, -1, 1, 12);
+  match(v, 12, 0, -1, 1, 13);
+  match(v, 13, 0, -1, 1, 14);
+  match(v, 14, 0, -1, 1, 15);
+
+  //  for (x = 1; x < 11; ++x) {
+  //    match(v, 14, x, -1, 1, 15 - x);
+  //  }
+  match(v, 14,  1, -1, 1, 14);
+  match(v, 14,  2, -1, 1, 13);
+  match(v, 14,  3, -1, 1, 12);
+  match(v, 14,  4, -1, 1, 11);
+  match(v, 14,  5, -1, 1, 10);
+  match(v, 14,  6, -1, 1,  9);
+  match(v, 14,  7, -1, 1,  8);
+  match(v, 14,  8, -1, 1,  7);
+  match(v, 14,  9, -1, 1,  6);
+  match(v, 14, 10, -1, 1,  5);
 
   astat.assoc=v;
+#ifdef TEST_PATTERN
+  return 0;
+#else
   return getScore(&astat, c);
+#endif
+
+}
+
+void calculateStat(Configuration v) {
+  memset(v->statistics, 0, sizeof(v->statistics));
+
+  //  for (y = 0; y < 15; ++y) {
+  //    match_and_mark(v, y, 0, 0, 1, 15);
+  //  }
+  match_and_mark(v,  0, 0, 0, 1, 15);
+  match_and_mark(v,  1, 0, 0, 1, 15);
+  match_and_mark(v,  2, 0, 0, 1, 15);
+  match_and_mark(v,  3, 0, 0, 1, 15);
+  match_and_mark(v,  4, 0, 0, 1, 15);
+  match_and_mark(v,  5, 0, 0, 1, 15);
+  match_and_mark(v,  6, 0, 0, 1, 15);
+  match_and_mark(v,  7, 0, 0, 1, 15);
+  match_and_mark(v,  8, 0, 0, 1, 15);
+  match_and_mark(v,  9, 0, 0, 1, 15);
+  match_and_mark(v, 10, 0, 0, 1, 15);
+  match_and_mark(v, 11, 0, 0, 1, 15);
+  match_and_mark(v, 12, 0, 0, 1, 15);
+  match_and_mark(v, 13, 0, 0, 1, 15);
+  match_and_mark(v, 14, 0, 0, 1, 15);
+
+  //  for (x = 0; x < 15; ++x) {
+  //    match_and_mark(v, 0, x, 1, 0, 15);
+  //  }
+  match_and_mark(v, 0,  0, 1, 0, 15);
+  match_and_mark(v, 0,  1, 1, 0, 15);
+  match_and_mark(v, 0,  2, 1, 0, 15);
+  match_and_mark(v, 0,  3, 1, 0, 15);
+  match_and_mark(v, 0,  4, 1, 0, 15);
+  match_and_mark(v, 0,  5, 1, 0, 15);
+  match_and_mark(v, 0,  6, 1, 0, 15);
+  match_and_mark(v, 0,  7, 1, 0, 15);
+  match_and_mark(v, 0,  8, 1, 0, 15);
+  match_and_mark(v, 0,  9, 1, 0, 15);
+  match_and_mark(v, 0, 10, 1, 0, 15);
+  match_and_mark(v, 0, 11, 1, 0, 15);
+  match_and_mark(v, 0, 12, 1, 0, 15);
+  match_and_mark(v, 0, 13, 1, 0, 15);
+  match_and_mark(v, 0, 14, 1, 0, 15);
+  
+  //  for (y = 0; y < 11; ++y) {
+  //    match_and_mark(v, y, 0, 1, 1, 15 - y);
+  //  }
+  match_and_mark(v,  0, 0, 1, 1, 15);
+  match_and_mark(v,  1, 0, 1, 1, 14);
+  match_and_mark(v,  2, 0, 1, 1, 13);
+  match_and_mark(v,  3, 0, 1, 1, 12);
+  match_and_mark(v,  4, 0, 1, 1, 11);
+  match_and_mark(v,  5, 0, 1, 1, 10);
+  match_and_mark(v,  6, 0, 1, 1,  9);
+  match_and_mark(v,  7, 0, 1, 1,  8);
+  match_and_mark(v,  8, 0, 1, 1,  7);
+  match_and_mark(v,  9, 0, 1, 1,  6);
+  match_and_mark(v, 10, 0, 1, 1,  5);
+
+  //  for (x = 1; x < 11; ++x) {
+  //    match_and_mark(v, 0, x, 1, 1, 15 - x);
+  //  }
+  match_and_mark(v, 0,  1, 1, 1, 14);
+  match_and_mark(v, 0,  2, 1, 1, 13);
+  match_and_mark(v, 0,  3, 1, 1, 12);
+  match_and_mark(v, 0,  4, 1, 1, 11);
+  match_and_mark(v, 0,  5, 1, 1, 10);
+  match_and_mark(v, 0,  6, 1, 1,  9);
+  match_and_mark(v, 0,  7, 1, 1,  8);
+  match_and_mark(v, 0,  8, 1, 1,  7);
+  match_and_mark(v, 0,  9, 1, 1,  6);
+  match_and_mark(v, 0, 10, 1, 1,  5);
+  
+  //  for (y = 4; y < 15; ++y) {
+  //    match_and_mark(v, y, 0, -1, 1, y + 1);
+  //  }
+  match_and_mark(v,  4, 0, -1, 1,  5);
+  match_and_mark(v,  5, 0, -1, 1,  6);
+  match_and_mark(v,  6, 0, -1, 1,  7);
+  match_and_mark(v,  7, 0, -1, 1,  8);
+  match_and_mark(v,  8, 0, -1, 1,  9);
+  match_and_mark(v,  9, 0, -1, 1, 10);
+  match_and_mark(v, 10, 0, -1, 1, 11);
+  match_and_mark(v, 11, 0, -1, 1, 12);
+  match_and_mark(v, 12, 0, -1, 1, 13);
+  match_and_mark(v, 13, 0, -1, 1, 14);
+  match_and_mark(v, 14, 0, -1, 1, 15);
+
+  //  for (x = 1; x < 11; ++x) {
+  //    match_and_mark(v, 14, x, -1, 1, 15 - x);
+  //  }
+  match_and_mark(v, 14,  1, -1, 1, 14);
+  match_and_mark(v, 14,  2, -1, 1, 13);
+  match_and_mark(v, 14,  3, -1, 1, 12);
+  match_and_mark(v, 14,  4, -1, 1, 11);
+  match_and_mark(v, 14,  5, -1, 1, 10);
+  match_and_mark(v, 14,  6, -1, 1,  9);
+  match_and_mark(v, 14,  7, -1, 1,  8);
+  match_and_mark(v, 14,  8, -1, 1,  7);
+  match_and_mark(v, 14,  9, -1, 1,  6);
+  match_and_mark(v, 14, 10, -1, 1,  5);
 
 }
 
@@ -282,8 +507,8 @@ int main() {
   node.data[7][7] = 1;
   node.data[7][8] = 1;
   node.data[7][9] = 1;
-  evaluateBoard(&node, 1);
-  printf("%d\n", node.statistics[5][5][ACTIVE_THREE][0]);
+  calculateStat(&node);
+  printf("%d\n", node.statistics[7][5][ACTIVE_THREE][0]);
 
   return 0;
 }
