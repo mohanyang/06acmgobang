@@ -78,8 +78,8 @@ ChildIterator getExpansion(Configuration v) {
 //					flag=1;
 					if (flag){
 					// not found in hash
-						applyMove(v, i, j);
-						
+// 						applyMove(v, i, j);
+						putPebble(v, i, j, player);
 						retval->movelist[retval->mllen].val=
 								evaluateBoard(v, player);
 // 						printBoardNonBlock(v);
