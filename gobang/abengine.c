@@ -21,7 +21,7 @@ static int stackcount=0;
 void printstack(){
 	int i;
 	for (i=0; i<stackcount; ++i)
-		printf(" ");
+		printf("\t");
 }
 
 ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
