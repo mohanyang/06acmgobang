@@ -7,8 +7,10 @@
 #include "transposition.h"
 #include "evaluator.h"
 #include "advstat.h"
+#include "opening.h"
 
 Configuration glbl;
+int _opening_state;
 
 void initializeEngine(){
 	initializeBaseType();
@@ -18,14 +20,74 @@ void initializeEngine(){
 	initializeEvaluate();
 	initializeMoveHeuristic();
 	initializeAdvStat();
+	initialize_opening();
+	_opening_state=BEGINNING_STATE;
 	glbl=allocConfiguration();
 	initializeConfiguration(glbl, BLACK);
 }
 
 ReturnValue search(PEBBLE_COLOR p){
-//	initializeConfiguration(glbl, p);
+	ReturnValue ret;
+	if (_opening_state){
+		Move best, current;
+		int opt, temp;
+		switch (p) {
+			case BLACK:
+				opt=-INFINITY;
+				break;
+			case WHITE:
+				opt=+INFINITY;
+				break;
+			default:
+				break;
+		}
+		for (current.x=0; current.x<15; ++current.x)
+			for (current.y=0; current.y<15; ++current.y){
+				if (has_child(_opening_state, 
+					current.x, current.y)) {
+					putPebble(glbl, current.x, current.y, p);
+					temp=evaluateBoard(glbl, p);
+					removePebble(glbl, current.x, current.y);
+					switch (p) {
+						case BLACK:
+							if (temp>opt){
+								opt=temp;
+								best=current;
+							}
+							break;
+						case WHITE:
+							if (temp<opt){
+								opt=temp;
+								best=current;
+							}
+						default:
+							break;
+					}
+				}
+			}
+		switch (p) {
+			case BLACK:
+				if (opt>-INFINITY) {
+					printf("a.o.\n");
+					ret.move=best;
+					ret.value=opt;
+					return ret;
+				}
+				break;
+			case WHITE:
+				if (opt<+INFINITY) {
+					printf("a.o.\n");
+					ret.move=best;
+					ret.value=opt;
+					return ret;
+				}
+				break;
+			default:
+				break;
+		}
+	}
 	initializeTimer();
-	ReturnValue ret=id_mtdf(glbl);
+	ret=id_mtdf(glbl);
 	printf("====search finished, returned %d %d %d====\n",
 		  ret.move.x, ret.move.y, ret.value);
 	showTimer();
@@ -40,6 +102,7 @@ int generate(){
 void playMove(Move m){
 	applyMove(glbl, m);
 	printBoardNonBlock(glbl);
+	_opening_state=move_opening(_opening_state, m.x, m.y);
 }
 
 void playchess(int c){
