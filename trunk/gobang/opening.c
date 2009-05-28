@@ -3,8 +3,8 @@
 #include "string.h"
 #include "opening.h"
 
-#define MAX_NODE 500000
-#define MAX_EDGE 500000
+#define MAX_NODE 320000
+#define MAX_EDGE 320000
 
 #define COOR_TO_ID(y, x) ((y)*15+(x))
 
@@ -21,6 +21,17 @@ int has_child(int state, int y, int x) {
       return 1;
   return 0;
 }
+
+#ifdef TEST_OPENING
+
+static
+void print_child(int state) {
+  int i;
+  for (i = trie[state]; i; i = next[i])
+    printf("%d %d\n", edge_id[i]/15, edge_id[i]%15);
+}
+
+#endif
 
 int move_opening(int state, int y, int x) {
   int i, k = COOR_TO_ID(y, x);
@@ -44,7 +55,7 @@ void add_opening(int *y, int *x, int len) {
       node[++nEdge] = ++nNode;
       edge_id[nEdge] = k;
       next[nEdge] = trie[s];
-      trie[s] = nNode;
+      trie[s] = nEdge;
     }
     s = move_opening(s, y[i], x[i]);
   }
@@ -110,6 +121,14 @@ void initialize_opening() {
 int main() {
   initialize_opening();
   printf("%d %d\n", nNode, nEdge);
+  int state = 1, y, x;
+  print_child(1);
+  printf("~~~~~~~~~~~~\n");
+  state = move_opening(state, 7, 7);
+  for (y = 0; y < 15; ++y)
+    for (x = 0; x < 15; ++x)
+      if (has_child(state, y, x))
+	printf("%d %d\n", y, x);
   return 0;
 }
 
