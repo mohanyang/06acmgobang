@@ -9,7 +9,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 0
+	DEBUG_STACK = 1
 };
 
 int max(int a, int b){
@@ -49,16 +49,20 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					ret.value=s->lowerbound;
 					ret.move=s->mv;
 					--stackcount;
-					printstack();
-					printf("hit exact 1\n");
+					if (DEBUG_STACK){
+						printstack();
+						printf("hit exact 1\n");
+					}
 					return ret;
 				}
 				if (s->upperbound<=alpha) {
 					ret.value=s->upperbound;
 					ret.move=s->mv;
 					--stackcount;
-					printstack();
-					printf("hit exact 2\n");
+					if (DEBUG_STACK){
+						printstack();
+						printf("hit exact 2\n");
+					}
 					return ret;
 				}
 				ret.alpha=max(alpha, s->lowerbound);
@@ -70,8 +74,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					ret.value=s->upperbound;
 					ret.move=s->mv;
 					--stackcount;
-					printstack();
-					printf("hit fail low\n");
+					if (DEBUG_STACK){
+						printstack();
+						printf("hit fail low\n");
+					}
 					return ret;
 				}
 				break;
@@ -80,8 +86,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					ret.value=s->lowerbound;
 					ret.move=s->mv;
 					--stackcount;
-					printstack();
-					printf("hit fail high\n");
+					if (DEBUG_STACK){
+						printstack();
+						printf("hit fail high\n");
+					}
 					return ret;
 				}
 				break;
