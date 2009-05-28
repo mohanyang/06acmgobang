@@ -29,73 +29,29 @@ void initializeEngine(){
 }
 
 ReturnValue search(PEBBLE_COLOR p){
-	ReturnValue ret;
-	if (_opening_state){
-		Move best, current;
-		int opt, temp;
-		switch (p) {
-			case BLACK:
-				opt=-INFINITY;
-				break;
-			case WHITE:
-				opt=+INFINITY;
-				break;
-			default:
-				break;
-		}
-		for (current.x=0; current.x<15; ++current.x)
-			for (current.y=0; current.y<15; ++current.y){
-				if (move_opening(_opening_state, 
-					current.x, current.y)) {
-					putPebble(glbl, current.x, current.y, p);
-					temp=evaluateBoard(glbl, p);
-					printf("%d %d %d\n", current.x, current.y,
-						   temp);
-					removePebble(glbl, current.x, current.y);
-					switch (p) {
-						case BLACK:
-							if (temp>opt){
-								opt=temp;
-								best=current;
-							}
-							break;
-						case WHITE:
-							if (temp<opt){
-								opt=temp;
-								best=current;
-							}
-						default:
-							break;
-					}
-				}
-			}
-		switch (p) {
-			case BLACK:
-				if (opt>-INFINITY) {
-					printf("a.o.\n");
-					ret.move=best;
-					ret.value=opt;
-					return ret;
-				}
-				break;
-			case WHITE:
-				if (opt<+INFINITY) {
-					printf("a.o.\n");
-					ret.move=best;
-					ret.value=opt;
-					return ret;
-				}
-				break;
-			default:
-				break;
-		}
+  ReturnValue ret;
+  if (_opening_state){
+    Move current;
+    int bestvalue = -1;
+    for (current.x = 0; current.x < 15; ++current.x) {
+      for (current.y = 0; current.y < 15; ++current.y) {
+	int s = move_opening(_opening_state, current.x, current.y);
+	if (s && get_child_count(s) > bestvalue) {
+	  bestvalue = get_child_count(s);
+	  ret.move = current;
 	}
-	initializeTimer();
-	ret=id_mtdf(glbl);
-	printf("====search finished, returned %d %d %d====\n",
-		  ret.move.x, ret.move.y, ret.value);
-	showTimer();
-	return ret;
+      }
+    }
+    if (bestvalue >= 0) {
+      return ret;
+    }
+  }
+  initializeTimer();
+  ret=id_mtdf(glbl);
+  printf("====search finished, returned %d %d %d====\n",
+	 ret.move.x, ret.move.y, ret.value);
+  showTimer();
+  return ret;
 }
 
 int generate(){
