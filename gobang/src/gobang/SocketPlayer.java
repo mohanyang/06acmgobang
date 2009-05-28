@@ -15,7 +15,7 @@ import ui.ChessFrame;
 import basis.Config;
 import basis.Debug;
 
-public class SocketPlayer implements Runnable {
+public class SocketPlayer {
 	private Socket socket = null;
 	private InputStream sin;
 	private OutputStream sout;
