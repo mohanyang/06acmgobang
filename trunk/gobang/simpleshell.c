@@ -3,6 +3,8 @@
 #include "enginetypes.h"
 #include <stdio.h>
 
+#include "expansion.h"
+
 int main(){
 	Move m;
 	ReturnValue r;
@@ -49,7 +51,7 @@ int main(){
 	r=search(WHITE);
 	playMove(r.move);*/
 	
-	FILE *fp=fopen("log.txt", "w");
+/*	FILE *fp=fopen("log.txt", "w");
 	while (1){
 		printf("black: ");
 		scanf("%d %d", &(m.x), &(m.y));
@@ -62,16 +64,16 @@ int main(){
 		playMove(r.move);
 		fprintf(fp, "%d %d\n", r.move.x, r.move.y);
 	}
-	fclose(fp);
+	fclose(fp);*/
 	
-/*	FILE *fp=fopen("log.txt", "r");
+	FILE *fp=fopen("log.txt", "r");
 	while (fscanf(fp, "%d %d", &(m.x), &(m.y))!=EOF){
 		printf("%d %d\n", m.x, m.y);
 		playMove(m);
-		getchar();
 	}
+	getchar();
 	fclose(fp);
 	r=search(WHITE);
-	playMove(r.move);*/
+	playMove(r.move);
 	return 0;
 }

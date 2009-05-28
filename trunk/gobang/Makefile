@@ -11,6 +11,7 @@ OBJS =		globalconst.o \
 			transposition.o \
 			historyheuristic.o \
 			moveheuristic.o \
+			dangerous.o \
 			opening.o \
 			forbid.o \
 			evaluator.o \
