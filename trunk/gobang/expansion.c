@@ -75,6 +75,7 @@ ChildIterator getExpansion(Configuration v) {
 				else {
 					retval->movelist[retval->mllen].val=
 							getMoveEvaluate(v, i, j, &flag);
+//					flag=1;
 					if (flag){
 					// not found in hash
 					// TODO should think of calculating
@@ -87,6 +88,9 @@ ChildIterator getExpansion(Configuration v) {
 /*					printf("recalc %d\n", 
 						retval->movelist[retval->mllen].val);*/
 					}
+/*					printf(">>>>>>>>>>>>>\n");
+					printf("%d %d %d\n", i, j, retval->movelist[retval->mllen].val);
+					printf("<<<<<<<<<<<<<\n");*/
 					++(retval->mllen);
 				}
 			}

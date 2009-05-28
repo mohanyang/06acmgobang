@@ -51,9 +51,12 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 							default:
 								break;
 						}
+/*				printBoardNonBlock(info->assoc);
+				printf("%d\n", k);
+				getchar();*/
 				return (info->stat[SLEEPY_THREE][0]*2
-						-info->stat[SLEEPY_THREE][1])*100
-						+k*100;
+						-info->stat[SLEEPY_THREE][1])*30
+						+k*10;
 			}
 		case WHITE:
 			if (info->stat[FIVE][0])
@@ -92,8 +95,8 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 								break;
 						}
 				return (-info->stat[SLEEPY_THREE][0]
-						+2*info->stat[SLEEPY_THREE][1])*100
-						-k*100;
+						+2*info->stat[SLEEPY_THREE][1])*30
+						+k*10;
 			}
 		default:
 			return 0;
@@ -105,6 +108,6 @@ void initializeAdvStat(){
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			_localpriority[i][j]=7-
-					abs(7-i)>abs(7-j)?
-					abs(7-i):abs(7-j);
+					((abs(7-i)>abs(7-j))?
+					abs(7-i):abs(7-j));
 }
