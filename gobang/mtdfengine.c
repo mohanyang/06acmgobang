@@ -59,6 +59,7 @@ ReturnValue mtdf(Configuration v, int firstguess, int depth){
 		printf("ub=%d, lb=%d\n", ub, lb);
 		printf("value=%d, move=(%d, %d)\n", g.value,
 			  g.move.x, g.move.y);
+		printBoardNonBlock(v);
 	} while (ub>lb);
 	return temp;
 }
