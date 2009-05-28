@@ -49,28 +49,29 @@ int main(){
 	r=search(WHITE);
 	playMove(r.move);*/
 	
-	FILE *fp=fopen("log.txt", "w");
+/*	FILE *fp=fopen("log.txt", "w");
 	while (1){
 		printf("black: ");
 		scanf("%d %d", &(m.x), &(m.y));
 		if (m.x<0)
 			break;
-		fprintf(fp, "black: %d %d\n", m.x, m.y);
+		fprintf(fp, "%d %d\n", m.x, m.y);
 		playMove(m);
 		r=search(WHITE);
 		printf("white: %d %d\n", r.move.x, r.move.y);
 		playMove(r.move);
-		fprintf(fp, "white: %d %d\n", r.move.x, r.move.y);
-	}
-	fclose(fp);
-	
-/*	FILE *fp=fopen("log.txt", "r");
-	while (1){
-		fscanf(fp, "%d %d", &(m.x), &(m.y));
-		printf("%d %d\n", m.x, m.y);
-		playMove(m);
-		getchar();
+		fprintf(fp, "%d %d\n", r.move.x, r.move.y);
 	}
 	fclose(fp);*/
+	
+	FILE *fp=fopen("log.txt", "r");
+	while (fscanf(fp, "%d %d", &(m.x), &(m.y))!=EOF){
+		printf("%d %d\n", m.x, m.y);
+		playMove(m);
+//		getchar();
+	}
+	fclose(fp);
+	r=search(WHITE);
+	playMove(r.move);
 	return 0;
 }
