@@ -194,8 +194,11 @@ void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
       int ty = abs(match_result[i].type);
       int owner = match_result[i].type < 0;
       ++astat.stat[ty][owner];
-      for (j = match_result[i].left; j <= match_result[i].right; ++j) {
-	++v->statistics[y0+j*dy][x0+j*dx][ty][owner];
+      for (j = match_result[i].left + 1; j <= match_result[i].right; ++j) {
+#ifdef TEST_PATTERN
+	printf("%d %d %d %d\n", y0+j*dy, x0+j*dx, ty, owner);
+#endif
+	++(v->statistics[y0+j*dy][x0+j*dx][ty][owner]);
       }
     }
   }
@@ -259,6 +262,7 @@ int main() {
   }
 
   struct BaseNode node;
+  /*
   memset(&node, 0, sizeof(node));
   node.data[0][0] = 0;
   node.data[0][1] = 2;
@@ -272,6 +276,14 @@ int main() {
   node.data[10][10] = 1;
 
   evaluateBoard(&node, 1);
+  */
+
+  memset(&node, 0, sizeof(node));
+  node.data[7][7] = 1;
+  node.data[7][8] = 1;
+  node.data[7][9] = 1;
+  evaluateBoard(&node, 1);
+  printf("%d\n", node.statistics[5][5][ACTIVE_THREE][0]);
 
   return 0;
 }
