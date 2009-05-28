@@ -61,7 +61,8 @@ ChildIterator getExpansion(Configuration v) {
 				else
 					_forbid[i][j]=0;
 		// find hazards
-		evaluateBoard(v, BLACK);
+		calculateStat(v);
+		//		evaluateBoard(v, BLACK);
 		for (i=0; i<15; ++i)
 			for (j=0; j<15; ++j)
 				if ((temp=isDangerous(v, i, j, WHITE)) 
@@ -143,7 +144,8 @@ ChildIterator getExpansion(Configuration v) {
 		target=-INFINITY;
 // 		getchar();
 		// find hazards
-		evaluateBoard(v, WHITE);
+		calculateStat(v);
+		//		evaluateBoard(v, WHITE);
 		for (i=0; i<15; ++i)
 			for (j=0; j<15; ++j)
 				if (getColor(v, i, j)==NONE
