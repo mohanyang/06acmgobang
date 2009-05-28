@@ -18,6 +18,7 @@ ReturnValue id_mtdf(Configuration v){
 	f.value=0;
 	int depth=0;
 	int MAXROUND=(225-_global_round_counter)/2;
+	printf("round: %d\n", _global_round_counter);
 	for (depth=0; depth<MAXROUND; depth+=2) {
 		printf("id depth = %d\n", depth);
 		f=mtdf(v, f.value, depth);

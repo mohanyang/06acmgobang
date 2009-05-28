@@ -124,9 +124,9 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 //			printf("a=%d ret.value=%d\n", a, ret.value);
 			if (ret.value>INFINITY)
 				break;
-			// TODO to be verified
+/*			// TODO to be verified
 			if (temp.value<=-INFINITY)
-				break;
+				break;*/
 			getNext(&itr);
 //			printf("e: %d %d\n", itr->current.x, itr->current.y);
 		}
@@ -169,9 +169,9 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 //			printf("a=%d ret.value=%d\n", b, ret.value);
 			if (ret.value<-INFINITY)
 				break;
-			// TODO to be verified
+/*			// TODO to be verified
 			if (temp.value>=INFINITY)
-				break;
+				break;*/
 			getNext(&itr);
 		}
 		releaseChildIterator(itr);

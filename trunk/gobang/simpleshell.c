@@ -68,7 +68,7 @@ int main(){
 	while (fscanf(fp, "%d %d", &(m.x), &(m.y))!=EOF){
 		printf("%d %d\n", m.x, m.y);
 		playMove(m);
-//		getchar();
+		getchar();
 	}
 	fclose(fp);
 	r=search(WHITE);
