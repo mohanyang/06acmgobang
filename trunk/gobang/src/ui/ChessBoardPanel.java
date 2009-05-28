@@ -313,8 +313,8 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 		}
 		for (int k = 1; k <= height - 5; ++k) {
 			lineLimit = width - k;
-			for (int i = k; i < width; ++i)
-				line[i] = board[height - i][i];
+			for (int i = 0; i < lineLimit; ++i)
+				line[i] = board[i + k][width - i - 1];
 			ret = judgeLine();
 			if (ret)
 				return;
