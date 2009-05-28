@@ -44,6 +44,6 @@ dll:
 			-shared -o JNIAdapter.dll $(DLLOBJS)
 			
 so:
-	gcc -I "/usr/lib/jvm/java-6-sun-1.6.0.10/include" \
-			-I "/usr/lib/jvm/java-6-sun-1.6.0.10/include/linux" \
+	gcc -I "/usr/lib/jvm/java-6-sun-1.6.0.13/include" \
+			-I "/usr/lib/jvm/java-6-sun-1.6.0.13/include/linux" \
 			-shared -o libJNIAdapter.so $(DLLOBJS)			
