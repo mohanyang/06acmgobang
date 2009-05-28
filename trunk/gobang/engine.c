@@ -45,7 +45,7 @@ ReturnValue search(PEBBLE_COLOR p){
 		}
 		for (current.x=0; current.x<15; ++current.x)
 			for (current.y=0; current.y<15; ++current.y){
-				if (has_child(_opening_state, 
+				if (move_opening(_opening_state, 
 					current.x, current.y)) {
 					putPebble(glbl, current.x, current.y, p);
 					temp=evaluateBoard(glbl, p);
