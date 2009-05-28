@@ -86,6 +86,12 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 		display(false);
 	}
 
+	public void repaint() {
+		super.repaint();
+		if (getGraphics() != null)
+			display(false);
+	}
+
 	public synchronized void drawChess(int x, int y, byte color,
 			boolean internal) {
 		Debug.assertTrue(board[x][y] == Color.NONE);
