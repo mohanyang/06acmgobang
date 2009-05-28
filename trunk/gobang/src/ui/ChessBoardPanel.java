@@ -158,6 +158,7 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 				board[i][j] = Color.NONE;
 		count = 0;
 		isOver = false;
+		color = Color.BLACK;
 		Graphics bf = bg.getGraphics();
 		drawGrid(bf);
 		getGraphics().drawImage(bg, 0, 0, null);
@@ -210,7 +211,7 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 				if (isOver) {
 					for (BoardListener listener : list)
 						listener.reset(wins);
-				}
+				}else
 				for (BoardListener listener : list)
 					listener.onClick(oldColor, (byte) gridY, (byte) gridX);
 			}
