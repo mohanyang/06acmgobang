@@ -169,12 +169,10 @@ struct interval {
   int left, right, type;
 } match_result[MAX_MATCH];
 int nMatch;
-int match_types[MAX_MATCH];
-int nTypes;
 AdvancedStat astat;
 
-void match(Configuration v, int y, int x, int dy, int dx, int n) {
-  int state, i, j, pid;
+void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
+  int state, i, j, pid, y = y0, x = x0;
   nMatch = 0;
   for (state = 1, i = 0; i < n; ++i, y += dy, x += dx) {
     state = trie[state][v->data[y][x]];
@@ -193,29 +191,20 @@ void match(Configuration v, int y, int x, int dy, int dx, int n) {
 	break;
     }
     if (j == nMatch) {
-      match_types[nTypes++] = match_result[i].type;
+      int ty = abs(match_result[i].type);
+      int owner = match_result[i].type < 0;
+      ++astat.stat[ty][owner];
+      for (j = match_result[i].left; j <= match_result[i].right; ++j) {
+	++v->statistics[y0+j*dy][x0+j*dx][ty][owner];
+      }
     }
-  }
-}
-
-void convertStat() {
-  int i;
-  memset(&astat, 0, sizeof(astat));
-/*  printf(">>>>>>>>>>>>>\n");
-  for (i=0; i<nTypes; ++i)
-	  printf("%d ", match_types[i]);
-  printf("\n");
-  printf("<<<<<<<<<<<<<\n");*/
-  for (i = 0; i < nTypes; ++i) {
-    int ty = abs(match_types[i]);
-    int owner = match_types[i] < 0;
-    ++astat.stat[ty][owner];
   }
 }
 
 int evaluateBoard(Configuration v, PEBBLE_COLOR c) {
   int y, x;
-  nTypes = 0;
+  memset(v->statistics, 0, sizeof(v->statistics));
+  memset(&astat, 0, sizeof(astat));
 
   for (y = 0; y < 15; ++y) {
     match(v, y, 0, 0, 1, 15);
@@ -238,7 +227,6 @@ int evaluateBoard(Configuration v, PEBBLE_COLOR c) {
     match(v, 14, x, -1, 1, 15 - x);
   }
 
-  convertStat();
   astat.assoc=v;
   return getScore(&astat, c);
 
