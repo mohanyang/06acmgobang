@@ -25,15 +25,16 @@ void printstack(){
 }
 
 ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
+	int counter=0;
 //	printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
 	++stackcount;
-// 	HashRetVal s;
-// 	s=retrieve(v);
+	HashRetVal s;
+	s=retrieve(v);
 	ReturnValue ret;
 	ReturnValue temp;
 	ret.alpha=alpha;
 	ret.beta=beta;
-/*	if (s!=NULL) {
+	if (s!=NULL) {
 		switch (s->type){
 			case EXACT:
 				if (s->lowerbound>=beta) {
@@ -72,7 +73,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				break;
 		}
 		free(s);
-	}*/
+	}
 	if (depth==0) {
 		ChildIterator itr=getExpansion(v);
 		ret.value=getCurrentValue(itr);
@@ -80,8 +81,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		releaseChildIterator(itr);
 		updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
 /*		printstack();
-		printf("eval %d\n", ret.value);
-		printBoardNonBlock(v);*/
+		printf("eval %d\n", ret.value);*/
+// 		printBoardNonBlock(v);
 	}
 	else if (getType(v)==MAXNODE) {
 //		printf("*\n");
@@ -124,9 +125,12 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 //			printf("a=%d ret.value=%d\n", a, ret.value);
 			if (ret.value>=INFINITY)
 				break;
-/*			// TODO to be verified
-			if (temp.value<=-INFINITY)
-				break;*/
+			// TODO to be verified
+			if (temp.value<=-INFINITY){
+				++counter;
+			}
+			if (counter>2)
+				break;
 			getNext(&itr);
 //			printf("e: %d %d\n", itr->current.x, itr->current.y);
 		}
@@ -169,9 +173,12 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 //			printf("a=%d ret.value=%d\n", b, ret.value);
 			if (ret.value<=-INFINITY)
 				break;
-/*			// TODO to be verified
-			if (temp.value>=INFINITY)
-				break;*/
+			// TODO to be verified
+			if (temp.value>=INFINITY){
+				++counter;
+			}
+			if (counter>2)
+				break;
 			getNext(&itr);
 		}
 		releaseChildIterator(itr);
@@ -180,10 +187,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	if (ret.value<=alpha) {
 		/* fail low */
 		v->upperbound=ret.value;
-		/*
+		
 		if (depth>0)
 			store(v, ret.move, FAIL_LOW);
-		*/
+		
 		/* Fail low result implies an upper bound */
 	}
 	else if (ret.value>alpha && ret.value<beta) {
@@ -195,10 +202,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 	else {
 		/* fail high */
 		v->lowerbound=ret.value;
-		/*
+		
 		if (depth>0)
 			store(v, ret.move, FAIL_HIGH);
-		*/
+		
 	}
 /*	printstack();
 	printf("ab return %d (%d,%d))\n", ret.value, ret.move.x,
