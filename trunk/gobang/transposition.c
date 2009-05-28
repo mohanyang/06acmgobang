@@ -21,7 +21,8 @@ typedef struct HNode HashNode;
 enum {
 	// TODO use different table size
 	MAX_TABLE_SIZE = 100000,
-	MAX_HASH_SIZE = 100000
+	MAX_HASH_SIZE = 100000,
+	DEBUG_TRANSPOS = 0
 };
 
 // TODO finalize
@@ -68,14 +69,13 @@ HashRetVal retrieve(Configuration v){
 	// TODO optimize v so that do not 
 	// need to calculate hash every time
 	// TODO how to deal with fail lo and fail hi nodes
-// 	return NULL;
+	return NULL;
 	int key=calcHash(v, MAX_TABLE_SIZE);
-	/*
-	if (hitcount % 1000==0){
-		printf("%d %d\n", hitcount, misscount);
-		getchar();
+	if (DEBUG_TRANSPOS){
+		printf("===retrieving===\n");
+		printf("key=%d\n", key);
+		printf("hit stat %d %d\n", hitcount, misscount);
 	}
-	*/
 	key=pointer[key];
 	while (key!=0) {
 		if (compare(v, key)==0){
@@ -83,12 +83,19 @@ HashRetVal retrieve(Configuration v){
 			struct HNode *ptr=&(container[key]);
 			// TODO repository
 			if (ptr->depth>=v->depth) {
+				if (DEBUG_TRANSPOS){
+					printf("hit depth %d >= %d\n", ptr->depth, v->depth);
+					printf(">>>>>>>>>>>\n");
+					printBoardNonBlock(v);
+					printf("<<<<<<<<<<<\n");
+				}
 				HashRetVal ret=malloc(sizeof(struct HashRet));
 				ret->lowerbound=ptr->lb;
 				ret->upperbound=ptr->ub;
 				ret->mv=ptr->move;
 				ret->type=ptr->type;
 				++hitcount;
+// 				printf("===retrieved===\n");
 				return ret;
 			}
 		}
@@ -96,31 +103,6 @@ HashRetVal retrieve(Configuration v){
 	}
 	++misscount;
 	return NULL;
-/*	
-	if (pointer[key]!=0){
-		struct HNode *ptr=&(container[pointer[key]]);
-		if (ptr->depth<v->depth) {
-		//	printf("miss\n");
-			++misscount;
-			return NULL;
-		}
-		++hitcount;
-		HashRetVal ret=malloc(sizeof(struct HashRet));
-		ret->lowerbound=ptr->lb;
-		ret->upperbound=ptr->ub;
-		ret->mv=ptr->move;
-		ret->type=ptr->type;
-		printf("===retrieved %d===\n", key);
-		printVertical(container[pointer[key]].vconf);
-		printf("======\n");
-		return ret;
-	}
-	else {
-//		printf("miss\n");
-		++misscount;
-		return NULL;
-	}
-*/
 }
 
 void flipMoveHorizontal(Move *m){
@@ -139,23 +121,40 @@ void rotateMove(Move *m){
 
 void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 	int key=calcHash(v, MAX_TABLE_SIZE);
-	/*
-	printf("===storing %d / %d ~ %d===\n", key, v->lowerbound, 
-		  v->upperbound);
-	printBoardNonBlock(v);
-	printf("======\n");
-	*/
+	int idx;
+	if (DEBUG_TRANSPOS){
+		printf("===storing %d / %d ~ %d %d===\n", key, v->lowerbound, 
+			   v->upperbound, type);
+		printBoardNonBlock(v);
+		printf("======\n");
+	}
+	
 	if (pointer[key]!=0) {
-		key=pointer[key];
-		while (key && compare(v, key)!=0){
-			key=container[key].next;
+		idx=pointer[key];
+		while (idx && compare(v, idx)!=0){
+			idx=container[idx].next;
 		}
-		if (key==0)
-			return;
+		if (idx==0){
+			// add one at beginning
+			if (containersize>=MAX_TABLE_SIZE)
+				return;
+			++containersize;
+			if (containersize % 1000==0)
+				printf("container reached %d\n", containersize);
+			struct HNode *ptr=&(container[containersize]);
+			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
+			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
+			ptr->lb=v->lowerbound;
+			ptr->ub=v->upperbound;
+			ptr->move=*m;
+			ptr->depth=v->depth;
+			ptr->step=v->step;
+			ptr->next=0;
+			ptr->type=type;
+			pointer[key]=containersize;
+		}
 		else {
 			struct HNode *ptr=&(container[key]);
-			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
-			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
 			ptr->lb=v->lowerbound;
 			ptr->ub=v->upperbound;
 			ptr->move=*m;
@@ -163,36 +162,6 @@ void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 			ptr->step=v->step;
 			ptr->type=type;
 		}
-		/*
-		if (compare(v, pointer[key])!=0){
-			printf("conflict detected!\n");
-			int i;
-			printBoardNonBlock(v);
-			for (i=0; i<15; ++i)
-				printf("%d: %u\n", i, v->vboard[i]);
-			printf("%d\n", v->hash);
-			printVertical(container[pointer[key]].vconf);
-			for (i=0; i<15; ++i)
-				printf("%d: %u\n", i, container[pointer[key]].vconf[i]);
-			printf("%d\n", key);
-			getchar();
-			assert(compare(v, pointer[key])==0);
-		}
-		*/
-		/*
-		int p=pointer[key];
-		if (container[p].step<v->step) {
-			struct HNode *ptr=&(container[pointer[key]]);
-			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
-			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
-			ptr->lb=v->lowerbound;
-			ptr->ub=v->upperbound;
-			ptr->move=*m;
-			ptr->depth=v->depth;
-			ptr->step=v->step;
-			ptr->type=type;
-		}
-		*/
 	}
 	else {
 		if (containersize>=MAX_TABLE_SIZE)
@@ -211,13 +180,11 @@ void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 		ptr->next=0;
 		ptr->type=type;
 		pointer[key]=containersize;
-//		printf("pos=%d, key=%d\n", containersize,
-//			  key);
 	}
 }
 
 void store(Configuration v, Move m, HashNodeType type){
-// 	return;
+	return;
 	int i, j, k;
 	memcpy((void*)(tempconf), (void*)v, sizeof(struct BaseNode));
 	memcpy((void*)tempmove, (void*)&m, sizeof(Move));
@@ -232,6 +199,10 @@ void store(Configuration v, Move m, HashNodeType type){
 				rotateMove(tempmove);*/
 //				printf("%d %d %d\n", i, j, k);
 				saveConfiguration(tempconf, tempmove, type);
+/*				printf("saving\n");
+				printf(">>>>>>>>>>>\n");
+				printBoardNonBlock(v);
+				printf("<<<<<<<<<<<\n");*/
 /*			}
 		}
 	}*/

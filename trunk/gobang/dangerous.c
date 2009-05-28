@@ -1,6 +1,10 @@
 #include "advstat.h"
 #include "dangerous.h"
 
+enum {
+	DEBUG_DANGER = 0
+};
+
 /**
  * returns 0 if (x,y) is not dangerous
  */
@@ -15,17 +19,23 @@ int isDangerous(Configuration v, int x, int y, PEBBLE_COLOR p){
 	if (getColor(v, x, y)==NONE){
 		if (v->statistics[x][y][AFOUR][idx]
 		   || v->statistics[x][y][ACTIVE_FOUR][idx]){
-// 			printf("hazard four %d %d\n", x, y);
+			if (DEBUG_DANGER){
+				printf("hazard four %d %d\n", x, y);
+			}
 			return 1;
 		}
 		else if (v->statistics[x][y][ACTIVE_THREE][idx]){
-// 			printf("hazard active three %d %d\n", x, y);
+			if (DEBUG_DANGER){
+				printf("hazard active three %d %d\n", x, y);
+			}
 			return 1;
 		}
 		else if (v->statistics[x][y][SLEEPY_THREE][idx]
 				&& v->statistics[x][y][ACTIVE_TWO][idx]){
-// 			printf("hazard %d %d\n", x, y);
-			return 1;
+			if (DEBUG_DANGER){
+				printf("hazard %d %d\n", x, y);
+			}
+			return 2;
 		}
 		else
 			return 0;
