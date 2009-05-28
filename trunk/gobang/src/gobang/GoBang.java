@@ -10,9 +10,9 @@ public class GoBang {
 		ImageLoader.getInstance();
 		int mode = Config.getInteger("mode");
 		if (mode == 3) {
-			new Thread(new SocketPlayer()).run();
+			new SocketPlayer().run();
 		} else {
-			new Thread(new HumanPlayer(mode)).run();
+			new HumanPlayer(mode).run();
 		}
 	}
 }

@@ -11,7 +11,7 @@ import types.Color;
 import ui.BoardListener;
 import ui.ChessFrame;
 
-public class HumanPlayer implements BoardListener, Runnable {
+public class HumanPlayer implements BoardListener {
 
 	private byte color = Color.BLACK;
 
