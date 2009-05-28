@@ -78,7 +78,7 @@ ChildIterator getExpansion(Configuration v) {
 					}
 					retval->movelist[retval->mllen].m.x=i;
 					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val=INFINITY+5;
+					retval->movelist[retval->mllen].val=INFINITY+4+(temp!=2);
 					++(retval->mllen);
 				}
 		strict=(have2==0 && retval->mllen>0);
@@ -160,7 +160,7 @@ ChildIterator getExpansion(Configuration v) {
 						have2=1;
 					retval->movelist[retval->mllen].m.x=i;
 					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val=-INFINITY-5;
+					retval->movelist[retval->mllen].val=-INFINITY-4-(temp!=2);
 					++(retval->mllen);
 				}
 		strict=(have2==0 && retval->mllen>0);
