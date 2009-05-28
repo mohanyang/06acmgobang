@@ -8,6 +8,7 @@
 #include "evaluator.h"
 #include "advstat.h"
 #include "opening.h"
+#include "moveheuristic.h"
 
 Configuration glbl;
 int _opening_state;
@@ -21,6 +22,7 @@ void initializeEngine(){
 	initializeMoveHeuristic();
 	initializeAdvStat();
 	initialize_opening();
+	initializeRound();
 	_opening_state=BEGINNING_STATE;
 	glbl=allocConfiguration();
 	initializeConfiguration(glbl, BLACK);
@@ -47,6 +49,8 @@ ReturnValue search(PEBBLE_COLOR p){
 					current.x, current.y)) {
 					putPebble(glbl, current.x, current.y, p);
 					temp=evaluateBoard(glbl, p);
+					printf("%d %d %d\n", current.x, current.y,
+						   temp);
 					removePebble(glbl, current.x, current.y);
 					switch (p) {
 						case BLACK:
@@ -102,7 +106,9 @@ int generate(){
 void playMove(Move m){
 	applyMove(glbl, m);
 	printBoardNonBlock(glbl);
+	increaseRound();
 	_opening_state=move_opening(_opening_state, m.x, m.y);
+	printf("state=%d\n", _opening_state);
 }
 
 void playchess(int c){

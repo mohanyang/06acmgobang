@@ -11,4 +11,8 @@
  */
 ReturnValue id_mtdf(Configuration v);
 
+void increaseRound();
+
+void initializeRound();
+
 #endif

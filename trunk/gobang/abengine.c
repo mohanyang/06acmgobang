@@ -27,7 +27,8 @@ void printstack(){
 ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 //	printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
 	++stackcount;
-	HashRetVal s=retrieve(v);
+// 	HashRetVal s;
+// 	s=retrieve(v);
 	ReturnValue ret;
 	ReturnValue temp;
 	ret.alpha=alpha;

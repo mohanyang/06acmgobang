@@ -17,8 +17,6 @@ enum {
 // TODO finalize
 // TODO what if container is full, deal with aging problem
 
-static int hitcount=0, misscount=0;
-
 /**
  * an array that stores the pointer to 
  * hashnodes, according to the depth,
@@ -72,7 +70,6 @@ int getMoveEvaluate(Configuration v, int x, int y, int *status){
 		key=movecontainer[x][y][key].next;
 	}
 // 	printf("retrieve miss\n");
-	++misscount;
 	*status=1;
 	return 0;
 }
