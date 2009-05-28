@@ -7,6 +7,6 @@ void initialize_opening();
 
 int move_opening(int state, int y, int x);
 
-int has_child(int state, int y, int x);
+int get_child_count(int state);
 
 #endif

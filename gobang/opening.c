@@ -12,14 +12,20 @@ static int trie[MAX_NODE];
 static int node[MAX_EDGE];
 static int next[MAX_EDGE];
 static int edge_id[MAX_EDGE];
+static int childs[MAX_NODE];
 static int nNode, nEdge;
 
+static
 int has_child(int state, int y, int x) {
   int i, k = COOR_TO_ID(y, x);
   for (i = trie[state]; i; i = next[i])
     if (edge_id[i] == k)
       return 1;
   return 0;
+}
+
+int get_child_count(int state) {
+  return childs[state];
 }
 
 #ifdef TEST_OPENING
@@ -56,6 +62,7 @@ void add_opening(int *y, int *x, int len) {
       edge_id[nEdge] = k;
       next[nEdge] = trie[s];
       trie[s] = nEdge;
+      ++childs[s];
     }
     s = move_opening(s, y[i], x[i]);
   }
