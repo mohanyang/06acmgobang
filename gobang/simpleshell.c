@@ -66,7 +66,7 @@ int main(){
 	}
 	fclose(fp);*/
 
-	char c;
+/*	char c;
 	while (1) {
 	  r = search(BLACK);
 	  playMove(r.move);
@@ -81,9 +81,9 @@ int main(){
 	
 	  c = getchar();
 	  if (c == 'q') break;
-	}
+	}*/
 	
-	/*
+	
 	FILE *fp=fopen("log.txt", "r");
 	while (fscanf(fp, "%d %d", &(m.x), &(m.y))!=EOF){
 		printf("%d %d\n", m.x, m.y);
@@ -92,6 +92,6 @@ int main(){
 	fclose(fp);
 	r=search(WHITE);
 	playMove(r.move);
-	*/
+	
 	return 0;
 }
