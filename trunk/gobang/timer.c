@@ -21,9 +21,9 @@ int tickTimer(){
 	if (_timer_counter % 50==0){
 		ftime(&_timer_time);
 	}
-	if (_timer_time.time-_timer_ori.time<=18
-			|| (_timer_time.time-_timer_ori.time==19
-			   && _timer_time.millitm-_timer_ori.millitm>=500))
+	if (_timer_time.time-_timer_ori.time<=8
+			|| (_timer_time.time-_timer_ori.time==9
+			   && _timer_time.millitm-_timer_ori.millitm<=500))
 		return 1;
 	else
 		return 0;

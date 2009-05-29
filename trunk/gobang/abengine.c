@@ -155,7 +155,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				a=ret.value;
 			}
 //			printf("a=%d ret.value=%d\n", a, ret.value);
-			if (ret.value>=INFINITY)
+			if (ret.value>=INFINITY+10)
 				break;
 			// TODO to be verified
 /*			if (temp.value<=-INFINITY){
@@ -213,7 +213,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				b=ret.value;
 			}
 //			printf("a=%d ret.value=%d\n", b, ret.value);
-			if (ret.value<=-INFINITY)
+			if (ret.value<=-INFINITY-10)
 				break;
 			// TODO to be verified
 /*			if (temp.value>=INFINITY){
