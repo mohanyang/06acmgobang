@@ -9,7 +9,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 0
+	DEBUG_STACK = 1
 };
 
 int max(int a, int b){
@@ -105,11 +105,11 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		releaseChildIterator(itr);
 		updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
 		if (DEBUG_STACK){
+			printBoardNonBlock(v);
 			printstack();
 			printf("eval %d\n", ret.value);
 			printstack();
 			printf("(%d, %d)\n", ret.move.x, ret.move.y);
-// 			printBoardNonBlock(v);
 		}
 	}
 	else if (getType(v)==MAXNODE) {
