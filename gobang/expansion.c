@@ -448,7 +448,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 			++ofs;
 			}
 			qsort(&(retval->movelist[dangerthreecount]), ofs-dangerthreecount,
-					sizeof(MoveListType), _compMovesDec);
+					sizeof(MoveListType), _compMovesInc);
 			retval->mllen=ofs;
 	}
 	else if (dangerthreecount){
@@ -458,6 +458,12 @@ void expandWhite(Configuration v, ChildIterator retval){
 			retval->movelist[i].val=getEvaluateForMove(v, WHITE,
 					dangerthree[i].m.x, dangerthree[i].m.y);
 		}
+		
+/*		printf("%d\n", dangerthreecount);
+		for (i=0; i<dangerthreecount; ++i)
+			printf("%d %d %d\n", retval->movelist[i].m.x, 
+				   retval->movelist[i].m.y, retval->movelist[i].val);
+		getchar();*/
 		qsort(retval->movelist, dangerthreecount,
 			  sizeof(MoveListType), _compMovesInc);
 	}
