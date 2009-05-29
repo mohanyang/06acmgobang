@@ -5,6 +5,7 @@
 #include "enginetypes.h"
 
 int _reverse[1 << 16]={0};
+int _localpriority[15][15];
 
 PEBBLE_COLOR getOppositePlayer(PEBBLE_COLOR p){
 	switch (p) {
@@ -37,6 +38,11 @@ void initializeBaseType(){
 			_reverse[i]=j;
 			_reverse[j]=i;
 		}
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			_localpriority[i][j]=7-
+					((abs(7-i)>abs(7-j))?
+					abs(7-i):abs(7-j));
 }
 
 void initializeConfiguration(Configuration v, PEBBLE_COLOR p){
@@ -48,6 +54,7 @@ void initializeConfiguration(Configuration v, PEBBLE_COLOR p){
 	memset((void*)((v->vboard)), 0, sizeof(int)*16);
 	v->lowerbound=-INFINITY;
 	v->upperbound=INFINITY;
+	v->localPriority = 0;
 }
 
 PEBBLE_COLOR getMover(Configuration v){
@@ -79,17 +86,23 @@ void putPebble(Configuration v, int x, int y, PEBBLE_COLOR col){
 		v->vboard[y] |= (1 << x);
 		v->hboard[x] |= (1 << y);
 //		updateHash(v, x, y, col);
+		v->localPriority += _localpriority[x][y];
 	}
 	else if (col==WHITE){
 		v->vboard[y] |= (1 << (x+16));
 		v->hboard[x] |= (1 << (y+16));
 //		updateHash(v, x, y, col);
+		v->localPriority -= _localpriority[x][y];
 	}
 	v->data[x][y]=col;
 }
 
 void removePebble(Configuration v, int x, int y){
 //	updateHash(v, x, y, getColor(v, x, y));
+  if (getColor(v, x, y) == BLACK)
+    v->localPriority -= _localpriority[x][y];
+  else
+    v->localPriority += _localpriority[x][y];
 	v->vboard[y] &= ~((1 << x) | (1 << (x+16)));
 	v->hboard[x] &= ~((1 << y) | (1 << (y+16)));
 	v->data[x][y]=NONE;

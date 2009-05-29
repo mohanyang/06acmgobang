@@ -65,7 +65,25 @@ int main(){
 		fprintf(fp, "%d %d\n", r.move.x, r.move.y);
 	}
 	fclose(fp);*/
+
+	char c;
+	while (1) {
+	  r = search(BLACK);
+	  playMove(r.move);
+	  printf("black: %d %d\n", r.move.x, r.move.y);
+
+	  c = getchar();
+	  if (c == 'q') break;
+
+	  r = search(WHITE);
+	  playMove(r.move);
+	  printf("white: %d %d\n", r.move.x, r.move.y);
 	
+	  c = getchar();
+	  if (c == 'q') break;
+	}
+	
+	/*
 	FILE *fp=fopen("log.txt", "r");
 	while (fscanf(fp, "%d %d", &(m.x), &(m.y))!=EOF){
 		printf("%d %d\n", m.x, m.y);
@@ -74,5 +92,6 @@ int main(){
 	fclose(fp);
 	r=search(WHITE);
 	playMove(r.move);
+	*/
 	return 0;
 }
