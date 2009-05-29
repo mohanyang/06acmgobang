@@ -9,7 +9,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 1
+	DEBUG_STACK = 0
 };
 
 int max(int a, int b){
@@ -224,7 +224,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 			getNext(&itr);
 		}
 		if (DEBUG_STACK){
-			if (ret.value>alpha){
+			if (ret.value<=alpha){
 				printstack();
 				printf("pruned\n");
 			}

@@ -288,19 +288,21 @@ void expandWhite(Configuration v, ChildIterator retval){
 	calculateStat(v);
 	// evaluateBoard(v, BLACK);
 	for (i=0; i<15; ++i)
-		for (j=0; j<15; ++j)
+		for (j=0; j<15; ++j){
 			if (getColor(v, i, j)==NONE && 
 				havePebbleAround(v, i, j))
 				_forbid[i][j]=1;
-			else
-				_forbid[i][j]=0;	
+			else {
+				_forbid[i][j]=0;
+			}
+		}
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if ((temp=isDangerous(v, i, j, BLACK))
-				&& _forbid[i][j]==1
-				&& getColor(v, i, j)==NONE){
-				if (forbid(v, i, j))
+				&& _forbid[i][j]==1){
+				if (forbid(v, i, j)) {
 					continue;
+				}
 				switch (temp) {
 					case 1:
 						dangerfour[dangerfourcount].m.x=i;
