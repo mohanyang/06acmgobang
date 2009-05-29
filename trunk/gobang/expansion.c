@@ -153,6 +153,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 			if (marked[i][j]==0 
 				&& _forbid[i][j]==1){
 				k=getEvaluateForMove(v, BLACK, i, j);
+				printf("evaluate %d,%d %d\n", i, j, k);
 				switch (k) {
 					case FIVE_SCORE:
 						winningfive[winningfivecount].m.x=i;
