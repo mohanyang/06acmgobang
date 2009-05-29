@@ -109,7 +109,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 					_forbid[i][j]=-1;
 					forbiddenmove[forbiddenmovecount].m.x=i;
 					forbiddenmove[forbiddenmovecount].m.y=j;
-					marked[i][j]=1;
+// 					marked[i][j]=1;
 					++forbiddenmovecount;
 				}
 				else
@@ -128,19 +128,19 @@ void expandBlack(Configuration v, ChildIterator retval){
 					case 1:
 						dangerfour[dangerfourcount].m.x=i;
 						dangerfour[dangerfourcount].m.y=j;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++dangerfourcount;
 						break;
 					case 2:
 						dangerthree[dangerthreecount].m.x=i;
 						dangerthree[dangerthreecount].m.y=j;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++dangerthreecount;
 						break;
 					case 3:
 						dangerfthree[dangerfthreecount].m.x=i;
 						dangerfthree[dangerfthreecount].m.y=j;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++dangerfthreecount;
 						break;
 					default:
@@ -153,41 +153,41 @@ void expandBlack(Configuration v, ChildIterator retval){
 			if (marked[i][j]==0 
 				&& _forbid[i][j]==1){
 				k=getEvaluateForMove(v, BLACK, i, j);
-				printf("evaluate %d,%d %d\n", i, j, k);
+//  				printf("evaluate %d,%d %d\n", i, j, k);
 				switch (k) {
 					case FIVE_SCORE:
 						winningfive[winningfivecount].m.x=i;
 						winningfive[winningfivecount].m.y=j;
 						winningfive[winningfivecount].val=k;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++winningfivecount;
 						break;
 					case FOUR_SCORE:
 						winningfour[winningfourcount].m.x=i;
 						winningfour[winningfourcount].m.y=j;
 						winningfour[winningfourcount].val=k;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++winningfourcount;
 						break;
 					case FTHREE_SCORE:
 						winningfthree[winningfthreecount].m.x=i;
 						winningfthree[winningfthreecount].m.y=j;
 						winningfthree[winningfthreecount].val=k;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++winningfthreecount;
 						break;
 					case DTHREE_SCORE:
 						winningdthree[winningdthreecount].m.x=i;
 						winningdthree[winningdthreecount].m.y=j;
 						winningdthree[winningdthreecount].val=k;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++winningdthreecount;
 						break;
 					default:
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
 						ordinarymove[ordinarymovecount].val=k;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++ordinarymovecount;
 						break;
 				}
@@ -296,19 +296,19 @@ void expandWhite(Configuration v, ChildIterator retval){
 					case 1:
 						dangerfour[dangerfourcount].m.x=i;
 						dangerfour[dangerfourcount].m.y=j;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++dangerfourcount;
 						break;
 					case 2:
 						dangerthree[dangerthreecount].m.x=i;
 						dangerthree[dangerthreecount].m.y=j;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++dangerthreecount;
 						break;
 					case 3:
 						dangerfthree[dangerfthreecount].m.x=i;
 						dangerfthree[dangerfthreecount].m.y=j;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++dangerfthreecount;
 						break;
 					default:
@@ -327,20 +327,20 @@ void expandWhite(Configuration v, ChildIterator retval){
 						winningfive[winningfivecount].m.y=j;
 						winningfive[winningfivecount].val=k;
 						++winningfivecount;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						break;
 					case -FOUR_SCORE:
 						winningfour[winningfourcount].m.x=i;
 						winningfour[winningfourcount].m.y=j;
 						winningfour[winningfourcount].val=k;
 						++winningfourcount;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						break;
 					case -FTHREE_SCORE:
 						winningfthree[winningfthreecount].m.x=i;
 						winningfthree[winningfthreecount].m.y=j;
 						winningfthree[winningfthreecount].val=k;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						++winningfthreecount;
 						break;
 					case -DTHREE_SCORE:
@@ -348,14 +348,14 @@ void expandWhite(Configuration v, ChildIterator retval){
 						winningdthree[winningdthreecount].m.y=j;
 						winningdthree[winningdthreecount].val=k;
 						++winningdthreecount;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						break;
 					default:
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
 						ordinarymove[ordinarymovecount].val=k;
 						++ordinarymovecount;
-						marked[i][j]=1;
+// 						marked[i][j]=1;
 						break;
 				}
 			}
