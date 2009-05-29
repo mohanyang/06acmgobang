@@ -19,10 +19,22 @@ void initializeConstant(){
     if (strcmp(key, "timelimit") == 0) {
       const_tls = atoi(value) / 1000;
       const_tlm = atoi(value) % 1000;
-    } else if (strcmp(key, "forbidden") == 0) {
+    } else if (strcmp(key, "allowforbidden") == 0) {
       const_forbidden = strcmp(value, "true") == 0;
     }
   }
   
   fclose(fp);
+}
+
+int timeLimitSecond() {
+	return const_tls;
+}
+
+int timeLimitMillis() {
+	return const_tlm;
+}
+
+int allowForbidden() {
+	return const_forbidden;
 }

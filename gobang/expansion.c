@@ -106,7 +106,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 		for (j=0; j<15; ++j)
 			if (getColor(v, i, j)==NONE && 
 				havePebbleAround(v, i, j)){
-				if (forbid(v, i, j)) {
+				if (forbid(v, i, j) && allowForbidden()==0) {
 					_forbid[i][j]=-1;
 					forbiddenmove[forbiddenmovecount].m.x=i;
 					forbiddenmove[forbiddenmovecount].m.y=j;
@@ -326,7 +326,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 		for (j=0; j<15; ++j)
 			if ((temp=isDangerous(v, i, j, BLACK))
 				&& _forbid[i][j]==1){
-				if (forbid(v, i, j)) {
+				if (forbid(v, i, j) && allowForbidden()==0) {
 					continue;
 				}
 				switch (temp) {
