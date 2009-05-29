@@ -33,12 +33,12 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return DTHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][0]){
 				if (info->stat[SLEEPY_THREE][1])
-					return 300;
+					return 350;
 				else
 					return 600;
 			}
 			else if (info->stat[AFOUR][0])
-				return 200;
+				return 300;
 			else {
 			  /*
 				// TODO quick calculation
@@ -83,13 +83,13 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			else if (info->stat[ACTIVE_THREE][1]>=2)
 				return -DTHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][1]){
-				if (info->stat[SLEEPY_THREE])
-					return -300;
+				if (info->stat[SLEEPY_THREE][0])
+					return -350;
 				else
 					return -600;
 			}
 			else if (info->stat[AFOUR][1])
-				return -200;
+				return -300;
 			else {
 			  /*
 				int i, j, k=0;
