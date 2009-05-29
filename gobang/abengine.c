@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "basetypes.h"
 #include "abengine.h"
+#include "advstat.h"
 #include "transposition.h"
 #include "evaluator.h"
 #include "expansion.h"
@@ -120,65 +121,68 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		int a=alpha;
 		ret.value=-INFINITY;
 		ret.move=getCurrent(itr);
-		while (itr!=NULL && ret.value<beta) {
-//			printf("depth=%d, move=%d %d\n",
-//				depth, getCurrent(itr).x, 
-//				getCurrent(itr).y);
-			if (tickTimer()==0)
-				break;
-			applyMove(v, getCurrent(itr));
-//			printBoardNonBlock(v);
-			
-			if (DEBUG_STACK){
-				printstack();
-				printf("black trying %d %d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y);
-			}
-			
-			if (getChildrenCount(itr)==1){
-				++doublecount;
-				temp=alphaBeta(v, a, beta,
-						depth-(doublecount & 1));
-				--doublecount;
-			}
-			else {
-				temp=alphaBeta(v, a, beta, depth-1);
-			}
-			updateMoveHeuristic(v, temp.move.x,
-								temp.move.y, temp.value);
-			if (DEBUG_STACK){
-				printstack();
-				printf("black try %d %d, result=%d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y,
-								  temp.value);
-			}
-			
-			if (temp.value>ret.value) {
-				ret.value=temp.value;
-				ret.move=getCurrent(itr);
-//				printf("current black move = %d %d\n", ret.move.x, ret.move.y);
-			}
-			undoMove(v, getCurrent(itr));
-//			printBoard(v);
-			if (a>ret.value){
-				a=ret.value;
-			}
-//			printf("a=%d ret.value=%d\n", a, ret.value);
-			if (ret.value>=INFINITY+10)
-				break;
-			// TODO to be verified
-/*			if (temp.value<=-INFINITY){
-				++counter;
-			}
-			if (counter>2)
-				break;*/
-			getNext(&itr);
-//			printf("e: %d %d\n", itr->current.x, itr->current.y);
+		if (getCurrentValue(itr)>=FIVE_SCORE){
+			ret.value=FIVE_SCORE;
 		}
-		if (DEBUG_STACK){
-			if (ret.value>=beta){
-				printstack();
-				printf("pruned\n");
+		else {
+			while (itr!=NULL && ret.value<beta) {
+	//			printf("depth=%d, move=%d %d\n",
+	//				depth, getCurrent(itr).x, 
+	//				getCurrent(itr).y);
+				if (tickTimer()==0)
+					break;
+				applyMove(v, getCurrent(itr));
+	//			printBoardNonBlock(v);
+				
+				if (DEBUG_STACK){
+					printstack();
+					printf("black trying %d %d\n", 
+						getCurrent(itr).x, getCurrent(itr).y);
+				}
+				
+/*				if (getChildrenCount(itr)==1){
+					++doublecount;
+					temp=alphaBeta(v, a, beta,
+							depth-(doublecount & 1));
+					--doublecount;
+				}
+				else*/ {
+					temp=alphaBeta(v, a, beta, depth-1);
+				}
+				updateMoveHeuristic(v, temp.move.x,
+									temp.move.y, temp.value);
+				if (DEBUG_STACK){
+					printstack();
+					printf("black try %d %d, result=%d\n", 
+						getCurrent(itr).x, getCurrent(itr).y,
+									temp.value);
+				}
+				
+				if (temp.value>ret.value) {
+					ret.value=temp.value;
+					ret.move=getCurrent(itr);
+	//				printf("current black move = %d %d\n", ret.move.x, ret.move.y);
+				}
+				undoMove(v, getCurrent(itr));
+	//			printBoard(v);
+				if (a>ret.value){
+					a=ret.value;
+				}
+	//			printf("a=%d ret.value=%d\n", a, ret.value);
+				// TODO to be verified
+	/*			if (temp.value<=-INFINITY){
+					++counter;
+				}
+				if (counter>2)
+					break;*/
+				getNext(&itr);
+	//			printf("e: %d %d\n", itr->current.x, itr->current.y);
+			}
+			if (DEBUG_STACK){
+				if (ret.value>=beta){
+					printstack();
+					printf("pruned\n");
+				}
 			}
 		}
 		releaseChildIterator(itr);
@@ -190,60 +194,65 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		int b=beta;
 		ret.value=INFINITY;
 		ret.move=getCurrent(itr);
-		while (itr!=NULL && ret.value>alpha) {
-			if (tickTimer()==0)
-				break;
-			applyMove(v, getCurrent(itr));
-			
-			if (DEBUG_STACK){
-				printstack();
-				printf("white trying %d %d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y);
-			}
-			
-			if (getChildrenCount(itr)==1){
-				++doublecount;
-				temp=alphaBeta(v, alpha, b, 
-						depth-(doublecount & 1));
-				--doublecount;
-			}
-			else {
-				temp=alphaBeta(v, alpha, b, depth-1);
-			}
-			updateMoveHeuristic(v, temp.move.x,
-								temp.move.y, temp.value);
-			
-			if (DEBUG_STACK){
-				printstack();
-				printf("white try %d %d, result=%d\n", 
-					   getCurrent(itr).x, getCurrent(itr).y,
-								  temp.value);
-			}
-			
-			if (temp.value<ret.value){
-				ret.value=temp.value;
-				ret.move=getCurrent(itr);
-	//			printf("current white move = %d %d\n", ret.move.x, ret.move.y);
-			}
-			undoMove(v, getCurrent(itr));
-			if (b<ret.value){
-				b=ret.value;
-			}
-//			printf("a=%d ret.value=%d\n", b, ret.value);
-			if (ret.value<=-INFINITY-10)
-				break;
-			// TODO to be verified
-/*			if (temp.value>=INFINITY){
-				++counter;
-			}
-			if (counter>2)
-				break;*/
-			getNext(&itr);
+		if (getCurrentValue(itr)<=-FIVE_SCORE){
+			ret.value=-FIVE_SCORE;
 		}
-		if (DEBUG_STACK){
-			if (ret.value<=alpha){
-				printstack();
-				printf("pruned\n");
+		else {
+			while (itr!=NULL && ret.value>alpha) {
+				if (tickTimer()==0)
+					break;
+				applyMove(v, getCurrent(itr));
+				
+				if (DEBUG_STACK){
+					printstack();
+					printf("white trying %d %d\n", 
+						getCurrent(itr).x, getCurrent(itr).y);
+				}
+				
+/*				if (getChildrenCount(itr)==1){
+					++doublecount;
+					temp=alphaBeta(v, alpha, b, 
+							depth-(doublecount & 1));
+					--doublecount;
+				}
+				else*/ {
+					temp=alphaBeta(v, alpha, b, depth-1);
+				}
+				updateMoveHeuristic(v, temp.move.x,
+									temp.move.y, temp.value);
+				
+				if (DEBUG_STACK){
+					printstack();
+					printf("white try %d %d, result=%d\n", 
+						getCurrent(itr).x, getCurrent(itr).y,
+									temp.value);
+				}
+				
+				if (temp.value<ret.value){
+					ret.value=temp.value;
+					ret.move=getCurrent(itr);
+		//			printf("current white move = %d %d\n", ret.move.x, ret.move.y);
+				}
+				undoMove(v, getCurrent(itr));
+				if (b<ret.value){
+					b=ret.value;
+				}
+	//			printf("a=%d ret.value=%d\n", b, ret.value);
+				if (ret.value<=-INFINITY-10)
+					break;
+				// TODO to be verified
+	/*			if (temp.value>=INFINITY){
+					++counter;
+				}
+				if (counter>2)
+					break;*/
+				getNext(&itr);
+			}
+			if (DEBUG_STACK){
+				if (ret.value<=alpha){
+					printstack();
+					printf("pruned\n");
+				}
 			}
 		}
 		releaseChildIterator(itr);
