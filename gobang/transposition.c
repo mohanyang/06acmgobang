@@ -69,7 +69,7 @@ HashRetVal retrieve(Configuration v){
 	// TODO optimize v so that do not 
 	// need to calculate hash every time
 	// TODO how to deal with fail lo and fail hi nodes
-// 	return NULL;
+	return NULL;
 	int key=calcHash(v, MAX_TABLE_SIZE);
 	if (DEBUG_TRANSPOS){
 		printf("===retrieving===\n");
@@ -184,7 +184,7 @@ void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 }
 
 void store(Configuration v, Move m, HashNodeType type){
-// 	return;
+	return;
 	int i, j, k;
 	memcpy((void*)(tempconf), (void*)v, sizeof(struct BaseNode));
 	memcpy((void*)tempmove, (void*)&m, sizeof(Move));

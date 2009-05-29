@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include "basetypes.h"
 #include "enginetypes.h"
 
@@ -82,6 +83,7 @@ PEBBLE_COLOR getColor(Configuration v, int x, int y){
 }
 
 void putPebble(Configuration v, int x, int y, PEBBLE_COLOR col){
+	assert(getColor(v, x, y)==NONE);
 	if (col==BLACK){
 		v->vboard[y] |= (1 << x);
 		v->hboard[x] |= (1 << y);
