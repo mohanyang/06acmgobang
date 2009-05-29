@@ -104,7 +104,7 @@ void updateMoveHeuristic(Configuration v, int x, int y, int val){
 		}
 	}
 	else {
-		if (movecontainersize[x][y]>=MAX_MOVE_TABLE_SIZE)
+		if (movecontainersize[x][y]>=MAX_MOVE_TABLE_SIZE-1)
 			return;
 		MoveHNode *ptr=&(movecontainer[x][y]
 				[movecontainersize[x][y]]);

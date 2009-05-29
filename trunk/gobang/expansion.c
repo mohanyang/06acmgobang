@@ -193,8 +193,10 @@ void expandBlack(Configuration v, ChildIterator retval){
 						break;
 				}
 			}
-	if (DEBUG_EXPAND)
+	if (DEBUG_EXPAND){
+		printf("dump black\n");
 		dumpAll();
+	}
 	if (winningfivecount){
 		retval->mllen=1;
 		retval->movelist[0]=winningfive[0];
@@ -216,12 +218,13 @@ void expandBlack(Configuration v, ChildIterator retval){
 			retval->movelist[i]=winningfour[i];
 		}
 	}
-	else if (winningfthreecount) {
+/*	else if (winningfthreecount) {
+		printf("d\n");
 		retval->mllen=winningfthreecount;
 		for (i=0; i<winningfthreecount; ++i){
 			retval->movelist[i]=winningfthree[i];
 		}
-	}
+	}*/
 	else if (dangerthreecount==0
 		&& dangerfthreecount==0 && winningdthreecount){
 		retval->mllen=winningdthreecount;
@@ -268,6 +271,9 @@ void expandBlack(Configuration v, ChildIterator retval){
 	}
 	else {
 		// TODO if no move available
+		printf("????\n");
+		dumpAll();
+		printf("!!!!\n");
 	}
 }
 
@@ -293,6 +299,8 @@ void expandWhite(Configuration v, ChildIterator retval){
 			if ((temp=isDangerous(v, i, j, BLACK))
 				&& _forbid[i][j]==1
 				&& getColor(v, i, j)==NONE){
+				if (forbid(v, i, j))
+					continue;
 				switch (temp) {
 					case 1:
 						dangerfour[dangerfourcount].m.x=i;
@@ -361,8 +369,10 @@ void expandWhite(Configuration v, ChildIterator retval){
 						break;
 				}
 			}
-	if (DEBUG_EXPAND)
+	if (DEBUG_EXPAND){
+		printf("dump white\n");
 		dumpAll();
+	}
 	if (winningfivecount){
 		retval->mllen=1;
 		retval->movelist[0]=winningfive[0];
@@ -430,6 +440,9 @@ void expandWhite(Configuration v, ChildIterator retval){
 	}
 	else {
 		// TODO if no move available
+		printf("????\n");
+		dumpAll();
+		printf("????\n");
 	}
 }
 
