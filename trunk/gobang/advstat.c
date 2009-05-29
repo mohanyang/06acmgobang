@@ -16,22 +16,22 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 	switch (col){
 		case BLACK:
 			if (info->stat[FIVE][1])
-				return -INFINITY-10;
+				return -FIVE_SCORE;
 			else if (info->stat[FIVE][0])
-				return INFINITY+10;
+				return FIVE_SCORE;
 			else if (info->stat[ACTIVE_FOUR][1])
-				return -INFINITY;
+				return -FOUR_SCORE;
 			else if (info->stat[AFOUR][1])
-				return -INFINITY;
+				return -FOUR_SCORE;
 			else if (info->stat[ACTIVE_FOUR][0])
-				return INFINITY;
+				return FOUR_SCORE;
 			else if (info->stat[AFOUR][0] &&
 							  info->stat[ACTIVE_THREE][0])
-				return INFINITY;
+				return FTHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][1])
-				return -INFINITY;
+				return -ATHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][0]>=2)
-				return INFINITY;
+				return DTHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][0])
 				return 800;
 			else if (info->stat[AFOUR][0])
@@ -60,22 +60,22 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			}
 		case WHITE:
 			if (info->stat[FIVE][0])
-				return +INFINITY+10;
+				return FIVE_SCORE;
 			else if (info->stat[FIVE][1])
-				return -INFINITY-10;
+				return -FIVE_SCORE;
 			else if (info->stat[ACTIVE_FOUR][0])
-				return INFINITY;
+				return FOUR_SCORE;
 			else if (info->stat[AFOUR][0])
-				return INFINITY;
+				return FOUR_SCORE;
 			else if (info->stat[ACTIVE_FOUR][1])
-				return -INFINITY;
+				return -FOUR_SCORE;
 			else if (info->stat[AFOUR][1] &&
 							  info->stat[ACTIVE_THREE][1])
-				return -INFINITY;
+				return -FTHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][0])
-				return INFINITY;
+				return ATHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][1]>=2)
-				return -INFINITY;
+				return -DTHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][1])
 				return -800;
 			else if (info->stat[AFOUR][1])
