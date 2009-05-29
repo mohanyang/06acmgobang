@@ -11,7 +11,7 @@
 #include "dangerous.h"
 
 enum {
-	DEBUG_EXPAND = 0
+	DEBUG_EXPAND = 1
 };
 
 typedef struct {
@@ -463,8 +463,8 @@ ChildIterator getExpansion(Configuration v) {
 	else {
 		expandWhite(v, retval);
 	}
-	if (retval->mllen>20)
-		retval->mllen=20;
+	if (retval->mllen>12)
+		retval->mllen=12;
 	if (DEBUG_EXPAND){
 		printf(">>>>>>>>>>>>\n");
 		printf("altogether %d\n", retval->mllen);
@@ -501,4 +501,8 @@ void releaseChildIterator(ChildIterator itr){
 	if (itr!=NULL)
 		--_childitrpointer;
 //	printf("childitrpointer %d\n", _childitrpointer);
+}
+
+int getChildrenCount(ChildIterator itr){
+	return itr->mllen;
 }

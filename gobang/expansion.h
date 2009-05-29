@@ -17,4 +17,6 @@ int getCurrentValue(ChildIterator itr);
 
 void releaseChildIterator(ChildIterator itr);
 
+int getChildrenCount(ChildIterator itr);
+
 #endif
