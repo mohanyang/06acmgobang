@@ -6,9 +6,21 @@
  */
 void initializeConstant();
 
-const int timeLimitSecond;
-const int timeLimitMillis;
+int const_tls, const_tlm, const_forbidden;
 
-const int allowForbidden;
+inline
+int timeLimitSecond() {
+  return const_tls;
+}
+
+inline
+int timeLimitMillis() {
+  return const_tlm;
+}
+
+inline
+int allowForbidden() {
+  return const_forbidden;
+}
 
 #endif

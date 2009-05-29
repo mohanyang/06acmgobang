@@ -242,6 +242,37 @@ void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
     }									\
   }
 
+#define adjust(score, color) ((color) == BLACK ? (score) : -(score))
+
+int _getScore(AdvancedStat *info, PEBBLE_COLOR c) {
+  
+  int now = getOppositePlayer(c);
+
+  if (info->stat[FIVE][c])
+    return adjust(now, -INFINITY);
+  if (info->stat[FIVE][now])
+    return adjust(now, INFINITY);
+  if (info->stat[ACTIVE_FOUR][now] || info->stat[AFOUR][now])
+    return adjust(now, INFINITY - 1);
+  if (info->stat[ACTIVE_FOUR][c])
+    return adjust(now, -INFINITY + 1);
+  if (info->stat[AFOUR][c] && info->stat[ACTIVE_THREE][c])
+    return adjust(now, -INFINITY + 1);
+
+  int score = 0;
+  score -= info->stat[AFOUR][c] * (INFINITY / 2 - 1);
+  score += info->stat[ACTIVE_THREE][now] * (INFINITY / 2 - 1);
+  score -= info->stat[ACTIVE_THREE][  c] * (INFINITY / 2 - 1);
+  score += info->stat[SLEEPY_THREE][now] * (INFINITY / 10);
+  score -= info->stat[SLEEPY_THREE][  c] * (INFINITY / 10);
+  score += info->stat[ACTIVE_TWO][now] * (INFINITY / 20);
+  score -= info->stat[ACTIVE_TWO][  c] * (INFINITY / 20);
+
+  if (score >  INFINITY - 10) score =  INFINITY - 10;
+  if (score < -INFINITY + 10) score = -INFINITY + 10;
+  return adjust(now, score) + info->assoc->localPriority;
+}
+
 int evaluateBoard(Configuration v, PEBBLE_COLOR c) {
   memset(&astat, 0, sizeof(astat));
 

@@ -1,5 +1,5 @@
 CC	= gcc
-CFLAGS =	-g -Wall -fmessage-length=0 -pg
+CFLAGS =	-g -Wall -fmessage-length=0
 
 OBJS =		globalconst.o \
 			basetypes.o \
