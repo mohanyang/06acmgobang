@@ -317,17 +317,15 @@ int havePebbleAround(Configuration v, int x, int y){
 	int i;
 	int lb=(x>=2)?(x-2):0;
 	int ub=(x<=12)?(x+2):14;
-	int mask=((1 << 5)-1) << (y-2);
+	int mask;
+	if (y>=2)
+		mask=((1 << 5)-1) << (y-2);
+	else
+		mask=((1 << 5)-1) >> (2-y);
 	mask |= (mask << 16);
 	for (i=lb; i<=ub; ++i)
-		if ((v->hboard[i]) & mask)
+		if ((v->hboard[i]) & mask){
 			return 1;
-/*	printf("========have pebble around=======\n");
-	printBoardNonBlock(v);
-	printf("(%d, %d) val=%d\n", x, y, 0);
-	printf("%d %d %d\n", lb, ub, mask);
-	for (i=0; i<15; ++i)
-		printf("%d\n", v->hboard[i]);
-	printf("=================================\n");*/
+		}
 	return 0;
 }

@@ -15,11 +15,9 @@ enum {
  */
 int isDangerous(Configuration v, int x, int y, PEBBLE_COLOR p){
 	int idx=(p==BLACK)?0:1;
+	
 /*	printBoardNonBlock(v);
-	printf("%d %d %d\n", x, y, idx);
-	printf("%d\n", v->statistics[x][y][ACTIVE_THREE][idx]);
-	if (x==7 && y==10)
-		getchar();*/
+	printf("%d %d %d\n", x, y, idx);*/
 	
 	if (getColor(v, x, y)==NONE){
 		if (v->statistics[x][y][AFOUR][idx]
