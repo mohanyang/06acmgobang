@@ -11,7 +11,7 @@
 #include "dangerous.h"
 
 enum {
-	DEBUG_EXPAND = 1
+	DEBUG_EXPAND = 0
 };
 
 typedef struct {
@@ -97,6 +97,7 @@ void dumpAll(){
 void expandBlack(Configuration v, ChildIterator retval){
 	int i, j, temp;
 	int k;
+	int has4=0;
 // 	memset(marked, 0, sizeof(marked));
 	dangerthreecount=dangerfourcount=dangerfthreecount
 		=winningfivecount=winningfourcount=winningfthreecount
@@ -185,6 +186,8 @@ void expandBlack(Configuration v, ChildIterator retval){
 						++winningdthreecount;
 						break;
 					default:
+						if (k==300)
+							has4=1;
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
 						ordinarymove[ordinarymovecount].val=k;
@@ -218,19 +221,41 @@ void expandBlack(Configuration v, ChildIterator retval){
 			retval->movelist[i]=winningfour[i];
 		}
 	}
-/*	else if (winningfthreecount) {
-		printf("d\n");
-		retval->mllen=winningfthreecount;
-		for (i=0; i<winningfthreecount; ++i){
-			retval->movelist[i]=winningfthree[i];
-		}
-	}*/
 	else if (dangerthreecount==0
 		&& dangerfthreecount==0 && winningdthreecount){
 		retval->mllen=winningdthreecount;
 		for (i=0; i<winningdthreecount; ++i){
 			retval->movelist[i]=winningdthree[i];
 		}
+	}
+	else if (dangerthreecount && has4){
+		int ofs=0;
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, BLACK,
+					dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(retval->movelist, dangerthreecount,
+			  sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerthreecount;
+		for (i=0; i<ordinarymovecount; ++i)
+			if (ordinarymove[i].val==300){
+				retval->movelist[ofs]=ordinarymove[i];
+				++ofs;
+			}
+		qsort(&(retval->movelist[dangerthreecount]), ofs-dangerthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		retval->mllen=ofs;
+	}
+	else if (dangerthreecount){
+		retval->mllen=dangerthreecount;			
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[i].m=dangerthree[i].m;
+			retval->movelist[i].val=getEvaluateForMove(v, BLACK,
+					dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(retval->movelist, dangerthreecount,
+			  sizeof(MoveListType), _compMovesDec);
 	}
 	else if (dangerthreecount+winningdthreecount+winningfthreecount
 		+dangerfthreecount+ordinarymovecount>0) {
@@ -280,6 +305,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 void expandWhite(Configuration v, ChildIterator retval){
 	int i, j, temp;
 	int k;
+	int has4=0;
 // 	memset(marked, 0, sizeof(marked));
 	dangerthreecount=dangerfourcount=dangerfthreecount
 		=winningfivecount=winningfourcount=winningfthreecount
@@ -363,6 +389,8 @@ void expandWhite(Configuration v, ChildIterator retval){
 // 						marked[i][j]=1;
 						break;
 					default:
+						if (k==-300)
+							has4=1;
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
 						ordinarymove[ordinarymovecount].val=k;
@@ -403,6 +431,35 @@ void expandWhite(Configuration v, ChildIterator retval){
 		for (i=0; i<winningdthreecount; ++i){
 			retval->movelist[i]=winningdthree[i];
 		}
+	}
+	else if (dangerthreecount && has4){
+		int ofs=0;
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, BLACK,
+					dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(retval->movelist, dangerthreecount,
+			  sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerthreecount;
+		for (i=0; i<ordinarymovecount; ++i)
+			if (ordinarymove[i].val==300){
+			retval->movelist[ofs]=ordinarymove[i];
+			++ofs;
+			}
+			qsort(&(retval->movelist[dangerthreecount]), ofs-dangerthreecount,
+					sizeof(MoveListType), _compMovesDec);
+			retval->mllen=ofs;
+	}
+	else if (dangerthreecount){
+		retval->mllen=dangerthreecount;			
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[i].m=dangerthree[i].m;
+			retval->movelist[i].val=getEvaluateForMove(v, BLACK,
+					dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(retval->movelist, dangerthreecount,
+			  sizeof(MoveListType), _compMovesDec);
 	}
 	else if (dangerthreecount+winningdthreecount+dangerfthreecount
 		+ordinarymovecount+winningfthreecount>0) {

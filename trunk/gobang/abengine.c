@@ -10,7 +10,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 1
+	DEBUG_STACK = 0
 };
 
 int max(int a, int b){
@@ -140,13 +140,13 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 						getCurrent(itr).x, getCurrent(itr).y);
 				}
 				
-/*				if (getChildrenCount(itr)==1){
+				if (getChildrenCount(itr)==1){
 					++doublecount;
 					temp=alphaBeta(v, a, beta,
 							depth-(doublecount & 1));
 					--doublecount;
 				}
-				else*/ {
+				else {
 					temp=alphaBeta(v, a, beta, depth-1);
 				}
 				updateMoveHeuristic(v, temp.move.x,
@@ -209,13 +209,13 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 						getCurrent(itr).x, getCurrent(itr).y);
 				}
 				
-/*				if (getChildrenCount(itr)==1){
+				if (getChildrenCount(itr)==1){
 					++doublecount;
 					temp=alphaBeta(v, alpha, b, 
 							depth-(doublecount & 1));
 					--doublecount;
 				}
-				else*/ {
+				else {
 					temp=alphaBeta(v, alpha, b, depth-1);
 				}
 				updateMoveHeuristic(v, temp.move.x,
