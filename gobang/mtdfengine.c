@@ -23,9 +23,10 @@ ReturnValue id_mtdf(Configuration v){
 		printf("id depth = %d\n", depth);
 		f=mtdf(v, f.value, depth);
 		// TODO if f better, than move
-		temp=f;
 		if (tickTimer()==0)
 			break;
+		else
+			temp=f;
 		if (f.value==target)
 			break;
 	}
