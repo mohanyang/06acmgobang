@@ -1,5 +1,5 @@
 CC	= gcc
-CFLAGS =	-g -Wall -fmessage-length=0
+CFLAGS =	-g -Wall -fmessage-length=0 -pg
 
 OBJS =		globalconst.o \
 			basetypes.o \
@@ -29,7 +29,7 @@ LIBS =
 TARGET =	gobang
 
 $(TARGET):	$(OBJS)
-	$(CC) -o $(TARGET) $(OBJS) $(LIBS)
+	$(CC) -o $(TARGET) $(CFLAGS) $(OBJS) $(LIBS)
 
 all:	$(TARGET)
 
@@ -48,3 +48,8 @@ so:
 	gcc -I "/usr/lib/jvm/java-1.6.0/include" \
 			-I "/usr/lib/jvm/java-1.6.0/include/linux" \
 			-shared -o libJNIAdapter.so $(DLLOBJS)			
+
+soso: $(TARGET)
+	gcc -I "/usr/lib/jvm/java-6-sun/include" \
+	-I "/usr/lib/jvm/java-6-sun/include/linux" \
+	 -shared -o libJNIAdapter.so $(DLLOBJS)

@@ -5,8 +5,6 @@
 #include "basestat.h"
 #include "enginetypes.h"
 
-int _localpriority[15][15];
-
 int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 /*	int i, j;
 	for (i=1; i<=5; ++i)
@@ -37,6 +35,7 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			else if (info->stat[AFOUR][0])
 				return 700;
 			else {
+			  /*
 				// TODO quick calculation
 				int i, j, k=0;
 				for (i=0; i<15; ++i)
@@ -51,9 +50,11 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 							default:
 								break;
 						}
-/*				printBoardNonBlock(info->assoc);
+				printBoardNonBlock(info->assoc);
 				printf("%d\n", k);
-				getchar();*/
+				getchar();
+			  */
+			  int k=info->assoc->localPriority;
 				return (info->stat[SLEEPY_THREE][0]*2
 						-info->stat[SLEEPY_THREE][1])*30
 						+k*10;
@@ -81,6 +82,7 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			else if (info->stat[AFOUR][1])
 				return -700;
 			else {
+			  /*
 				int i, j, k=0;
 				for (i=0; i<15; ++i)
 					for (j=0; j<15; ++j)
@@ -94,6 +96,8 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 							default:
 								break;
 						}
+			  */
+				int k = info->assoc->localPriority;
 				return (-info->stat[SLEEPY_THREE][0]
 						+2*info->stat[SLEEPY_THREE][1])*30
 						+k*10;
@@ -104,10 +108,4 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 }
 
 void initializeAdvStat(){
-	int i, j;
-	for (i=0; i<15; ++i)
-		for (j=0; j<15; ++j)
-			_localpriority[i][j]=7-
-					((abs(7-i)>abs(7-j))?
-					abs(7-i):abs(7-j));
 }
