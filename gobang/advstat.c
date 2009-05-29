@@ -7,10 +7,11 @@
 
 int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 /*	int i, j;
+	printf("eeeeeeeeeeeeeee\n");
 	for (i=1; i<=5; ++i)
 		for (j=0; j<2; ++j)
 			printf("%d ", info->stat[i][j]);
-	printf("\n");*/
+	printf("\ndddddddddddddddd\n");*/
 	switch (col){
 		case BLACK:
 			if (info->stat[FIVE][1])
