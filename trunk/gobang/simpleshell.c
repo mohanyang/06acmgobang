@@ -90,7 +90,7 @@ int main(){
 		playMove(m);
 	}
 	fclose(fp);
-	r=search(BLACK);
+	r=search(WHITE);
 	playMove(r.move);
 	
 	return 0;

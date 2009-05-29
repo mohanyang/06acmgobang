@@ -9,7 +9,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 0
+	DEBUG_STACK = 1
 };
 
 int max(int a, int b){
@@ -21,6 +21,7 @@ int min(int a, int b){
 }
 
 static int stackcount=0;
+static int doublecount=0;
 
 void printstack(){
 	int i;
@@ -134,7 +135,15 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					   getCurrent(itr).x, getCurrent(itr).y);
 			}
 			
-			temp=alphaBeta(v, a, beta, depth-1);
+			if (getChildrenCount(itr)==1){
+				++doublecount;
+				temp=alphaBeta(v, a, beta,
+						depth-(doublecount & 1));
+				--doublecount;
+			}
+			else {
+				temp=alphaBeta(v, a, beta, depth-1);
+			}
 			updateMoveHeuristic(v, temp.move.x,
 								temp.move.y, temp.value);
 			if (DEBUG_STACK){
@@ -192,7 +201,15 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					   getCurrent(itr).x, getCurrent(itr).y);
 			}
 			
-			temp=alphaBeta(v, alpha, b, depth-1);
+			if (getChildrenCount(itr)==1){
+				++doublecount;
+				temp=alphaBeta(v, alpha, b, 
+						depth-(doublecount & 1));
+				--doublecount;
+			}
+			else {
+				temp=alphaBeta(v, alpha, b, depth-1);
+			}
 			updateMoveHeuristic(v, temp.move.x,
 								temp.move.y, temp.value);
 			

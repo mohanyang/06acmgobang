@@ -4,6 +4,11 @@
 /**
  * open the config file and read config information
  */
-void initialize();
+void initializeConstant();
+
+const int timeLimitSecond;
+const int timeLimitMillis;
+
+const int allowForbidden;
 
 #endif
