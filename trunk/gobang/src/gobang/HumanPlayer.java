@@ -46,36 +46,33 @@ public class HumanPlayer implements BoardListener {
 				humanPlay();
 				if (isOver) {
 					judgeOver();
-					continue;
+					break;
 				}
 				humanPlay();
 				if (isOver) {
 					judgeOver();
-					continue;
 				}
 				break;
 			case 1:
 				humanPlay();
 				if (isOver) {
 					judgeOver();
-					continue;
+					break;
 				}
 				AIPlay();
 				if (isOver) {
 					judgeOver();
-					continue;
 				}
 				break;
 			case 2:
 				AIPlay();
 				if (isOver) {
 					judgeOver();
-					continue;
+					break;
 				}
 				humanPlay();
 				if (isOver) {
 					judgeOver();
-					continue;
 				}
 				break;
 			default:
@@ -90,7 +87,7 @@ public class HumanPlayer implements BoardListener {
 			int n = JOptionPane.showConfirmDialog(null,
 					(wins == Color.WHITE ? "WHITE" : "BLACK")
 							+ " wins!\nClick Y to restart, N to exit.",
-					"Gobang", JOptionPane.YES_NO_CANCEL_OPTION);
+					"Gobang", JOptionPane.YES_NO_OPTION);
 			if (n == JOptionPane.OK_OPTION) {
 				playerReset();
 			} else if (n == JOptionPane.NO_OPTION) {
@@ -124,11 +121,13 @@ public class HumanPlayer implements BoardListener {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		out.println(lastMove);
-		System.out.println(lastMove);
-		if (jni != null)
-			jni.playChess(lastMove.toInt());
-		color = (byte) (Color.SUM - lastMove.color);
+		if (!isOver) {
+			out.println(lastMove);
+			System.out.println(lastMove);
+			if (jni != null)
+				jni.playChess(lastMove.toInt());
+			color = (byte) (Color.SUM - lastMove.color);
+		}
 	}
 
 	private boolean waitResult = false;

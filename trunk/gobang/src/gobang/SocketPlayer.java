@@ -78,6 +78,7 @@ public class SocketPlayer {
 		switch (msg) {
 		case Message.COMM_MSG_GAME_START:
 			Debug.assertTrue(color != Color.NONE);
+			out.println("new game");
 			status = Status.STARTED;
 			curColor = Color.BLACK;
 			jni.reset();
@@ -137,10 +138,10 @@ public class SocketPlayer {
 	}
 
 	synchronized void handleOver() {
-		jni.reset();
-		out.println("new game");
-		if (uiOn)
-			cf.reset();
+		// jni.reset();
+		// out.println("new game");
+		// if (uiOn)
+		// cf.reset();
 		status = Status.UNSTART;
 		curColor = Color.BLACK;
 	}

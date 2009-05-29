@@ -6,8 +6,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -155,14 +158,22 @@ public class ChessBoardPanel extends JPanel implements MouseListener,
 				}
 			}
 		}
+		try {
+			ImageIO.write(bg, "bmp", new File("snapshot" + gameCount + ".bmp"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		getGraphics().drawImage(bg, 0, 0, null);
 	}
+
+	static int gameCount = 0;
 
 	public synchronized void reset() {
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 				board[i][j] = Color.NONE;
 		count = 0;
+		++gameCount;
 		isOver = false;
 		color = Color.BLACK;
 		Graphics bf = bg.getGraphics();
