@@ -2,6 +2,7 @@
 #define _ADVSTAT_H_
 
 #include "basetypes.h"
+#include "enginetypes.h"
 
 /**
  * calculate advanced statistics of a 
@@ -17,6 +18,14 @@ enum {
 	ACTIVE_THREE = 4,
 	SLEEPY_THREE = 5,
 	ACTIVE_TWO = 6,
+};
+
+enum {
+	FIVE_SCORE = INFINITY+10,
+	FOUR_SCORE = INFINITY+9,
+	FTHREE_SCORE = INFINITY+8,
+	ATHREE_SCORE = INFINITY+8,
+	DTHREE_SCORE = INFINITY+7
 };
 
 typedef struct {

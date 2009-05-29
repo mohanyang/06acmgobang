@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "advstat.h"
 #include "expansion.h"
 #include "evaluator.h"
 #include "enginetypes.h"
@@ -37,185 +38,365 @@ int _compMovesDec(const void *x, const void *y){
 	return ((MoveListType*)y)->val-((MoveListType*)x)->val;
 }
 
+int getEvaluateForMove(Configuration v, PEBBLE_COLOR col, int x, int y){
+	int flag;
+	int ret=getMoveEvaluate(v, x, y, &flag);
+	if (flag){
+		putPebble(v, x, y, col);
+		ret=evaluateBoard(v, col);
+		removePebble(v, x, y);
+	}
+	return ret;
+}
+
+MoveListType dangerthree[225];
+int dangerthreecount;
+MoveListType dangerfour[225];
+int dangerfourcount;
+MoveListType dangerfthree[225];
+int dangerfthreecount;
+MoveListType winningfive[225];
+int winningfivecount;
+MoveListType winningfour[225];
+int winningfourcount;
+MoveListType winningfthree[225];
+int winningfthreecount;
+MoveListType winningdthree[225];
+int winningdthreecount;
+MoveListType ordinarymove[225];
+int ordinarymovecount;
+MoveListType forbiddenmove[225];
+int forbiddenmovecount;
+int marked[15][15];
+
+void expandBlack(Configuration v, ChildIterator retval){
+	int i, j, temp;
+	int k;
+	memset(marked, 0, sizeof(marked));
+	dangerthreecount=dangerfourcount=dangerfthreecount
+		=winningfivecount=winningfourcount=winningfthreecount
+		=winningdthreecount=ordinarymovecount=forbiddenmovecount=0;
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			if (getColor(v, i, j)==NONE && 
+				havePebbleAround(v, i, j)){
+				if (forbid(v, i, j)) {
+					_forbid[i][j]=-1;
+					forbiddenmove[forbiddenmovecount].m.x=i;
+					forbiddenmove[forbiddenmovecount].m.y=j;
+					marked[i][j]=1;
+					++forbiddenmovecount;
+				}
+				else
+					_forbid[i][j]=1;
+			}
+			else
+				_forbid[i][j]=0;
+	// find hazards
+	calculateStat(v);
+	// evaluateBoard(v, BLACK);
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			if ((temp=isDangerous(v, i, j, WHITE))
+				&& _forbid[i][j]==1
+				&& getColor(v, i, j)==NONE){
+				switch (temp) {
+					case 1:
+						dangerfour[dangerfourcount].m.x=i;
+						dangerfour[dangerfourcount].m.y=j;
+						marked[i][j]=1;
+						++dangerfourcount;
+						break;
+					case 2:
+						dangerthree[dangerthreecount].m.x=i;
+						dangerthree[dangerthreecount].m.y=j;
+						marked[i][j]=1;
+						++dangerthreecount;
+						break;
+					case 3:
+						dangerfthree[dangerfthreecount].m.x=i;
+						dangerfthree[dangerfthreecount].m.y=j;
+						marked[i][j]=1;
+						++dangerfthreecount;
+						break;
+					default:
+						break;
+				}
+			}
+	// if there is no hazard
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			if (marked[i][j]==0 
+				&& _forbid[i][j]==1
+				&& getColor(v, i, j)==NONE){
+				k=getEvaluateForMove(v, BLACK, i, j);
+				switch (k) {
+					case FIVE_SCORE:
+						winningfive[winningfivecount].m.x=i;
+						winningfive[winningfivecount].m.y=j;
+						winningfive[winningfivecount].val=k;
+						marked[i][j]=1;
+						++winningfivecount;
+						break;
+					case FOUR_SCORE:
+						winningfour[winningfourcount].m.x=i;
+						winningfour[winningfourcount].m.y=j;
+						winningfour[winningfourcount].val=k;
+						marked[i][j]=1;
+						++winningfourcount;
+						break;
+					case FTHREE_SCORE:
+						winningfthree[winningfthreecount].m.x=i;
+						winningfthree[winningfthreecount].m.y=j;
+						winningfthree[winningfthreecount].val=k;
+						marked[i][j]=1;
+						++winningfthreecount;
+						break;
+					case DTHREE_SCORE:
+						winningdthree[winningdthreecount].m.x=i;
+						winningdthree[winningdthreecount].m.y=j;
+						winningdthree[winningdthreecount].val=k;
+						marked[i][j]=1;
+						++winningdthreecount;
+						break;
+					default:
+						ordinarymove[ordinarymovecount].m.x=i;
+						ordinarymove[ordinarymovecount].m.y=j;
+						ordinarymove[ordinarymovecount].val=k;
+						marked[i][j]=1;
+						++ordinarymovecount;
+						break;
+				}
+			}
+	if (winningfivecount){
+		retval->mllen=1;
+		retval->movelist[0]=winningfive[0];
+	}
+	else if (dangerfourcount){
+		retval->mllen=dangerfourcount;
+		for (i=0; i<dangerfourcount; ++i){
+			retval->movelist[i]=dangerfour[i];
+			retval->movelist[i].val=getEvaluateForMove(v,
+				BLACK,
+				dangerfour[i].m.x, dangerfour[i].m.y);
+		}
+		qsort(retval->movelist, retval->mllen,
+				sizeof(MoveListType), _compMovesDec);
+	}
+	else if (winningfourcount){
+		retval->mllen=winningfourcount;
+		for (i=0; i<winningfourcount; ++i){
+			retval->movelist[i]=winningfour[i];
+		}
+	}
+	else if (dangerthreecount) {
+		retval->mllen=dangerthreecount;
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[i]=dangerthree[i];
+			retval->movelist[i].val=getEvaluateForMove(v,
+				BLACK,
+				dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(retval->movelist, retval->mllen,
+				sizeof(MoveListType), _compMovesDec);
+	}
+	else if (dangerfthreecount==0 && winningdthreecount){
+		retval->mllen=winningdthreecount;
+		for (i=0; i<winningdthreecount; ++i){
+			retval->movelist[i]=winningdthree[i];
+		}
+	}
+	else if (winningdthreecount+dangerfthreecount
+		+ordinarymovecount>0) {
+		retval->mllen=winningdthreecount+dangerfthreecount
+			+ordinarymovecount;
+		for (i=0; i<dangerfthreecount; ++i){
+			retval->movelist[i].m=dangerfthree[i].m;
+			retval->movelist[i].val=getEvaluateForMove(v, BLACK,
+				dangerfthree[i].m.x, dangerfthree[i].m.y);
+		}
+		qsort(retval->movelist, dangerfthreecount,
+			sizeof(MoveListType), _compMovesDec);
+		for (i=0; i<winningdthreecount; ++i)
+			retval->movelist[dangerfthreecount+i]
+				=winningdthree[i];
+		for (i=0; i<ordinarymovecount; ++i)
+			retval->movelist[dangerfthreecount+winningdthreecount+i]
+				=ordinarymove[i];
+		qsort(&(retval->movelist[dangerfthreecount+winningdthreecount]),
+			ordinarymovecount, sizeof(MoveListType), _compMovesDec);
+	}
+	else {
+		// TODO if no move available
+	}
+}
+
+void expandWhite(Configuration v, ChildIterator retval){
+	int i, j, temp;
+	int k;
+	memset(marked, 0, sizeof(marked));
+	dangerthreecount=dangerfourcount=dangerfthreecount
+		=winningfivecount=winningfourcount=winningfthreecount
+		=winningdthreecount=ordinarymovecount=forbiddenmovecount=0;
+	// find hazards
+	calculateStat(v);
+	// evaluateBoard(v, BLACK);
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			if (getColor(v, i, j)==NONE && 
+				havePebbleAround(v, i, j))
+				_forbid[i][j]=1;
+			else
+				_forbid[i][j]=0;	
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			if ((temp=isDangerous(v, i, j, BLACK))
+				&& _forbid[i][j]
+				&& getColor(v, i, j)==NONE){
+				switch (temp) {
+					case 1:
+						dangerfour[dangerfourcount].m.x=i;
+						dangerfour[dangerfourcount].m.y=j;
+						marked[i][j]=1;
+						++dangerfourcount;
+						break;
+					case 2:
+						dangerthree[dangerthreecount].m.x=i;
+						dangerthree[dangerthreecount].m.y=j;
+						marked[i][j]=1;
+						++dangerthreecount;
+						break;
+					case 3:
+						dangerfthree[dangerfthreecount].m.x=i;
+						dangerfthree[dangerfthreecount].m.y=j;
+						marked[i][j]=1;
+						++dangerfthreecount;
+						break;
+					default:
+						break;
+				}
+			}
+	// if there is no hazard
+	for (i=0; i<15; ++i)
+		for (j=0; j<15; ++j)
+			if (marked[i][j]==0 
+				&& _forbid[i][j]==1){
+				k=getEvaluateForMove(v, WHITE, i, j);
+				switch (k) {
+					case -FIVE_SCORE:
+						winningfive[winningfivecount].m.x=i;
+						winningfive[winningfivecount].m.y=j;
+						winningfive[winningfivecount].val=k;
+						++winningfivecount;
+						marked[i][j]=1;
+						break;
+					case -FOUR_SCORE:
+						winningfour[winningfourcount].m.x=i;
+						winningfour[winningfourcount].m.y=j;
+						winningfour[winningfourcount].val=k;
+						++winningfourcount;
+						marked[i][j]=1;
+						break;
+					case -FTHREE_SCORE:
+						winningfthree[winningfthreecount].m.x=i;
+						winningfthree[winningfthreecount].m.y=j;
+						winningfthree[winningfthreecount].val=k;
+						marked[i][j]=1;
+						++winningfthreecount;
+						break;
+					case -DTHREE_SCORE:
+						winningdthree[winningdthreecount].m.x=i;
+						winningdthree[winningdthreecount].m.y=j;
+						winningdthree[winningdthreecount].val=k;
+						++winningdthreecount;
+						marked[i][j]=1;
+						break;
+					default:
+						ordinarymove[ordinarymovecount].m.x=i;
+						ordinarymove[ordinarymovecount].m.y=j;
+						ordinarymove[ordinarymovecount].val=k;
+						++ordinarymovecount;
+						marked[i][j]=1;
+						break;
+				}
+			}
+	if (winningfivecount){
+		retval->mllen=1;
+		retval->movelist[0]=winningfive[0];
+	}
+	else if (dangerfourcount){
+		retval->mllen=dangerfourcount;
+		for (i=0; i<dangerfourcount; ++i){
+			retval->movelist[i]=dangerfour[i];
+			retval->movelist[i].val=getEvaluateForMove(v,
+				BLACK,
+				dangerfour[i].m.x, dangerfour[i].m.y);
+		}
+		qsort(retval->movelist, retval->mllen,
+				sizeof(MoveListType), _compMovesInc);
+	}
+	else if (winningfourcount){
+		retval->mllen=winningfourcount;
+		for (i=0; i<winningfourcount; ++i){
+			retval->movelist[i]=winningfour[i];
+		}
+	}
+	else if (dangerthreecount) {
+		retval->mllen=dangerthreecount;
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[i]=dangerthree[i];
+			retval->movelist[i].val=getEvaluateForMove(v,
+				WHITE,
+				dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(retval->movelist, retval->mllen,
+				sizeof(MoveListType), _compMovesInc);
+	}
+	else if (dangerfthreecount==0 && winningdthreecount){
+		retval->mllen=winningdthreecount;
+		for (i=0; i<winningdthreecount; ++i){
+			retval->movelist[i]=winningdthree[i];
+		}
+	}
+	else if (winningdthreecount+dangerfthreecount
+		+ordinarymovecount>0) {
+		retval->mllen=winningdthreecount+dangerfthreecount
+			+ordinarymovecount;
+		for (i=0; i<dangerfthreecount; ++i){
+			retval->movelist[i].m=dangerfthree[i].m;
+			retval->movelist[i].val=getEvaluateForMove(v, WHITE,
+				dangerfthree[i].m.x, dangerfthree[i].m.y);
+		}
+		qsort(retval->movelist, dangerfthreecount,
+			sizeof(MoveListType), _compMovesInc);
+		for (i=0; i<winningdthreecount; ++i)
+			retval->movelist[dangerfthreecount+i]
+				=winningdthree[i];
+		for (i=0; i<ordinarymovecount; ++i)
+			retval->movelist[dangerfthreecount+winningdthreecount+i]
+				=ordinarymove[i];
+		qsort(&(retval->movelist[dangerfthreecount+winningdthreecount]),
+			ordinarymovecount, sizeof(MoveListType), _compMovesInc);
+	}
+	else {
+		// TODO if no move available
+	}
+}
+
 ChildIterator getExpansion(Configuration v) {
 	ChildIterator retval=&_childitrcontainer[_childitrpointer];
-	int have2=0, temp;
-	int strict=0;
 	++_childitrpointer;
-//	printf("child pointer %d\n", _childitrpointer);
-	
-	int i, j, k, l;
+	int i;
 	retval->v=v;
 	retval->mllen=0;
 	retval->currentidx=0;
 	// TODO what if no expansion is possible
-	int target;
-	int flag=0;
 	PEBBLE_COLOR player=getMover(v);
 	if (player==BLACK) {
-		target=INFINITY;
-		for (i=0; i<15; ++i)
-			for (j=0; j<15; ++j)
-				if (getColor(v, i, j)==NONE && 
-					havePebbleAround(v, i, j)){
-					if (forbid(v, i, j))
-						_forbid[i][j]=-1;
-					else
-						_forbid[i][j]=1;
-				}
-				else
-					_forbid[i][j]=0;
-		// find hazards
-		calculateStat(v);
-		//		evaluateBoard(v, BLACK);
-		for (i=0; i<15; ++i)
-			for (j=0; j<15; ++j)
-				if ((temp=isDangerous(v, i, j, WHITE)) 
-					&& _forbid[i][j]==1
-				   	&& getColor(v, i, j)==NONE){
-					if (temp==2) {
-						have2=1;
-					}
-					retval->movelist[retval->mllen].m.x=i;
-					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val=INFINITY+4+(temp!=2);
-					++(retval->mllen);
-				}
-		strict=(have2==0 && retval->mllen>0);
-		// if there is no hazard
-		for (i=0; i<15; ++i)
-			for (j=0; j<15; ++j)
-				if (isDangerous(v, i, j, WHITE)==0 
-					&& _forbid[i][j]==1
-					&& getColor(v, i, j)==NONE){
-					retval->movelist[retval->mllen].m.x=i;
-					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val
-							=getMoveEvaluate(v, i, j, &flag);
-					if (flag){
-						putPebble(v, i, j, player);
-						retval->movelist[retval->mllen].val
-							=evaluateBoard(v, player);
-						removePebble(v, i, j);
-					}
-					if (strict==0 
-						|| retval->movelist[retval->mllen].val>INFINITY+5)
-						++(retval->mllen);
-				}
-		if (retval->mllen==0){
-			// TODO if still nothing found
-		}
-/*		else {
-		}*/
-		qsort(retval->movelist, retval->mllen,
-			  sizeof(MoveListType), _compMovesDec);		
-/*		if (retval->mllen>0){
-			int i=0;
-			while (retval->movelist[i].val>=INFINITY)
-				++i;
-			if (i>0) {
-				retval->mllen=i;
-			}
-		}*/
-		// if there is hazard, evaluate the score
-		if (retval->mllen>0 && retval->movelist[0].val>INFINITY+5){
-			retval->mllen=1;
-		}
-		else {
-			l=0;
-			while (l<retval->mllen && retval->movelist[l].val==INFINITY+5){
-				retval->movelist[l].val
-					=getMoveEvaluate(v, 
-						retval->movelist[l].m.x,
-		 				retval->movelist[l].m.y,
-	 					&flag);
-				if (flag){
-					putPebble(v,
-						retval->movelist[l].m.x,
-		 				retval->movelist[l].m.y,
-   						player);
-					retval->movelist[l].val
-						=evaluateBoard(v, player);
-					removePebble(v,
-						retval->movelist[l].m.x,
-		 			retval->movelist[l].m.y);
-				}
-				++l;
-			}
-			qsort(retval->movelist, l, sizeof(MoveListType),
-				  _compMovesDec);
-		}
+		expandBlack(v, retval);
 	}
 	else {
-		target=-INFINITY;
-// 		getchar();
-		// find hazards
-		calculateStat(v);
-		//		evaluateBoard(v, WHITE);
-		for (i=0; i<15; ++i)
-			for (j=0; j<15; ++j)
-				if (getColor(v, i, j)==NONE
-					&& (temp=isDangerous(v, i, j, BLACK))) {
-					if (temp==2)
-						have2=1;
-					retval->movelist[retval->mllen].m.x=i;
-					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val=-INFINITY-4-(temp!=2);
-					++(retval->mllen);
-				}
-		strict=(have2==0 && retval->mllen>0);
-		// if there is no hazard
-		for (i=0; i<15; ++i)
-			for (j=0; j<15; ++j)
-				if (isDangerous(v, i, j, BLACK)==0
-					&& getColor(v, i, j)==NONE
-					&& havePebbleAround(v, i, j)){
-					retval->movelist[retval->mllen].m.x=i;
-					retval->movelist[retval->mllen].m.y=j;
-					retval->movelist[retval->mllen].val
-						=getMoveEvaluate(v, i, j, &flag);
-					if (flag){
-						putPebble(v, i, j, player);
-						retval->movelist[retval->mllen].val
-								=evaluateBoard(v, player);
-						removePebble(v, i, j);
-					}
-					if (strict==0
-						|| retval->movelist[retval->mllen].val<-INFINITY-5)
-						++(retval->mllen);
-				}
-		if (retval->mllen==0){
-			// TODO if still nothing found
-		}
-		qsort(retval->movelist, retval->mllen,
-			  sizeof(MoveListType), _compMovesInc);
-		if (retval->mllen>0 && retval->movelist[0].val<-INFINITY-5){
-			retval->mllen=1;
-		}
-		else {
-			l=0;
-			while (l<retval->mllen && retval->movelist[l].val==-INFINITY-5){
-				retval->movelist[l].val
-					=getMoveEvaluate(v, 
-						retval->movelist[l].m.x,
-						retval->movelist[l].m.y,
-						&flag);
-				if (flag){
-					putPebble(v,
-						retval->movelist[l].m.x,
-						retval->movelist[l].m.y,
-						player);
-					retval->movelist[l].val
-						=evaluateBoard(v, player);
-					removePebble(v,
-						retval->movelist[l].m.x,
-						retval->movelist[l].m.y);
-				}
-				++l;
-			}
-			qsort(retval->movelist, l, sizeof(MoveListType),
-				_compMovesInc);
-		}
+		expandWhite(v, retval);
 	}
 	if (DEBUG_EXPAND){
 		printf(">>>>>>>>>>>>\n");
@@ -223,8 +404,8 @@ ChildIterator getExpansion(Configuration v) {
 		for (i=0; i<retval->mllen; ++i)
 			printf("%d, %d\n", retval->movelist[i].m.x, retval->movelist[i].m.y);
 		printf("<<<<<<<<<<<<\n");
+//		getchar();
 	}
-// 	getchar();
 	return retval;
 }
 
