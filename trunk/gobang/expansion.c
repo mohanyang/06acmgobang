@@ -11,7 +11,7 @@
 #include "dangerous.h"
 
 enum {
-	DEBUG_EXPAND = 0
+	DEBUG_EXPAND = 1
 };
 
 typedef struct {

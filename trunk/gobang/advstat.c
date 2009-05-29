@@ -30,10 +30,14 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return -ATHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][0]>=2)
 				return DTHREE_SCORE;
-			else if (info->stat[ACTIVE_THREE][0])
-				return 800;
+			else if (info->stat[ACTIVE_THREE][0]){
+				if (info->stat[SLEEPY_THREE][1])
+					return 300;
+				else
+					return 600;
+			}
 			else if (info->stat[AFOUR][0])
-				return 700;
+				return 200;
 			else {
 			  /*
 				// TODO quick calculation
@@ -56,8 +60,8 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			  */
 			  int k=info->assoc->localPriority;
 				return (info->stat[SLEEPY_THREE][0]*2
-						-info->stat[SLEEPY_THREE][1])*30
-						+k*10;
+						-info->stat[SLEEPY_THREE][1])*2
+						+k;
 			}
 		case WHITE:
 			if (info->stat[FIVE][0])
@@ -77,10 +81,14 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return ATHREE_SCORE;
 			else if (info->stat[ACTIVE_THREE][1]>=2)
 				return -DTHREE_SCORE;
-			else if (info->stat[ACTIVE_THREE][1])
-				return -800;
+			else if (info->stat[ACTIVE_THREE][1]){
+				if (info->stat[SLEEPY_THREE])
+					return -300;
+				else
+					return -600;
+			}
 			else if (info->stat[AFOUR][1])
-				return -700;
+				return -200;
 			else {
 			  /*
 				int i, j, k=0;
@@ -99,8 +107,8 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			  */
 				int k = info->assoc->localPriority;
 				return (-info->stat[SLEEPY_THREE][0]
-						+2*info->stat[SLEEPY_THREE][1])*30
-						+k*10;
+						+2*info->stat[SLEEPY_THREE][1])*2
+						+k;
 			}
 		default:
 			return 0;

@@ -22,10 +22,10 @@ ReturnValue id_mtdf(Configuration v){
 	for (depth=0; depth<MAXROUND; depth+=2) {
 		printf("id depth = %d\n", depth);
 		f=mtdf(v, f.value, depth);
+		// TODO if f better, than move
+		temp=f;
 		if (tickTimer()==0)
 			break;
-		else
-			temp=f;
 		if (f.value==target)
 			break;
 	}
@@ -50,8 +50,10 @@ ReturnValue mtdf(Configuration v, int firstguess, int depth){
 			beta=g.value;
 		printf(">>>>> search restart %d %d\n", beta, depth);
 		g=alphaBeta(v, beta-1, beta, depth);
-		if (tickTimer())
+		if (tickTimer()){
 			temp=g;
+			printf("current %d, %d\n", g.move.x, g.move.y);
+		}
 		if (g.value<beta)
 			ub=g.value;
 		else
