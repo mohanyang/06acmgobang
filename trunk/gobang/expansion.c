@@ -123,8 +123,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if ((temp=isDangerous(v, i, j, WHITE))
-				&& _forbid[i][j]==1
-				&& getColor(v, i, j)==NONE){
+				&& _forbid[i][j]==1){
 				switch (temp) {
 					case 1:
 						dangerfour[dangerfourcount].m.x=i;
@@ -152,8 +151,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if (marked[i][j]==0 
-				&& _forbid[i][j]==1
-				&& getColor(v, i, j)==NONE){
+				&& _forbid[i][j]==1){
 				k=getEvaluateForMove(v, BLACK, i, j);
 				switch (k) {
 					case FIVE_SCORE:
@@ -246,7 +244,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 		for (i=0; i<dangerfthreecount; ++i){
 			retval->movelist[ofs+i].m=dangerfthree[i].m;
 			retval->movelist[ofs+i].val=getEvaluateForMove(v, BLACK,
-				dangerfthree[ofs+i].m.x, dangerfthree[i].m.y);
+				dangerfthree[i].m.x, dangerfthree[i].m.y);
 		}
 		qsort(&(retval->movelist[ofs]),
 			dangerfthreecount, sizeof(MoveListType), _compMovesDec);
@@ -291,7 +289,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
 			if ((temp=isDangerous(v, i, j, BLACK))
-				&& _forbid[i][j]
+				&& _forbid[i][j]==1
 				&& getColor(v, i, j)==NONE){
 				switch (temp) {
 					case 1:
@@ -371,7 +369,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 		for (i=0; i<dangerfourcount; ++i){
 			retval->movelist[i]=dangerfour[i];
 			retval->movelist[i].val=getEvaluateForMove(v,
-				BLACK,
+				WHITE,
 				dangerfour[i].m.x, dangerfour[i].m.y);
 		}
 		qsort(retval->movelist, retval->mllen,
