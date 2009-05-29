@@ -23,6 +23,7 @@ int min(int a, int b){
 
 static int stackcount=0;
 static int doublecount=0;
+static int quadcount=0;
 
 void printstack(){
 	int i;
@@ -140,14 +141,20 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 						getCurrent(itr).x, getCurrent(itr).y);
 				}
 				
-				if (getChildrenCount(itr)==1){
-					++doublecount;
-					temp=alphaBeta(v, a, beta,
-							depth-(doublecount & 1));
-					--doublecount;
-				}
-				else {
-					temp=alphaBeta(v, a, beta, depth-1);
+				switch (getChildrenCount(itr)){
+					case 1:
+						++quadcount;
+						temp=alphaBeta(v, a, beta, 
+								depth-((doublecount & 3)==0));
+					case 2:
+						++doublecount;
+						temp=alphaBeta(v, a, beta,
+								depth-(doublecount & 1));
+						--doublecount;
+						break;
+					default:
+						temp=alphaBeta(v, a, beta, depth-1);
+						break;
 				}
 				updateMoveHeuristic(v, temp.move.x,
 									temp.move.y, temp.value);

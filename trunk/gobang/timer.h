@@ -1,7 +1,6 @@
 #ifndef _TIMER_H_
 #define _TIMER_H_
 
-// TODO test CPU speed
 void initializeTimer();
 
 /**

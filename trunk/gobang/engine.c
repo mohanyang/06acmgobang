@@ -9,11 +9,13 @@
 #include "advstat.h"
 #include "opening.h"
 #include "moveheuristic.h"
+#include "globalconst.h"
 
 Configuration glbl;
 int _opening_state;
 
 void initializeEngine(){
+	initializeConstant();
 	initializeBaseType();
 	initializeTimer();
 	initializeHashService();
