@@ -7,7 +7,8 @@
 #include "transposition.h"
 
 struct HNode{
-	int hconf[16], vconf[16];
+	int hconf[16];
+// 	int vconf[16];
 	int lb, ub;
 	Move move;
 	HashNodeType type;
@@ -20,8 +21,8 @@ typedef struct HNode HashNode;
 
 enum {
 	// TODO use different table size
-	MAX_TABLE_SIZE = 100000,
-	MAX_HASH_SIZE = 100000,
+	MAX_TABLE_SIZE = 200000,
+	MAX_HASH_SIZE = 200000,
 	DEBUG_TRANSPOS = 0
 };
 
@@ -136,14 +137,14 @@ void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 		}
 		if (idx==0){
 			// add one at beginning
-			if (containersize>=MAX_TABLE_SIZE)
+			if (containersize>=MAX_TABLE_SIZE-1)
 				return;
 			++containersize;
 			if (containersize % 1000==0)
 				printf("container reached %d\n", containersize);
 			struct HNode *ptr=&(container[containersize]);
 			memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
-			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
+// 			memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
 			ptr->lb=v->lowerbound;
 			ptr->ub=v->upperbound;
 			ptr->move=*m;
@@ -164,14 +165,14 @@ void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 		}
 	}
 	else {
-		if (containersize>=MAX_TABLE_SIZE)
+		if (containersize>=MAX_TABLE_SIZE-1)
 			return;
 		++containersize;
 		if (containersize % 1000==0)
 			printf("container reached %d\n", containersize);
 		struct HNode *ptr=&(container[containersize]);
 		memcpy(ptr->hconf, v->hboard, sizeof(int)*16);
-		memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
+// 		memcpy(ptr->vconf, v->vboard, sizeof(int)*16);
 		ptr->lb=v->lowerbound;
 		ptr->ub=v->upperbound;
 		ptr->move=*m;
