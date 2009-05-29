@@ -9,7 +9,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 1
+	DEBUG_STACK = 0
 };
 
 int max(int a, int b){
