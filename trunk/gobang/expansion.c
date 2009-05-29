@@ -12,7 +12,8 @@
 #include "globalconst.h"
 
 enum {
-	DEBUG_EXPAND = 0
+	DEBUG_EXPAND = 1,
+	MAX_CHILD = 16
 };
 
 typedef struct {
@@ -187,7 +188,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 						++winningdthreecount;
 						break;
 					default:
-						if (k==300)
+						if (k==300 || k==350)
 							has4=1;
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
@@ -240,7 +241,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 			  sizeof(MoveListType), _compMovesDec);
 		ofs+=dangerthreecount;
 		for (i=0; i<ordinarymovecount; ++i)
-			if (ordinarymove[i].val==300){
+			if (ordinarymove[i].val==300 || ordinarymove[i].val==350){
 				retval->movelist[ofs]=ordinarymove[i];
 				++ofs;
 			}
@@ -389,7 +390,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 // 						marked[i][j]=1;
 						break;
 					default:
-						if (k==-300)
+						if (k==-300 || k==-350)
 							has4=1;
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
@@ -402,6 +403,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 	if (DEBUG_EXPAND){
 		printf("dump white\n");
 		dumpAll();
+		printf("has four %d\n", has4);
 	}
 	if (winningfivecount){
 		retval->mllen=1;
@@ -443,7 +445,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 			  sizeof(MoveListType), _compMovesInc);
 		ofs+=dangerthreecount;
 		for (i=0; i<ordinarymovecount; ++i)
-			if (ordinarymove[i].val==300){
+			if (ordinarymove[i].val==-300 || ordinarymove[i].val==-350){
 			retval->movelist[ofs]=ordinarymove[i];
 			++ofs;
 			}
@@ -524,8 +526,8 @@ ChildIterator getExpansion(Configuration v) {
 	else {
 		expandWhite(v, retval);
 	}
-	if (retval->mllen>12)
-		retval->mllen=12;
+	if (retval->mllen>MAX_CHILD)
+		retval->mllen=MAX_CHILD;
 	if (DEBUG_EXPAND){
 		printf(">>>>>>>>>>>>\n");
 		printf("altogether %d\n", retval->mllen);
