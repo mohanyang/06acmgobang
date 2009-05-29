@@ -83,7 +83,7 @@ PEBBLE_COLOR getColor(Configuration v, int x, int y){
 }
 
 void putPebble(Configuration v, int x, int y, PEBBLE_COLOR col){
-	assert(getColor(v, x, y)==NONE);
+// 	assert(getColor(v, x, y)==NONE);
 	if (col==BLACK){
 		v->vboard[y] |= (1 << x);
 		v->hboard[x] |= (1 << y);

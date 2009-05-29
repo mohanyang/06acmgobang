@@ -40,25 +40,6 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			else if (info->stat[AFOUR][0])
 				return 300;
 			else {
-			  /*
-				// TODO quick calculation
-				int i, j, k=0;
-				for (i=0; i<15; ++i)
-					for (j=0; j<15; ++j)
-						switch (getColor(info->assoc, i, j)){
-							case BLACK:
-								k+=_localpriority[i][j];
-								break;
-							case WHITE:
-								k-=_localpriority[i][j];
-								break;
-							default:
-								break;
-						}
-				printBoardNonBlock(info->assoc);
-				printf("%d\n", k);
-				getchar();
-			  */
 			  int k=info->assoc->localPriority;
 				return (info->stat[SLEEPY_THREE][0]*2
 						-info->stat[SLEEPY_THREE][1])*2

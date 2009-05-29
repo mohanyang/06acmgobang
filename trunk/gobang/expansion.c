@@ -296,10 +296,9 @@ void expandBlack(Configuration v, ChildIterator retval){
 			ordinarymovecount, sizeof(MoveListType), _compMovesDec);
 	}
 	else {
-		// TODO if no move available
-		printf("????\n");
-		dumpAll();
-		printf("!!!!\n");
+		retval->mllen=forbiddenmovecount;
+		for (i=0; i<forbiddenmovecount; ++i)
+			retval->movelist[i]=forbiddenmove[i];
 	}
 }
 
@@ -505,10 +504,9 @@ void expandWhite(Configuration v, ChildIterator retval){
 			ordinarymovecount, sizeof(MoveListType), _compMovesInc);
 	}
 	else {
-		// TODO if no move available
-		printf("????\n");
-		dumpAll();
-		printf("????\n");
+		retval->mllen=forbiddenmovecount;
+		for (i=0; i<forbiddenmovecount; ++i)
+			retval->movelist[i]=forbiddenmove[i];
 	}
 }
 
@@ -519,7 +517,6 @@ ChildIterator getExpansion(Configuration v) {
 	retval->v=v;
 	retval->mllen=0;
 	retval->currentidx=0;
-	// TODO what if no expansion is possible
 	PEBBLE_COLOR player=getMover(v);
 	if (player==BLACK) {
 		expandBlack(v, retval);
