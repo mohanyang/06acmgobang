@@ -67,7 +67,7 @@ MoveListType ordinarymove[225];
 int ordinarymovecount;
 MoveListType forbiddenmove[225];
 int forbiddenmovecount;
-int marked[15][15];
+// int marked[15][15];
 
 void dumpAll(){
 	int i;
@@ -97,7 +97,7 @@ void dumpAll(){
 void expandBlack(Configuration v, ChildIterator retval){
 	int i, j, temp;
 	int k;
-	memset(marked, 0, sizeof(marked));
+// 	memset(marked, 0, sizeof(marked));
 	dangerthreecount=dangerfourcount=dangerfthreecount
 		=winningfivecount=winningfourcount=winningfthreecount
 		=winningdthreecount=ordinarymovecount=forbiddenmovecount=0;
@@ -150,8 +150,9 @@ void expandBlack(Configuration v, ChildIterator retval){
 	// if there is no hazard
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
-			if (marked[i][j]==0 
-				&& _forbid[i][j]==1){
+			if (_forbid[i][j]==1){
+/*			if (marked[i][j]==0 
+				&& _forbid[i][j]==1){*/
 				k=getEvaluateForMove(v, BLACK, i, j);
 //  				printf("evaluate %d,%d %d\n", i, j, k);
 				switch (k) {
@@ -273,7 +274,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 void expandWhite(Configuration v, ChildIterator retval){
 	int i, j, temp;
 	int k;
-	memset(marked, 0, sizeof(marked));
+// 	memset(marked, 0, sizeof(marked));
 	dangerthreecount=dangerfourcount=dangerfthreecount
 		=winningfivecount=winningfourcount=winningfthreecount
 		=winningdthreecount=ordinarymovecount=forbiddenmovecount=0;
@@ -318,8 +319,9 @@ void expandWhite(Configuration v, ChildIterator retval){
 	// if there is no hazard
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
-			if (marked[i][j]==0 
-				&& _forbid[i][j]==1){
+			if (_forbid[i][j]==1){
+/*			if (marked[i][j]==0 
+				&& _forbid[i][j]==1){*/
 				k=getEvaluateForMove(v, WHITE, i, j);
 				switch (k) {
 					case -FIVE_SCORE:
