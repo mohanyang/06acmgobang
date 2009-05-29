@@ -461,6 +461,8 @@ ChildIterator getExpansion(Configuration v) {
 	else {
 		expandWhite(v, retval);
 	}
+	if (retval->mllen>20)
+		retval->mllen=12;
 	if (DEBUG_EXPAND){
 		printf(">>>>>>>>>>>>\n");
 		printf("altogether %d\n", retval->mllen);
