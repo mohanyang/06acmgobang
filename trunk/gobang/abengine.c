@@ -142,11 +142,11 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				}
 				
 				switch (getChildrenCount(itr)){
-					case 1:
-						++quadcount;
+// 					case 1:
+/*						++quadcount;
 						temp=alphaBeta(v, a, beta, 
-								depth-((doublecount & 3)==0));
-					case 2:
+								depth-((doublecount & 3)==0));*/
+					case 1:
 						++doublecount;
 						temp=alphaBeta(v, a, beta,
 								depth-(doublecount & 1));

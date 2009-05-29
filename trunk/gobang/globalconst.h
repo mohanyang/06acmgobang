@@ -8,10 +8,10 @@ void initializeConstant();
 
 int const_tls, const_tlm, const_forbidden;
 
-int timeLimitSecond();
+#define allowForbidden() (const_forbidden)
 
-int timeLimitMillis();
+#define timeLimitSecond() (const_tls)
 
-int allowForbidden();
+#define timeLimitMillis() (const_tlm)
 
 #endif

@@ -26,15 +26,3 @@ void initializeConstant(){
   
   fclose(fp);
 }
-
-int timeLimitSecond() {
-	return const_tls;
-}
-
-int timeLimitMillis() {
-	return const_tlm;
-}
-
-int allowForbidden() {
-	return const_forbidden;
-}

@@ -9,6 +9,7 @@
 #include "moveheuristic.h"
 #include "forbid.h"
 #include "dangerous.h"
+#include "globalconst.h"
 
 enum {
 	DEBUG_EXPAND = 0
