@@ -70,7 +70,7 @@ HashRetVal retrieve(Configuration v){
 	// TODO optimize v so that do not 
 	// need to calculate hash every time
 	// TODO how to deal with fail lo and fail hi nodes
-// 	return NULL;
+  //        return NULL;
 	int key=calcHash(v, MAX_TABLE_SIZE);
 	if (DEBUG_TRANSPOS){
 		printf("===retrieving===\n");
