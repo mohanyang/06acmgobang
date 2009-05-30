@@ -131,7 +131,7 @@ void dumpAll(){
 void expandBlack(Configuration v, ChildIterator retval){
 	int i, j, temp;
 	int k;
-	int has4=0;
+// 	int has4=0;
 // 	memset(marked, 0, sizeof(marked));
 	dangerthreecount=dangerfourcount=dangerfthreecount
 		=winningfivecount=winningfourcount=winningfthreecount

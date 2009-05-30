@@ -23,7 +23,7 @@ int min(int a, int b){
 
 static int stackcount=0;
 static int doublecount=0;
-static int quadcount=0;
+// static int quadcount=0;
 
 void printstack(){
 	int i;
@@ -32,7 +32,7 @@ void printstack(){
 }
 
 ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
-	int counter=0;
+// 	int counter=0;
 	if (DEBUG_STACK){
 		printstack();
 		printf("alphabeta a=%d b=%d d=%d\n", alpha, beta, depth);
