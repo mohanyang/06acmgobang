@@ -15,7 +15,7 @@
 
 enum {
 	DEBUG_EXPAND = 0,
-	MAX_CHILD = 35
+	MAX_CHILD = 50
 };
 
 typedef struct {
