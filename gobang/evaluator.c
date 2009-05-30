@@ -242,6 +242,7 @@ void match(Configuration v, int y0, int x0, int dy, int dx, int n) {
     }									\
   }
 
+/*
 #define adjust(score, color) ((color) == BLACK ? (score) : -(score))
 
 int _getScore(AdvancedStat *info, PEBBLE_COLOR c) {
@@ -272,6 +273,7 @@ int _getScore(AdvancedStat *info, PEBBLE_COLOR c) {
   if (score < -INFINITY + 10) score = -INFINITY + 10;
   return adjust(now, score) + info->assoc->localPriority;
 }
+*/
 
 int evaluateBoard(Configuration v, PEBBLE_COLOR c) {
   memset(&astat, 0, sizeof(astat));
@@ -532,6 +534,52 @@ int main() {
   calculateStat(&node);
   printf("%d\n", node.statistics[7][5][ACTIVE_THREE][0]);
 
+  return 0;
+}
+
+#endif
+
+
+#ifdef EXPORT_GRAPH
+
+char *getLabel(int node, char *label) {
+  if (node == 1)
+    return "START";
+  else if (!rel_pattern[node])
+    return "";
+  int pid = rel_pattern[node];
+  int i;
+  for (i = 0; i < plen[pid]; ++i) {
+    switch (pattern[pid][i]) {
+    case BLACK :
+      label[i] = 'b';
+      break;
+    case WHITE :
+      label[i] = 'w';
+      break;
+    default :
+      label[i] = '.';
+    }
+  }
+  label[plen[pid]] = 0;
+  return label;
+}
+
+int main() {
+  int i;
+  char label[100];
+  initializeEvaluate();
+  for (i = 1; i <= nState; ++i) {
+    printf("node%d [label=\"%s\", peripheries=%d]\n", i, getLabel(i, label), 1+(i==1||rel_pattern[i]));
+  }
+  for (i = 1; i <= nState; ++i) {
+    if (trie[i][NONE])
+      printf("node%d -> node%d [label=\".\"]\n", i, trie[i][NONE]);
+    if (trie[i][BLACK])
+      printf("node%d -> node%d [label=\"b\"]\n", i, trie[i][BLACK]);
+    if (trie[i][WHITE])
+      printf("node%d -> node%d [label=\"w\"]\n", i, trie[i][WHITE]);
+  }
   return 0;
 }
 

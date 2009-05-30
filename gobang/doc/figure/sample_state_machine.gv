@@ -1,0 +1,26 @@
+digraph state_machine {
+	rankdir=LR
+
+	node0 [label="START", peripheries=2]
+	node1 [label="w"]
+	node2 [label="wb"]
+	node3 [label="wbw", peripheries=2]
+	node4 [label="b"]
+	node5 [label="bb"]
+	node6 [label="bbw", peripheries=2]
+
+	node0 -> node1 [label="w"]
+	node0 -> node4 [label="b"]
+	node1 -> node1 [label="w"]
+	node1 -> node2 [label="b"]
+	node2 -> node3 [label="w"]
+	node2 -> node4 [label="b"]
+	node3 -> node1 [label="w"]
+	node3 -> node2 [label="b"]
+	node4 -> node1 [label="w"]
+	node4 -> node5 [label="b"]
+	node5 -> node6 [label="w"]
+	node5 -> node5 [label="b"]
+	node6 -> node1 [label="w"]
+	node6 -> node2 [label="b"]
+}
