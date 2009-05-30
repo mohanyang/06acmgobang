@@ -89,6 +89,7 @@ int main(){
 		printf("%d %d\n", m.x, m.y);
 		playMove(m);
 	}
+	getchar();
 	fclose(fp);
 	r=search(WHITE);
 	playMove(r.move);
