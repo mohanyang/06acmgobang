@@ -23,29 +23,41 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return -FOUR_SCORE;
 			else if (info->stat[AFOUR][1])
 				return -FOUR_SCORE;
-			else if (info->stat[AFOUR][0]>1){
+/*			else if (info->stat[AFOUR][0]>1){
 				return DFOUR_SCORE;
-			}
+			}*/
 			else if (info->stat[ACTIVE_FOUR][0])
 				return FOUR_SCORE;
-			else if (info->stat[AFOUR][0] &&
+/*			else if (info->stat[AFOUR][0] &&
 							  info->stat[ACTIVE_THREE][0])
-				return FTHREE_SCORE;
+				return FTHREE_SCORE;*/
 			else if (info->stat[ACTIVE_THREE][1])
 				return -ATHREE_SCORE;
-			else if (info->stat[ACTIVE_THREE][0]>=2)
-				return DTHREE_SCORE;
+/*			else if (info->stat[ACTIVE_THREE][0]>=2)
+				return DTHREE_SCORE;*/
 			else if (info->stat[ACTIVE_THREE][0]){
-				if (info->stat[SLEEPY_THREE][1])
-					return 350;
-				else
-					return 600;
+				switch(info->stat[SLEEPY_THREE][1]){
+					case 0:
+						return 600;
+					case 1:
+						return 350;
+					case 2:
+						return 250;
+					default:
+						return 150;
+				}
 			}
 			else if (info->stat[AFOUR][0])
 				return 300;
 			else {
 			  int k=info->assoc->localPriority;
-				return (info->stat[SLEEPY_THREE][0]*10
+/*			  printf("~~~~\n");
+			  printf("%d\n", info->stat[SLEEPY_THREE][0]);
+			  printf("%d\n", info->stat[ACTIVE_TWO][0]);
+			  printf("%d\n", info->stat[SLEEPY_THREE][1]);
+			  printf("%d\n", k);
+			  printf("~~~\n");*/
+			  return (info->stat[SLEEPY_THREE][0]*10
 						+info->stat[ACTIVE_TWO][0]*5
 						-info->stat[SLEEPY_THREE][1]*3)*2
 						+k;
@@ -59,22 +71,28 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return FOUR_SCORE;
 			else if (info->stat[AFOUR][0])
 				return FOUR_SCORE;
-			else if (info->stat[AFOUR][1]>1)
-				return -DFOUR_SCORE;
+/*			else if (info->stat[AFOUR][1]>1)
+				return -DFOUR_SCORE;*/
 			else if (info->stat[ACTIVE_FOUR][1])
 				return -FOUR_SCORE;
-			else if (info->stat[AFOUR][1] &&
+/*			else if (info->stat[AFOUR][1] &&
 							  info->stat[ACTIVE_THREE][1])
-				return -FTHREE_SCORE;
+				return -FTHREE_SCORE;*/
 			else if (info->stat[ACTIVE_THREE][0])
 				return ATHREE_SCORE;
-			else if (info->stat[ACTIVE_THREE][1]>=2)
-				return -DTHREE_SCORE;
+/*			else if (info->stat[ACTIVE_THREE][1]>=2)
+				return -DTHREE_SCORE;*/
 			else if (info->stat[ACTIVE_THREE][1]){
-				if (info->stat[SLEEPY_THREE][0])
-					return -350;
-				else
-					return -600;
+				switch(info->stat[SLEEPY_THREE][0]){
+					case 0:
+						return -600;
+					case 1:
+						return -350;
+					case 2:
+						return -250;
+					default:
+						return -150;
+				}
 			}
 			else if (info->stat[AFOUR][1])
 				return -300;

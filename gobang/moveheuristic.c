@@ -59,8 +59,8 @@ int getMoveEvaluate(Configuration v, int x, int y, int *status){
 	// need to calculate hash every time
 /*	printf("===retrieving (%d, %d)===\n", x, y);
 	printBoardNonBlock(v);*/
-/*	*status=1;
-	return 0;*/
+	*status=1;
+	return 0;
 	
 	int key=calcHash(v, MAX_MOVE_TABLE_SIZE);
 	key=movepointer[x][y][key];
@@ -78,7 +78,7 @@ int getMoveEvaluate(Configuration v, int x, int y, int *status){
 }
 
 void updateMoveHeuristic(Configuration v, int x, int y, int val){
-// 	return;
+	return;
 	int key=calcHash(v, MAX_MOVE_TABLE_SIZE);
 	int idx;
 /*	printf("===saving (%d, %d)===%d===\n", x, y, val);

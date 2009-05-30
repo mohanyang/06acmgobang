@@ -34,7 +34,7 @@ int isDangerous(Configuration v, int x, int y, PEBBLE_COLOR p){
 			}
 			return 2;
 		}
-		else if (four_three(v, y, x, p)){
+		else if (four_three(v, x, y, p)){
 			if (DEBUG_DANGER){
 				printf("hazard %d %d\n", x, y);
 // 				getchar();
