@@ -14,8 +14,8 @@
 #include "engine.h"
 
 enum {
-	DEBUG_EXPAND = 1,
-	MAX_CHILD = 40
+	DEBUG_EXPAND = 0,
+	MAX_CHILD = 35
 };
 
 typedef struct {
@@ -45,6 +45,8 @@ int _compMovesDec(const void *x, const void *y){
 int getEvaluateForMove(Configuration v, PEBBLE_COLOR col, int x, int y){
 	int flag;
 	int ret=getMoveEvaluate(v, x, y, &flag);
+	if (col==WHITE)
+		ret=-ret;
 	if (flag){
 		putPebble(v, x, y, col);
 		ret=evaluateBoard(v, col);
@@ -186,7 +188,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 /*			if (marked[i][j]==0 
 				&& _forbid[i][j]==1){*/
 				k=getEvaluateForMove(v, BLACK, i, j);
- 				printf("evaluate %d,%d %d\n", i, j, k);
+//  				printf("evaluate %d,%d %d\n", i, j, k);
 				switch (k) {
 					case FIVE_SCORE:
 						winningfive[winningfivecount].m.x=i;
@@ -577,7 +579,7 @@ ChildIterator getExpansion(Configuration v) {
 	else {
 		expandWhite(v, retval);
 	}
-	if (/*whoAmI()==player && */retval->mllen>MAX_CHILD)
+	if (whoAmI()==player && retval->mllen>MAX_CHILD)
 		retval->mllen=MAX_CHILD;
 	if (DEBUG_EXPAND){
 		printf(">>>>>>>>>>>>\n");

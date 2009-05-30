@@ -57,9 +57,9 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			  printf("%d\n", info->stat[SLEEPY_THREE][1]);
 			  printf("%d\n", k);
 			  printf("~~~\n");*/
-			  return (info->stat[SLEEPY_THREE][0]*10
+			  return (info->stat[SLEEPY_THREE][0]*7
 						+info->stat[ACTIVE_TWO][0]*5
-						-info->stat[SLEEPY_THREE][1]*3)*2
+						-info->stat[SLEEPY_THREE][1]*8)*2
 						+k;
 			}
 		case WHITE:
@@ -114,9 +114,9 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 			  */
 				int k = info->assoc->localPriority;
 
-				return (-info->stat[SLEEPY_THREE][1]*10
+				return (-info->stat[SLEEPY_THREE][1]*7
 						-info->stat[ACTIVE_TWO][1]*5
-						+info->stat[SLEEPY_THREE][1]*3)*2
+						+info->stat[SLEEPY_THREE][1]*8)*2
 						+k;
 			}
 		default:
