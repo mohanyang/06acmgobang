@@ -47,7 +47,7 @@ int getEvaluateForMove(Configuration v, PEBBLE_COLOR col, int x, int y){
 		putPebble(v, x, y, col);
 		ret=evaluateBoard(v, col);
 		removePebble(v, x, y);
-		flag=four_three(v, x, y, col);
+		flag=four_three(v, y, x, col);
 		if (flag && FTHREE_SCORE>abs(ret))
 			if (col==BLACK)
 				ret=FTHREE_SCORE;
@@ -372,6 +372,10 @@ void expandWhite(Configuration v, ChildIterator retval){
 						break;
 				}
 			}
+/*			else {
+				printf("%d %d\n", i, j);
+				printBoard(v);
+			}*/
 	// if there is no hazard
 	for (i=0; i<15; ++i)
 		for (j=0; j<15; ++j)
@@ -456,7 +460,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 					WHITE, dangerfthree[i].m.x, dangerfthree[i].m.y);
 		}
 		qsort(&(retval->movelist[ofs]), dangerfthreecount,
-				sizeof(MoveListType), _compMovesDec);
+				sizeof(MoveListType), _compMovesInc);
 		ofs+=dangerfthreecount;
 		for (i=0; i<dangerthreecount; ++i){
 			retval->movelist[ofs+i].m=dangerthree[i].m;
@@ -464,7 +468,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 					WHITE, dangerthree[i].m.x, dangerthree[i].m.y);
 		}
 		qsort(&(retval->movelist[ofs]), dangerthreecount,
-				sizeof(MoveListType), _compMovesDec);
+				sizeof(MoveListType), _compMovesInc);
 		ofs+=dangerthreecount;
 		retval->mllen=ofs;
 	}
@@ -477,7 +481,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 					WHITE, dangerfthree[i].m.x, dangerfthree[i].m.y);
 		}
 		qsort(&(retval->movelist[ofs]), dangerfthreecount,
-				sizeof(MoveListType), _compMovesDec);
+				sizeof(MoveListType), _compMovesInc);
 		ofs+=dangerfthreecount;
 		for (i=0; i<winningdthreecount; ++i)
 			retval->movelist[ofs+i]=winningdthree[i];
@@ -489,7 +493,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 			}
 		qsort(&(retval->movelist[dangerfthreecount+winningdthreecount]),
 				ofs-dangerfthreecount-winningdthreecount,
-				sizeof(MoveListType), _compMovesDec);
+				sizeof(MoveListType), _compMovesInc);
 		retval->mllen=ofs;
 	}
 	else if (dangerthreecount==0 && winningdthreecount){
@@ -506,7 +510,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 					dangerthree[i].m.x, dangerthree[i].m.y);
 		}
 		qsort(retval->movelist, dangerthreecount,
-			  sizeof(MoveListType), _compMovesDec);
+			  sizeof(MoveListType), _compMovesInc);
 		ofs+=dangerthreecount;
 		for (i=0; i<ordinarymovecount; ++i)
 			if (ordinarymove[i].val==-300){
@@ -514,7 +518,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 				++ofs;
 			}
 		qsort(&(retval->movelist[dangerthreecount]), ofs-dangerthreecount,
-			sizeof(MoveListType), _compMovesDec);
+			sizeof(MoveListType), _compMovesInc);
 		retval->mllen=ofs;
 	}
 	else if (winningdthreecount+ordinarymovecount>0) {

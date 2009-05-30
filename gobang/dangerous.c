@@ -23,18 +23,21 @@ int isDangerous(Configuration v, int x, int y, PEBBLE_COLOR p){
 		   || v->statistics[x][y][ACTIVE_FOUR][idx]){
 			if (DEBUG_DANGER){
 				printf("hazard four %d %d\n", x, y);
+// 				getchar();
 			}
 			return 1;
 		}
 		else if (v->statistics[x][y][ACTIVE_THREE][idx]){
 			if (DEBUG_DANGER){
 				printf("hazard active three %d %d\n", x, y);
+// 				getchar();
 			}
 			return 2;
 		}
-		else if (four_three(v, x, y, p)){
+		else if (four_three(v, y, x, p)){
 			if (DEBUG_DANGER){
 				printf("hazard %d %d\n", x, y);
+// 				getchar();
 			}
 			return 3;
 		}
