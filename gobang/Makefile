@@ -1,5 +1,5 @@
 CC	= gcc
-CFLAGS =	-O2 -Wall -fmessage-length=0
+CFLAGS =	-Wall -fmessage-length=0
 
 OBJS =		globalconst.o \
 			basetypes.o \
@@ -12,6 +12,7 @@ OBJS =		globalconst.o \
 			historyheuristic.o \
 			moveheuristic.o \
 			dangerous.o \
+			four_three.o \
 			opening.o \
 			forbid.o \
 			evaluator.o \

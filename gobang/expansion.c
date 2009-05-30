@@ -47,6 +47,13 @@ int getEvaluateForMove(Configuration v, PEBBLE_COLOR col, int x, int y){
 		putPebble(v, x, y, col);
 		ret=evaluateBoard(v, col);
 		removePebble(v, x, y);
+		flag=four_three(v, x, y, col);
+		if (flag && FTHREE_SCORE>abs(ret))
+			if (col==BLACK)
+				ret=FTHREE_SCORE;
+			else
+				ret=-FTHREE_SCORE;
+			
 	}
 	return ret;
 }
@@ -167,6 +174,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 						++winningfivecount;
 						break;
 					case FOUR_SCORE:
+// 					case DFOUR_SCORE:
 						winningfour[winningfourcount].m.x=i;
 						winningfour[winningfourcount].m.y=j;
 						winningfour[winningfourcount].val=k;
@@ -188,8 +196,6 @@ void expandBlack(Configuration v, ChildIterator retval){
 						++winningdthreecount;
 						break;
 					default:
-						if (k==300 || k==350)
-							has4=1;
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
 						ordinarymove[ordinarymovecount].val=k;
@@ -223,14 +229,61 @@ void expandBlack(Configuration v, ChildIterator retval){
 			retval->movelist[i]=winningfour[i];
 		}
 	}
-	else if (dangerthreecount==0
-		&& dangerfthreecount==0 && winningdthreecount){
+	else if (winningfthreecount){
+		// winning 43 and danger 3, danger 43
+		int ofs=0;
+		for (i=0; i<winningfthreecount; ++i)
+			retval->movelist[ofs+i]=winningfthree[i];
+		ofs+=winningfthreecount;
+		for (i=0; i<dangerfthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerfthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, 
+				BLACK, dangerfthree[i].m.x, dangerfthree[i].m.y);
+		}
+		qsort(&(retval->movelist[ofs]), dangerfthreecount,
+			sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerfthreecount;
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, 
+					BLACK, dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(&(retval->movelist[ofs]), dangerthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerthreecount;
+		retval->mllen=ofs;
+	}
+	else if (dangerfthreecount){
+		// danger 43, dthree, afour
+		int ofs=0;
+		for (i=0; i<dangerfthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerfthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, 
+					BLACK, dangerfthree[i].m.x, dangerfthree[i].m.y);
+		}
+		qsort(&(retval->movelist[ofs]), dangerfthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerfthreecount;
+		for (i=0; i<winningdthreecount; ++i)
+			retval->movelist[ofs+i]=winningdthree[i];
+		ofs+=winningdthreecount;
+		for (i=0; i<ordinarymovecount; ++i)
+			if (ordinarymove[i].val==300){
+				retval->movelist[ofs]=ordinarymove[i];
+				++ofs;
+			}
+		qsort(&(retval->movelist[dangerfthreecount+winningdthreecount]),
+				ofs-dangerfthreecount-winningdthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		retval->mllen=ofs;
+	}
+	else if (dangerthreecount==0 && winningdthreecount){
 		retval->mllen=winningdthreecount;
 		for (i=0; i<winningdthreecount; ++i){
 			retval->movelist[i]=winningdthree[i];
 		}
 	}
-	else if (dangerthreecount && has4){
+	else if (dangerthreecount){
 		int ofs=0;
 		for (i=0; i<dangerthreecount; ++i){
 			retval->movelist[ofs+i].m=dangerthree[i].m;
@@ -241,7 +294,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 			  sizeof(MoveListType), _compMovesDec);
 		ofs+=dangerthreecount;
 		for (i=0; i<ordinarymovecount; ++i)
-			if (ordinarymove[i].val==300 || ordinarymove[i].val==350){
+			if (ordinarymove[i].val==300){
 				retval->movelist[ofs]=ordinarymove[i];
 				++ofs;
 			}
@@ -249,48 +302,14 @@ void expandBlack(Configuration v, ChildIterator retval){
 				sizeof(MoveListType), _compMovesDec);
 		retval->mllen=ofs;
 	}
-	else if (dangerthreecount){
-		retval->mllen=dangerthreecount;			
-		for (i=0; i<dangerthreecount; ++i){
-			retval->movelist[i].m=dangerthree[i].m;
-			retval->movelist[i].val=getEvaluateForMove(v, BLACK,
-					dangerthree[i].m.x, dangerthree[i].m.y);
-		}
-		qsort(retval->movelist, dangerthreecount,
-			  sizeof(MoveListType), _compMovesDec);
-	}
-	else if (dangerthreecount+winningdthreecount+winningfthreecount
-		+dangerfthreecount+ordinarymovecount>0) {
+	else if (winningdthreecount+ordinarymovecount>0) {
 		int ofs=0;
-		retval->mllen=dangerthreecount+winningdthreecount
-			+dangerfthreecount+ordinarymovecount+winningfthreecount;
-			
-		for (i=0; i<dangerthreecount; ++i){
-			retval->movelist[ofs+i].m=dangerthree[i].m;
-			retval->movelist[ofs+i].val=getEvaluateForMove(v, BLACK,
-				dangerthree[i].m.x, dangerthree[i].m.y);
-		}
-		qsort(retval->movelist, dangerthreecount,
-			sizeof(MoveListType), _compMovesDec);
-		ofs+=dangerthreecount;
-		for (i=0; i<dangerfthreecount; ++i){
-			retval->movelist[ofs+i].m=dangerfthree[i].m;
-			retval->movelist[ofs+i].val=getEvaluateForMove(v, BLACK,
-				dangerfthree[i].m.x, dangerfthree[i].m.y);
-		}
-		qsort(&(retval->movelist[ofs]),
-			dangerfthreecount, sizeof(MoveListType), _compMovesDec);
-		ofs+=dangerfthreecount;
+		retval->mllen=winningdthreecount+ordinarymovecount;
 		for (i=0; i<winningdthreecount; ++i)
 			retval->movelist[ofs+i]=winningdthree[i];
 		qsort(&(retval->movelist[ofs]),
 			winningdthreecount, sizeof(MoveListType), _compMovesDec);
 		ofs+=winningdthreecount;
-		for (i=0; i<winningfthreecount; ++i)
-			retval->movelist[ofs+i]=winningfthree[i];
-		qsort(&(retval->movelist[ofs]),
-			winningfthreecount, sizeof(MoveListType), _compMovesDec);
-		ofs+=winningfthreecount;
 		for (i=0; i<ordinarymovecount; ++i)
 			retval->movelist[ofs+i]=ordinarymove[i];
 		qsort(&(retval->movelist[ofs]),
@@ -369,6 +388,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 // 						marked[i][j]=1;
 						break;
 					case -FOUR_SCORE:
+// 					case -DFOUR_SCORE:
 						winningfour[winningfourcount].m.x=i;
 						winningfour[winningfourcount].m.y=j;
 						winningfour[winningfourcount].val=k;
@@ -390,8 +410,6 @@ void expandWhite(Configuration v, ChildIterator retval){
 // 						marked[i][j]=1;
 						break;
 					default:
-						if (k==-300 || k==-350)
-							has4=1;
 						ordinarymove[ordinarymovecount].m.x=i;
 						ordinarymove[ordinarymovecount].m.y=j;
 						ordinarymove[ordinarymovecount].val=k;
@@ -426,15 +444,61 @@ void expandWhite(Configuration v, ChildIterator retval){
 			retval->movelist[i]=winningfour[i];
 		}
 	}
-	else if (dangerthreecount==0 
-		&& dangerfthreecount==0 
-		&& winningdthreecount){
+	else if (winningfthreecount){
+		// winning 43 and danger 3, danger 43
+		int ofs=0;
+		for (i=0; i<winningfthreecount; ++i)
+			retval->movelist[ofs+i]=winningfthree[i];
+		ofs+=winningfthreecount;
+		for (i=0; i<dangerfthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerfthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, 
+					WHITE, dangerfthree[i].m.x, dangerfthree[i].m.y);
+		}
+		qsort(&(retval->movelist[ofs]), dangerfthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerfthreecount;
+		for (i=0; i<dangerthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, 
+					WHITE, dangerthree[i].m.x, dangerthree[i].m.y);
+		}
+		qsort(&(retval->movelist[ofs]), dangerthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerthreecount;
+		retval->mllen=ofs;
+	}
+	else if (dangerfthreecount){
+		// danger 43, dthree, afour
+		int ofs=0;
+		for (i=0; i<dangerfthreecount; ++i){
+			retval->movelist[ofs+i].m=dangerfthree[i].m;
+			retval->movelist[ofs+i].val=getEvaluateForMove(v, 
+					WHITE, dangerfthree[i].m.x, dangerfthree[i].m.y);
+		}
+		qsort(&(retval->movelist[ofs]), dangerfthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		ofs+=dangerfthreecount;
+		for (i=0; i<winningdthreecount; ++i)
+			retval->movelist[ofs+i]=winningdthree[i];
+		ofs+=winningdthreecount;
+		for (i=0; i<ordinarymovecount; ++i)
+			if (ordinarymove[i].val==-300){
+				retval->movelist[ofs]=ordinarymove[i];
+				++ofs;
+			}
+		qsort(&(retval->movelist[dangerfthreecount+winningdthreecount]),
+				ofs-dangerfthreecount-winningdthreecount,
+				sizeof(MoveListType), _compMovesDec);
+		retval->mllen=ofs;
+	}
+	else if (dangerthreecount==0 && winningdthreecount){
 		retval->mllen=winningdthreecount;
 		for (i=0; i<winningdthreecount; ++i){
 			retval->movelist[i]=winningdthree[i];
 		}
 	}
-	else if (dangerthreecount && has4){
+	else if (dangerthreecount){
 		int ofs=0;
 		for (i=0; i<dangerthreecount; ++i){
 			retval->movelist[ofs+i].m=dangerthree[i].m;
@@ -442,64 +506,25 @@ void expandWhite(Configuration v, ChildIterator retval){
 					dangerthree[i].m.x, dangerthree[i].m.y);
 		}
 		qsort(retval->movelist, dangerthreecount,
-			  sizeof(MoveListType), _compMovesInc);
+			  sizeof(MoveListType), _compMovesDec);
 		ofs+=dangerthreecount;
 		for (i=0; i<ordinarymovecount; ++i)
-			if (ordinarymove[i].val==-300 || ordinarymove[i].val==-350){
-			retval->movelist[ofs]=ordinarymove[i];
-			++ofs;
+			if (ordinarymove[i].val==-300){
+				retval->movelist[ofs]=ordinarymove[i];
+				++ofs;
 			}
-			qsort(&(retval->movelist[dangerthreecount]), ofs-dangerthreecount,
-					sizeof(MoveListType), _compMovesInc);
-			retval->mllen=ofs;
+		qsort(&(retval->movelist[dangerthreecount]), ofs-dangerthreecount,
+			sizeof(MoveListType), _compMovesDec);
+		retval->mllen=ofs;
 	}
-	else if (dangerthreecount){
-		retval->mllen=dangerthreecount;			
-		for (i=0; i<dangerthreecount; ++i){
-			retval->movelist[i].m=dangerthree[i].m;
-			retval->movelist[i].val=getEvaluateForMove(v, WHITE,
-					dangerthree[i].m.x, dangerthree[i].m.y);
-		}
-		
-/*		printf("%d\n", dangerthreecount);
-		for (i=0; i<dangerthreecount; ++i)
-			printf("%d %d %d\n", retval->movelist[i].m.x, 
-				   retval->movelist[i].m.y, retval->movelist[i].val);
-		getchar();*/
-		qsort(retval->movelist, dangerthreecount,
-			  sizeof(MoveListType), _compMovesInc);
-	}
-	else if (dangerthreecount+winningdthreecount+dangerfthreecount
-		+ordinarymovecount+winningfthreecount>0) {
-		retval->mllen=dangerthreecount+winningdthreecount
-			+dangerfthreecount+ordinarymovecount+winningfthreecount;
+	else if (winningdthreecount+ordinarymovecount>0) {
+		retval->mllen=winningdthreecount+ordinarymovecount;
 		int ofs=0;
-		for (i=0; i<dangerthreecount; ++i){
-			retval->movelist[i+ofs].m=dangerthree[i].m;
-			retval->movelist[i+ofs].val=getEvaluateForMove(v, WHITE, 
-				dangerthree[i].m.x, dangerthree[i].m.y);
-		}
-		qsort(retval->movelist, dangerthreecount,
-			sizeof(MoveListType), _compMovesInc);
-		ofs+=dangerthreecount;
-		for (i=0; i<dangerfthreecount; ++i){
-			retval->movelist[ofs+i].m=dangerfthree[i].m;
-			retval->movelist[ofs+i].val=getEvaluateForMove(v, WHITE,
-				dangerfthree[i].m.x, dangerfthree[i].m.y);
-		}
-		qsort(&(retval->movelist[ofs]),
-			dangerfthreecount, sizeof(MoveListType), _compMovesInc);
-		ofs+=dangerfthreecount;
 		for (i=0; i<winningdthreecount; ++i)
 			retval->movelist[ofs+i]=winningdthree[i];
 		qsort(&(retval->movelist[ofs]),
 			winningdthreecount, sizeof(MoveListType), _compMovesInc);
 		ofs+=winningdthreecount;
-		for (i=0; i<winningfthreecount; ++i)
-			retval->movelist[ofs+i]=winningfthree[i];
-		qsort(&(retval->movelist[ofs]),
-			winningfthreecount, sizeof(MoveListType), _compMovesInc);
-		ofs+=winningfthreecount;
 		for (i=0; i<ordinarymovecount; ++i)
 			retval->movelist[ofs+i]=ordinarymove[i];
 		qsort(&(retval->movelist[ofs]),

@@ -5,6 +5,7 @@
 #include "basestat.h"
 #include "enginetypes.h"
 
+
 int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 /*	int i, j;
 	printf("eeeeeeeeeeeeeee\n");
@@ -22,6 +23,8 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return -FOUR_SCORE;
 			else if (info->stat[AFOUR][1])
 				return -FOUR_SCORE;
+			else if (info->stat[AFOUR][0]>1)
+				return DFOUR_SCORE;
 			else if (info->stat[ACTIVE_FOUR][0])
 				return FOUR_SCORE;
 			else if (info->stat[AFOUR][0] &&
@@ -54,6 +57,8 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return FOUR_SCORE;
 			else if (info->stat[AFOUR][0])
 				return FOUR_SCORE;
+			else if (info->stat[AFOUR][1]>1)
+				return -DFOUR_SCORE;
 			else if (info->stat[ACTIVE_FOUR][1])
 				return -FOUR_SCORE;
 			else if (info->stat[AFOUR][1] &&
