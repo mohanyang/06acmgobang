@@ -31,6 +31,7 @@ void initializeEngine(){
 }
 
 ReturnValue search(PEBBLE_COLOR p){
+	aiplayer=p;
   ReturnValue ret;
   if (_opening_state){
     Move current;
