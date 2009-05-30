@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "advstat.h"
 #include "dangerous.h"
 #include "four_three.h"

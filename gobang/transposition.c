@@ -186,7 +186,7 @@ void saveConfiguration(Configuration v, Move *m, HashNodeType type){
 
 void store(Configuration v, Move m, HashNodeType type){
 // 	return;
-	int i, j, k;
+// 	int i, j, k;
 	memcpy((void*)(tempconf), (void*)v, sizeof(struct BaseNode));
 	memcpy((void*)tempmove, (void*)&m, sizeof(Move));
 /*	for (i=0; i<2; ++i) {
