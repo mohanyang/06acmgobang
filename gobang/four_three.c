@@ -220,15 +220,33 @@ int main() {
   printf("%d\n", four_three(&node, 7, 7, WHITE));
   */
 
-  node.data[ 8][ 3] = BLACK;
+  node.data[ 4][ 7] = WHITE;
+  node.data[ 5][ 4] = BLACK;
+  node.data[ 5][ 5] = WHITE;
+  node.data[ 5][ 7] = WHITE;
+  node.data[ 6][ 4] = BLACK;
+  node.data[ 6][ 5] = WHITE;
+  node.data[ 6][ 6] = BLACK;
+  //  node.data[ 7][ 3] = BLACK;
+  node.data[ 7][ 4] = WHITE;
+  node.data[ 7][ 5] = BLACK;
+  node.data[ 7][ 6] = WHITE;
+  node.data[ 7][ 7] = BLACK;
+  //  node.data[ 8][ 3] = BLACK;
   node.data[ 8][ 4] = BLACK;
   node.data[ 8][ 6] = BLACK;
-  node.data[ 9][ 3] = WHITE;
-  node.data[10][ 4] = WHITE;
-  node.data[10][ 6] = WHITE;
+  node.data[ 8][ 7] = WHITE;
+  //  node.data[ 9][ 3] = WHITE;
+  node.data[ 9][ 5] = BLACK;
   node.data[ 9][ 7] = WHITE;
-  printf("%d\n", four_three(&node, 8, 2, BLACK));
-  printf("%d\n", four_three(&node, 11, 5, WHITE));
+  node.data[ 9][ 8] = WHITE;
+  node.data[10][ 4] = WHITE;
+  node.data[10][ 5] = BLACK;
+  //  node.data[10][ 6] = WHITE;
+  node.data[10][ 9] = BLACK;
+  //  printf("%d\n", four_three(&node, 8, 2, BLACK));
+  //  printf("%d\n", four_three(&node, 11, 5, WHITE));
+  printf("%d\n", four_three(&node, 11, 5, BLACK));
   return 0;
 
 }
