@@ -186,7 +186,14 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 	}
     }
 
-  return countThree > 0 && countFour > 0;
+  int ret = 0;
+  if (countFour > 1)
+    ret |= FOUR_FOUR;
+  if (countThree > 0 && countFour > 0)
+    ret |= FOUR_THREE;
+  if (countThree > 1)
+    ret |= THREE_THREE;
+  return ret;
 }
 
 #ifdef TEST_43
