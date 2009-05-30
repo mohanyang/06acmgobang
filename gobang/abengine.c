@@ -147,7 +147,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 						temp=alphaBeta(v, a, beta, 
 								depth-((doublecount & 3)==0));*/
 					case 1:
-					case 2:
+// 					case 2:
 						++doublecount;
 						temp=alphaBeta(v, a, beta,
 								depth-(doublecount & 1));
@@ -217,7 +217,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 						getCurrent(itr).x, getCurrent(itr).y);
 				}
 				
-				if (getChildrenCount(itr)<=2){
+				if (getChildrenCount(itr)<=1){
 					++doublecount;
 					temp=alphaBeta(v, alpha, b, 
 							depth-(doublecount & 1));

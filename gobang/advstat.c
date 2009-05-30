@@ -23,8 +23,9 @@ int getScore(AdvancedStat *info, PEBBLE_COLOR col){
 				return -FOUR_SCORE;
 			else if (info->stat[AFOUR][1])
 				return -FOUR_SCORE;
-			else if (info->stat[AFOUR][0]>1)
+			else if (info->stat[AFOUR][0]>1){
 				return DFOUR_SCORE;
+			}
 			else if (info->stat[ACTIVE_FOUR][0])
 				return FOUR_SCORE;
 			else if (info->stat[AFOUR][0] &&

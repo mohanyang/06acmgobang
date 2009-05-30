@@ -14,7 +14,7 @@
 
 enum {
 	DEBUG_EXPAND = 0,
-	MAX_CHILD = 30
+	MAX_CHILD = 40
 };
 
 typedef struct {
@@ -49,13 +49,24 @@ int getEvaluateForMove(Configuration v, PEBBLE_COLOR col, int x, int y){
 		ret=evaluateBoard(v, col);
 		removePebble(v, x, y);
 		flag=four_three(v, y, x, col);
-		if (flag && FTHREE_SCORE>abs(ret)){
+		if ((flag & 1) && DFOUR_SCORE>abs(ret)){
+			if (col==BLACK)
+				ret=DFOUR_SCORE;
+			else
+				ret=-DFOUR_SCORE;
+		}
+		if ((flag & 2) && FTHREE_SCORE>abs(ret)){
 			if (col==BLACK)
 				ret=FTHREE_SCORE;
 			else
 				ret=-FTHREE_SCORE;
 		}
-			
+		if ((flag & 3) && DTHREE_SCORE>abs(ret)){
+			if (col==BLACK)
+				ret=DTHREE_SCORE;
+			else
+				ret=-DTHREE_SCORE;
+		}
 	}
 	return ret;
 }
