@@ -1,0 +1,41 @@
+在极大极小搜索过程中，必须通过减少不必要的搜索来改进搜索算法的效率。在五子棋对弈过程中，相同的一个局面完全有可能通过不同的走法得到，因此单纯的搜索过程可能会有很多冗余。为了避免重复搜索已经扩展过的节点，我们需要使用置换表来辅助搜索。
+
+我们使用一个哈希表储存搜索过的节点。在后续的搜索中，我们直接查看表中记录的结果。我们同时还需要将每一个局面对应的最优值和最佳走法也记录下来，以便查找。
+
+在哈希函数的选取上，我们采用了比较简单的多项式哈希函数，因为这样可以直接利用位图进行计算。我们采用开散列方式处理冲突，即如果某个哈希值对应了多个棋盘，我们用链表将他们都存储下来。
+
+为了更好地支持MTD(f)搜索，我们还需要在每个哈希节点中记录当前储存的节点中的最优值表示该值是上界、下界、还是准确值。我们还需要对MTD(f)的搜索框架进行一些修改。伪代码如下：
+
+//	带有置换表支持的MTD(f)算法伪代码
+int mtdf( int firstguess, int depth )
+{
+	HashNode v= retrieve();	//	在哈希表中查找当前局面
+	if ( found )
+		switch ( v.type ) {	//	对不同类型的哈希节点分别讨论
+			case EXACT:	//	准确匹配
+				return v;
+			case FAIL_LOW:	//	表示上界
+				return v.upperbound;
+			case FAIL_HIGH:	//	表示下界
+				return v.lowerbound;
+		}
+	int g, lowerbound, upperbound, beta;
+	g = firstguess;	//	初始值猜测
+	upperbound = INFINITY;	//	无穷大
+	lowerbound = -INFINITY;	//	负无穷大
+	while ( lowerbound < upperbound )
+{	//	下界小于上界
+	if ( g == lowerbound )
+		beta = g + 1;
+	else
+		beta = g;
+	//	空窗探测
+	g = alphabeta( depth, beta – 1, beta );
+	if ( g < beta )
+		upperbound = g;
+	else
+		lowerbound = g;
+}
+	store g in TranspositionTable;
+return g;	//	返回结果
+}
