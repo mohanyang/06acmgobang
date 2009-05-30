@@ -10,10 +10,11 @@
 #include "forbid.h"
 #include "dangerous.h"
 #include "globalconst.h"
+#include "four_three.h"
 #include "engine.h"
 
 enum {
-	DEBUG_EXPAND = 0,
+	DEBUG_EXPAND = 1,
 	MAX_CHILD = 40
 };
 
@@ -48,25 +49,34 @@ int getEvaluateForMove(Configuration v, PEBBLE_COLOR col, int x, int y){
 		putPebble(v, x, y, col);
 		ret=evaluateBoard(v, col);
 		removePebble(v, x, y);
-		flag=four_three(v, y, x, col);
-		if ((flag & 1) && DFOUR_SCORE>abs(ret)){
+		flag=four_three(v, x, y, col);
+		if ((flag & FOUR_FOUR) && DFOUR_SCORE>abs(ret)){
 			if (col==BLACK)
 				ret=DFOUR_SCORE;
 			else
 				ret=-DFOUR_SCORE;
 		}
-		if ((flag & 2) && FTHREE_SCORE>abs(ret)){
+		if ((flag & FOUR_THREE) && FTHREE_SCORE>abs(ret)){
+/*			printf("###############\n");
+			printBoardNonBlock(v);
+			printf("##############\n");*/
 			if (col==BLACK)
 				ret=FTHREE_SCORE;
 			else
 				ret=-FTHREE_SCORE;
 		}
-		if ((flag & 3) && DTHREE_SCORE>abs(ret)){
+		if ((flag & THREE_THREE) && DTHREE_SCORE>abs(ret)){
 			if (col==BLACK)
 				ret=DTHREE_SCORE;
 			else
 				ret=-DTHREE_SCORE;
 		}
+	}
+	if ((col==BLACK && ret==FTHREE_SCORE)
+			|| (col==WHITE && ret==-FTHREE_SCORE)){
+/*		printf("@@@@@@@@@@@@@@@\n");
+		printBoardNonBlock(v);
+		printf("@@@@@@@@@@@@@@@\n");*/
 	}
 	return ret;
 }
@@ -176,7 +186,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 /*			if (marked[i][j]==0 
 				&& _forbid[i][j]==1){*/
 				k=getEvaluateForMove(v, BLACK, i, j);
-//  				printf("evaluate %d,%d %d\n", i, j, k);
+ 				printf("evaluate %d,%d %d\n", i, j, k);
 				switch (k) {
 					case FIVE_SCORE:
 						winningfive[winningfivecount].m.x=i;
@@ -186,7 +196,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 						++winningfivecount;
 						break;
 					case FOUR_SCORE:
-// 					case DFOUR_SCORE:
+					case DFOUR_SCORE:
 						winningfour[winningfourcount].m.x=i;
 						winningfour[winningfourcount].m.y=j;
 						winningfour[winningfourcount].val=k;
@@ -197,6 +207,7 @@ void expandBlack(Configuration v, ChildIterator retval){
 						winningfthree[winningfthreecount].m.x=i;
 						winningfthree[winningfthreecount].m.y=j;
 						winningfthree[winningfthreecount].val=k;
+// 						printf("fthree %d %d %d\n", i, j, k);
 // 						marked[i][j]=1;
 						++winningfthreecount;
 						break;
@@ -403,7 +414,7 @@ void expandWhite(Configuration v, ChildIterator retval){
 // 						marked[i][j]=1;
 						break;
 					case -FOUR_SCORE:
-// 					case -DFOUR_SCORE:
+					case -DFOUR_SCORE:
 						winningfour[winningfourcount].m.x=i;
 						winningfour[winningfourcount].m.y=j;
 						winningfour[winningfourcount].val=k;

@@ -10,7 +10,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 0
+	DEBUG_STACK = 1
 };
 
 int max(int a, int b){
@@ -234,6 +234,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					printf("white try %d %d, result=%d\n", 
 						getCurrent(itr).x, getCurrent(itr).y,
 									temp.value);
+					printf("retval=%d\n", ret.value);
 				}
 				
 				if (temp.value<ret.value){
@@ -246,8 +247,8 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 					b=ret.value;
 				}
 	//			printf("a=%d ret.value=%d\n", b, ret.value);
-				if (ret.value<=-INFINITY-10)
-					break;
+/*				if (ret.value<=-INFINITY-10)
+					break;*/
 				// TODO to be verified
 	/*			if (temp.value>=INFINITY){
 					++counter;

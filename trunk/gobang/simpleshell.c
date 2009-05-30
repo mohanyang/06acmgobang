@@ -91,7 +91,7 @@ int main(){
 	}
 	getchar();
 	fclose(fp);
-	r=search(WHITE);
+	r=search(BLACK);
 	playMove(r.move);
 
 	return 0;
