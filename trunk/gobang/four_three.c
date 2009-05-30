@@ -86,12 +86,12 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 	  int four=0;
 	  if(NearEmpty[k]>0)                       // ?+0000?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k],k)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k],k)==0)
 		four=1;
 	    }
 	  if(NearEmpty[k+4]>0) //?0000+?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k+4],k+4)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k+4],k+4)==0)
 		four=1;
 	    }
 	  if(four) countFour++;
@@ -101,12 +101,12 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 	{
 	  if(NearEmpty[k]==1&&EmptyColor[k]==1) //?0+000?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k],k)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k],k)==0)
 		countFour++;
 	    }
 	  if(NearEmpty[k+4]==1&&EmptyColor[k+4]==1) //?000+0?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k+4],k+4)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k+4],k+4)==0)
 		countFour++;
 	    }
 	  
@@ -116,14 +116,14 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 	  if((NearEmpty[k]>2||(NearEmpty[k]==2&&EmptyColor[k]==0))&&
 	     (NearEmpty[k+4]>1||(NearEmpty[k+4]==1&&EmptyColor[k+4]==0)))
 	    {
-	      if(key_forbid(v,x,y,NearColor[k],k)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k],k)==0)
 		three = 1;
 	    }
 	  //?+000++?
 	  if((NearEmpty[k+4]>2||(NearEmpty[k+4]==2&&EmptyColor[k+4]==0))&&
 	     (NearEmpty[k]>1||(NearEmpty[k]==1&&EmptyColor[k]==0)))
 	    {
-	      if(key_forbid(v,x,y,NearColor[k+4],k+4)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k+4],k+4)==0)
 		three = 1;
 	    }
 	  if(three) countThree++;
@@ -132,12 +132,12 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 	{
 	  if(NearEmpty[k]==1&& EmptyColor[k]==2) //?00+00?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k],k)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k],k)==0)
 		countFour++;
 	    }
 	  if(NearEmpty[k+4]==1&&EmptyColor[k+4]==2) //?00+00?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k+4],k+4)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k+4],k+4)==0)
 		countFour++;
 	    }
 	  
@@ -145,14 +145,14 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 						 (NextEmpty[k]==1&&NextColor[k]==0))&&(NearEmpty[k+4]>1||
 										       (NearEmpty[k+4]==1&&EmptyColor[k+4]==0))) //?+0+00+?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k],k)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k],k)==0)
 		countThree++;
 	    }
 	  if(NearEmpty[k+4]==1&&EmptyColor[k+4]==1&&(NextEmpty[k+4]>1||
 						     (NextEmpty[k+4]==1&&NextColor[k+4]==0))&&(NearEmpty[k]>1||
 											       (NearEmpty[k]==1&&EmptyColor[k]==0))) //?+00+0+?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k+4],k+4)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k+4],k+4)==0)
 		countThree++;
 	    }
 	  
@@ -161,26 +161,26 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 	{
 	  if(NearEmpty[k]==1&&EmptyColor[k]==3) //?000+0?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k],k)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k],k)==0)
 		countFour++;
 	    }
 	  if(NearEmpty[k+4]==1&&EmptyColor[k+4]==3) //?0+000?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k+4],k+4)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k+4],k+4)==0)
 		countFour++;
 	    }
 	  if(NearEmpty[k]==1&&EmptyColor[k]==2&&(NextEmpty[k]>1||
 						 (NextEmpty[k]==1&&NextColor[k]==0))&&(NearEmpty[k+4]>1||
 										       (NearEmpty[k+4]==1&&EmptyColor[k+4]==0))) //?+00+0+?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k],k)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k],k)==0)
 		countThree++;
 	    }
 	  if(NearEmpty[k+4]==1&&EmptyColor[k+4]==2&&(NextEmpty[k+4]>1||
 						     (NextEmpty[k+4]==1&&NextColor[k+4]==0))&&(NearEmpty[k]>1||
 											       (NearEmpty[k]==1&&EmptyColor[k]==0))) //?+00+0+?
 	    {
-	      if(key_forbid(v,x,y,NearColor[k+4],k+4)==0)
+	      if(c==WHITE||key_forbid(v,x,y,NearColor[k+4],k+4)==0)
 		countThree++;
 	    }
 	}

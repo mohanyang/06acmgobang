@@ -227,11 +227,11 @@ int key_forbid(Configuration v,int x, int y, int adjacent,int direction)
     }
   
   BOARD(v,x,y)=BLACK;
-  //  BOARD(v,m,n)=BLACK;
+  BOARD(v,m,n)=BLACK;
 
   int result = forbid(v,m,n);
 
-  //  BOARD(v,m,n)=NONE;
+  BOARD(v,m,n)=NONE;
   BOARD(v,x,y)=NONE;
   
   return result;
