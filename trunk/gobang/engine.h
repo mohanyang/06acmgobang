@@ -17,6 +17,10 @@ void initializeEngine();
  */
 ReturnValue search(PEBBLE_COLOR player);
 
+PEBBLE_COLOR aiplayer;
+
+#define whoAmI() (aiplayer)
+
 /**
  * the frontend should use this to inform the search
  * engine that the specified move is played.

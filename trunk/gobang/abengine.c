@@ -172,7 +172,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				}
 				undoMove(v, getCurrent(itr));
 	//			printBoard(v);
-				if (a>ret.value){
+				if (a<ret.value){
 					a=ret.value;
 				}
 	//			printf("a=%d ret.value=%d\n", a, ret.value);
@@ -241,7 +241,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		//			printf("current white move = %d %d\n", ret.move.x, ret.move.y);
 				}
 				undoMove(v, getCurrent(itr));
-				if (b<ret.value){
+				if (b>ret.value){
 					b=ret.value;
 				}
 	//			printf("a=%d ret.value=%d\n", b, ret.value);

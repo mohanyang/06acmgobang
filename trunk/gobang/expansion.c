@@ -10,6 +10,7 @@
 #include "forbid.h"
 #include "dangerous.h"
 #include "globalconst.h"
+#include "engine.h"
 
 enum {
 	DEBUG_EXPAND = 0,
@@ -48,11 +49,12 @@ int getEvaluateForMove(Configuration v, PEBBLE_COLOR col, int x, int y){
 		ret=evaluateBoard(v, col);
 		removePebble(v, x, y);
 		flag=four_three(v, y, x, col);
-		if (flag && FTHREE_SCORE>abs(ret))
+		if (flag && FTHREE_SCORE>abs(ret)){
 			if (col==BLACK)
 				ret=FTHREE_SCORE;
 			else
 				ret=-FTHREE_SCORE;
+		}
 			
 	}
 	return ret;
@@ -555,7 +557,7 @@ ChildIterator getExpansion(Configuration v) {
 	else {
 		expandWhite(v, retval);
 	}
-	if (retval->mllen>MAX_CHILD)
+	if (whoAmI()==player && retval->mllen>MAX_CHILD)
 		retval->mllen=MAX_CHILD;
 	if (DEBUG_EXPAND){
 		printf(">>>>>>>>>>>>\n");
