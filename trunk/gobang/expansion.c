@@ -555,7 +555,7 @@ ChildIterator getExpansion(Configuration v) {
 	else {
 		expandWhite(v, retval);
 	}
-	if (whoAmI()==player && retval->mllen>MAX_CHILD)
+	if (/*whoAmI()==player && */retval->mllen>MAX_CHILD)
 		retval->mllen=MAX_CHILD;
 	if (DEBUG_EXPAND){
 		printf(">>>>>>>>>>>>\n");

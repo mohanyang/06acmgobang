@@ -265,7 +265,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		releaseChildIterator(itr);
 	}
 
-	if (ret.value<=alpha) {
+	if (ret.value<=alpha && getType(v)==MINNODE) {
 		/* fail low */
 		v->upperbound=ret.value;
 		
@@ -280,7 +280,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		if (depth>0)
 			store(v, ret.move, EXACT);
 	}
-	else {
+	else if (getType(v)==MINNODE && ret.value>=MAXNODE){
 		/* fail high */
 		v->lowerbound=ret.value;
 		
