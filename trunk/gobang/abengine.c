@@ -10,7 +10,7 @@
 #include "moveheuristic.h"
 
 enum {
-	DEBUG_STACK = 1
+	DEBUG_STACK = 0
 };
 
 int max(int a, int b){
@@ -106,7 +106,10 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ret.value=getCurrentValue(itr);
 		ret.move=getCurrent(itr);
 		releaseChildIterator(itr);
-		updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
+		if (getType(v)==MAXNODE)
+			updateMoveHeuristic(v, ret.move.x, ret.move.y, ret.value);
+		else
+			updateMoveHeuristic(v, ret.move.x, ret.move.y, -ret.value);
 		if (DEBUG_STACK){
 			printBoardNonBlock(v);
 			printstack();
@@ -120,7 +123,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ChildIterator itr=getExpansion(v);
 //		printf("e: %d %d %d\n", getCurrent(itr).x, getCurrent(itr).y, depth);
 		int a=alpha;
-		ret.value=-INFINITY;
+		ret.value=-FIVE_SCORE;
 		ret.move=getCurrent(itr);
 		if (getCurrentValue(itr)>=FIVE_SCORE){
 			ret.value=FIVE_SCORE;
@@ -150,7 +153,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 // 					case 2:
 						++doublecount;
 						temp=alphaBeta(v, a, beta,
-								depth-(doublecount & 1));
+								depth-1);
 						--doublecount;
 						break;
 					default:
@@ -200,7 +203,7 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 		ChildIterator itr=getExpansion(v);
 //		printf("n: %d %d %d\n", getCurrent(itr).x, getCurrent(itr).y, depth);
 		int b=beta;
-		ret.value=INFINITY;
+		ret.value=FIVE_SCORE;
 		ret.move=getCurrent(itr);
 		if (getCurrentValue(itr)<=-FIVE_SCORE){
 			ret.value=-FIVE_SCORE;
@@ -220,14 +223,14 @@ ReturnValue alphaBeta(Configuration v, int alpha, int beta, int depth){
 				if (getChildrenCount(itr)<=1){
 					++doublecount;
 					temp=alphaBeta(v, alpha, b, 
-							depth-(doublecount & 1));
+							depth-1);
 					--doublecount;
 				}
 				else {
 					temp=alphaBeta(v, alpha, b, depth-1);
 				}
 				updateMoveHeuristic(v, temp.move.x,
-									temp.move.y, temp.value);
+									temp.move.y, -temp.value);
 				
 				if (DEBUG_STACK){
 					printstack();
