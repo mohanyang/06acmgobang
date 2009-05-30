@@ -108,7 +108,6 @@ public class HumanPlayer implements BoardListener {
 		cf.waitResponse();
 		lastMove = new ChessInfo(color, jni.generateChessInfo());
 		out.println(lastMove);
-		System.out.println(lastMove);
 		jni.playChess(lastMove.toInt());
 		cf.drawChess(lastMove.col, lastMove.row, lastMove.color, false);
 		color = (byte) (Color.SUM - lastMove.color);
@@ -123,7 +122,6 @@ public class HumanPlayer implements BoardListener {
 		}
 		if (!isOver) {
 			out.println(lastMove);
-			System.out.println(lastMove);
 			if (jni != null)
 				jni.playChess(lastMove.toInt());
 			color = (byte) (Color.SUM - lastMove.color);
