@@ -2,9 +2,14 @@
 #include "basetypes.h"
 #include "forbid.h"
 
+#ifdef TEST_43
+#include "string.h"
+#include "stdio.h"
+#endif
+
 #define BOARD(v, x, y) (v->data[x][y])
 
-int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
+int four_three(Configuration v, int x, int y, PEBBLE_COLOR c) {
   int NearColor[8];
   int NearEmpty[8];
   int EmptyColor[8];
@@ -186,6 +191,10 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 	}
     }
 
+#ifdef TEST_43
+  printf("%d %d\n", countThree, countFour);
+#endif
+
   int ret = 0;
   if (countFour > 1)
     ret |= FOUR_FOUR;
@@ -197,12 +206,11 @@ int four_three(Configuration v, int y, int x, PEBBLE_COLOR c) {
 }
 
 #ifdef TEST_43
-#include "string.h"
-#include "stdio.h"
 
 int main() {
   struct BaseNode node;
   memset(&node, 0, sizeof(node));
+  /*
   node.data[7][8] = 2;
   node.data[7][10] = 2;
   node.data[8][7] = 2;
@@ -210,7 +218,17 @@ int main() {
   node.data[11][7] = 2;
   //node.data[8][7] = 1;
   printf("%d\n", four_three(&node, 7, 7, WHITE));
+  */
 
+  node.data[ 8][ 3] = BLACK;
+  node.data[ 8][ 4] = BLACK;
+  node.data[ 8][ 6] = BLACK;
+  node.data[ 9][ 3] = WHITE;
+  node.data[10][ 4] = WHITE;
+  node.data[10][ 6] = WHITE;
+  node.data[ 9][ 7] = WHITE;
+  printf("%d\n", four_three(&node, 8, 2, BLACK));
+  printf("%d\n", four_three(&node, 11, 5, WHITE));
   return 0;
 
 }
