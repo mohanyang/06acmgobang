@@ -2,11 +2,9 @@
 #include "forbid.h"
 #include "string.h"
 #include "stdio.h"
-
+#include "globalconst.h"
 
 #define BOARD(v, x, y) (v->data[x][y])
-
-int key_forbid(Configuration v, int x, int y, int adjacent, int direction);
 
 int forbid(Configuration v, int x, int y) {
   int NearBlack[8];
@@ -200,7 +198,9 @@ int forbid(Configuration v, int x, int y) {
 
 int key_forbid(Configuration v,int x, int y, int adjacent,int direction)
 {
-  int m,n;
+  if (!allowForbidden())
+    return 0;
+  int m = 0, n = 0;
   adjacent++;
   if(direction>=4)                     
     adjacent=-adjacent;
