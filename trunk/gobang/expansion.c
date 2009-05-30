@@ -12,8 +12,8 @@
 #include "globalconst.h"
 
 enum {
-	DEBUG_EXPAND = 1,
-	MAX_CHILD = 16
+	DEBUG_EXPAND = 0,
+	MAX_CHILD = 30
 };
 
 typedef struct {
