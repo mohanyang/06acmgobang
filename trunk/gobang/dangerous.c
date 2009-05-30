@@ -1,5 +1,6 @@
 #include "advstat.h"
 #include "dangerous.h"
+#include "four_three.h"
 
 enum {
 	DEBUG_DANGER = 0
@@ -7,11 +8,9 @@ enum {
 
 /**
  * returns 0 if (x,y) is not dangerous
- * otherwise, returns the minimum number of 
- * defeating step if the current move is not
- * dealt with.
- * note that since 4+3 pattern can not be recognized
- * correctly, we return a 3, actually it is 2
+ * 1 if is four danger
+ * 2 if is active three danger
+ * 3 if is 4+3 danger
  */
 int isDangerous(Configuration v, int x, int y, PEBBLE_COLOR p){
 	int idx=(p==BLACK)?0:1;
@@ -33,8 +32,7 @@ int isDangerous(Configuration v, int x, int y, PEBBLE_COLOR p){
 			}
 			return 2;
 		}
-		else if (v->statistics[x][y][SLEEPY_THREE][idx]
-				&& v->statistics[x][y][ACTIVE_TWO][idx]){
+		else if (four_three(v, x, y, p)){
 			if (DEBUG_DANGER){
 				printf("hazard %d %d\n", x, y);
 			}
