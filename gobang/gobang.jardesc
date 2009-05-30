@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="GB18030" standalone="no"?>
+<jardesc>
+    <jar path="C:/Documents and Settings/Isaac/My Documents/Project/Java/gobang/gobang.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/gobang/gobang.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=gobang/src&lt;gobang{GoBang.java[GoBang" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=gobang/src&lt;basis"/>
+        <javaElement handleIdentifier="=gobang/src&lt;types"/>
+        <javaElement handleIdentifier="=gobang/src&lt;ui"/>
+        <javaElement handleIdentifier="=gobang/src&lt;gobang"/>
+    </selectedElements>
+</jardesc>
