@@ -153,7 +153,6 @@ public class SocketPlayer {
 	synchronized void handleChessmove() {
 		readChessInfo();
 		out.println(lastMove);
-		System.out.println(lastMove);
 		if (uiOn)
 			cf.drawChess(lastMove.col, lastMove.row, lastMove.color, true);
 		jni.playChess(lastMove.toInt());
